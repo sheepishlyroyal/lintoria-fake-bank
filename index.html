@@ -1642,51 +1642,29 @@
         async function register() {
             const email = document.getElementById('registerEmail').value.trim();
             const name = document.getElementById('registerName').value.trim();
-            const username = document.getElementById('registerUsername').value.trim();
+            const password = document.getElementById('registerUsername').value.trim();
             const errorDiv = document.getElementById('registerError');
             
             errorDiv.className = 'hidden';
             
-            if (!email || !name || !username) {
+            if (!email || !name || !password) {
                 showAlert(errorDiv, 'Please fill in all fields', 'error');
                 return;
             }
 
-            const data = await getSheetsData('getUsers');
-            const existingUsers = data.users || [];
+            // Call backend register endpoint
+            const result = await getSheetsData('register', `&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}&password=${encodeURIComponent(password)}&deviceId=${encodeURIComponent(deviceFingerprint)}&ip=${encodeURIComponent(simulatedIP)}`);
 
-            if (existingUsers.find(u => u.email === email)) {
-                showAlert(errorDiv, 'Email already registered', 'error');
+            if (!result.success) {
+                showAlert(errorDiv, result.error || 'Registration failed', 'error');
                 return;
             }
-
-            if (existingUsers.find(u => u.fingerprint === deviceFingerprint)) {
-                showAlert(errorDiv, 'Device already registered', 'error');
-                return;
-            }
-
-            if (existingUsers.find(u => u.ip === simulatedIP)) {
-                showAlert(errorDiv, 'IP already registered', 'error');
-                return;
-            }
-
-            const newUser = {
-                email,
-                name,
-                username,
-                balance: 100000,
-                fingerprint: deviceFingerprint,
-                ip: simulatedIP,
-                created: new Date().toISOString(),
-                permissions: { news: false, lore: false, flights: false, banking: false }
-            };
-
-            await callSheetsAPI('register', newUser);
 
             showAlert(errorDiv, '✨ Account created! Starting balance: $100,000.00', 'success');
             setTimeout(() => {
                 switchAuthTab('login');
                 document.getElementById('loginEmail').value = email;
+                document.getElementById('loginPassword').value = password;
             }, 1500);
         }
 
@@ -1699,17 +1677,17 @@
                 return;
             }
 
-            const data = await getSheetsData('getUsers');
-            const user = (data.users || []).find(u => u.email === email && u.username === password);
+            // Call backend login endpoint
+            const result = await getSheetsData('login', `&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
 
-            if (!user) {
-                alert('Invalid email or password');
+            if (!result.success) {
+                alert(result.error || 'Invalid email or password');
                 return;
             }
 
-            currentUser = user;
+            currentUser = result.user;
             if (!currentUser.permissions) {
-                currentUser.permissions = { news: false, lore: false, flights: false, banking: false };
+                currentUser.permissions = { news: false, lore: false, flights: false, banking: false, marketplace: false, stocks: false, updates: false };
             }
             showApp();
         }
