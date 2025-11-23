@@ -1084,12 +1084,15 @@
             <div class="tabs scroll-animate-slide-left">
                 <button class="tab active" onclick="switchTab('dashboard')">🏦 Banking</button>
                 <button class="tab" onclick="switchTab('transfer')">💸 Transfer</button>
+                <button class="tab" onclick="switchTab('stocks')">📈 Stocks</button>
+                <button class="tab" onclick="switchTab('portfolio')">💼 Portfolio</button>
                 <button class="tab" onclick="switchTab('leaderboard')">🏆 Leaderboard</button>
                 <button class="tab" onclick="switchTab('tickets')">🎫 My Tickets</button>
                 <button class="tab" onclick="switchTab('news')">📰 News</button>
                 <button class="tab" onclick="switchTab('lore')">📜 Lore</button>
                 <button class="tab" onclick="switchTab('flights')">✈️ Flights</button>
                 <button class="tab" onclick="switchTab('chat')">💬 Chat</button>
+                <button class="tab" onclick="switchTab('updates')">🔔 Updates</button>
                 <button class="tab hidden" id="adminTab" onclick="switchTab('admin')">👑 Control</button>
             </div>
 
@@ -1299,6 +1302,33 @@
                 </div>
             </div>
 
+            <!-- Stocks Market (V2.0) -->
+            <div id="stocksContent" class="tab-content">
+                <div class="card scroll-animate">
+                    <h2>📈 Stock Market</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 32px;">Trade shares in Lintoria companies. Prices change with every transaction!</p>
+                    <div id="stocksList"></div>
+                </div>
+            </div>
+
+            <!-- Portfolio (V2.0) -->
+            <div id="portfolioContent" class="tab-content">
+                <div class="card scroll-animate">
+                    <h2>💼 Your Portfolio</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 32px;">View your stock holdings and track your gains.</p>
+                    <div id="portfolioItems"></div>
+                </div>
+            </div>
+
+            <!-- Updates Page (V2.0) -->
+            <div id="updatesContent" class="tab-content">
+                <div class="card scroll-animate">
+                    <h2>🔔 Platform Updates</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 32px;">Latest features, improvements, and announcements.</p>
+                    <div id="updatesList"></div>
+                </div>
+            </div>
+
             <!-- Admin Panel -->
             <div id="adminContent" class="tab-content">
                 <div class="card scroll-animate">
@@ -1336,7 +1366,7 @@
     </div>
 
     <script>
-        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxjv4Wb_GMInk_ygKHexQ54E4fIwnPAIh9C2XpJ7raCtdzTPQjHvmBg367zdkgIP5tg2Q/exec';
+        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyBztlREdKoXOFsZbiVglmWNUFua2rRhLTZSzdRpfA9YwwvYy8bbPmzBvA_x3JkA8g/exec';
         const MASTER_ADMIN = 'sheepishlyroyal@gmail.com';
         
         let currentUser = null;
@@ -1345,6 +1375,30 @@
         let allUsers = [];
         let updateInterval = null;
         let messageSending = false;
+        let currentResellItem = null;
+
+        // === V2.0 VERSION CONTROL ===
+        const APP_VERSION = '2.0.0';
+        const VERSION_KEY = 'lintoria_version';
+        
+        (function checkVersionAndWipe() {
+            const storedVersion = localStorage.getItem(VERSION_KEY);
+            if (storedVersion !== APP_VERSION) {
+                console.log(`Upgrading: ${storedVersion || 'none'} → v${APP_VERSION}`);
+                const savedIP = localStorage.getItem('simulatedIP');
+                localStorage.clear();
+                if (savedIP) localStorage.setItem('simulatedIP', savedIP);
+                localStorage.setItem(VERSION_KEY, APP_VERSION);
+                setTimeout(() => {
+                    alert(`🎉 Welcome to Lintoria v${APP_VERSION}!\n\n✨ New Features:\n• Stock Market System\n• Updates Page\n• Bug Fixes\n\nYour client data has been refreshed!`);
+                }, 1000);
+            }
+        })();
+
+        // V2.0 Stock market variables
+        let allStocks = [];
+        let currentBuyStock = null;
+        let currentSellStock = null;
 
         // Cursor and Scroll Animation
         document.addEventListener('mousemove', (e) => {
@@ -1438,12 +1492,15 @@
                 const text = t.textContent.toLowerCase();
                 if (text.includes('banking')) return 'dashboard';
                 if (text.includes('transfer')) return 'transfer';
+                if (text.includes('stocks')) return 'stocks';
+                if (text.includes('portfolio')) return 'portfolio';
                 if (text.includes('leaderboard')) return 'leaderboard';
                 if (text.includes('tickets')) return 'tickets';
                 if (text.includes('news')) return 'news';
                 if (text.includes('lore')) return 'lore';
                 if (text.includes('flights')) return 'flights';
                 if (text.includes('chat')) return 'chat';
+                if (text.includes('updates')) return 'updates';
                 if (text.includes('control')) return 'admin';
                 return '';
             });
@@ -1464,6 +1521,9 @@
             else if (tab === 'news') loadPosts('news');
             else if (tab === 'lore') loadPosts('lore');
             else if (tab === 'flights') loadFlights();
+            else if (tab === 'stocks') loadStocks();
+            else if (tab === 'portfolio') loadPortfolio();
+            else if (tab === 'updates') loadUpdates();
         }
 
         async function callSheetsAPI(action, data) {
@@ -2231,6 +2291,113 @@
             element.className = `alert alert-${type}`;
             element.textContent = message;
             setTimeout(() => element.className = 'hidden', 5000);
+        }
+
+        // === STOCK MARKET FUNCTIONS (V2.0) ===
+        async function loadStocks() {
+            const data = await getSheetsData('getStocks');
+            const stocks = data.stocks || [];
+            allStocks = stocks;
+            const container = document.getElementById('stocksList');
+            if (!container) return;
+            if (stocks.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📈</div><div>No companies listed yet</div></div>';
+            } else {
+                container.innerHTML = stocks.map((stock, i) => {
+                    const changePercent = ((stock.currentPrice - stock.startingPrice) / stock.startingPrice * 100).toFixed(2);
+                    const isPositive = changePercent >= 0;
+                    return `<div class="card scroll-animate scroll-animate-delay-${i%3+1}" style="margin-bottom:24px"><div style="display:flex;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:20px"><div><div style="font-size:24px;font-weight:900;color:var(--text-primary)">${escapeHtml(stock.symbol)}</div><div style="color:var(--text-muted);font-size:14px">${escapeHtml(stock.companyName)}</div></div><div style="text-align:right"><div style="font-size:36px;font-weight:900;color:${isPositive?'var(--success)':'var(--danger)'}">$${parseFloat(stock.currentPrice).toLocaleString('en-US',{minimumFractionDigits:2})}</div><div style="font-size:16px;font-weight:700;color:${isPositive?'var(--success)':'var(--danger)'}">$ {isPositive?'+':''}${changePercent}%</div></div></div><div style="color:var(--text-secondary);margin:16px 0">${escapeHtml(stock.description)}</div><div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid var(--border)"><span style="color:var(--text-muted)">Available: ${stock.availableShares.toLocaleString()} shares</span><button onclick='buyStockPrompt(${JSON.stringify(stock).replace(/'/g,"&apos;")})'>Buy Shares</button></div></div>`;
+                }).join('');
+                initScrollAnimations();
+            }
+        }
+
+        function buyStockPrompt(stock) {
+            const shares = prompt(`How many shares of ${stock.symbol} do you want to buy?\n\nPrice per share: $${parseFloat(stock.currentPrice).toLocaleString('en-US',{minimumFractionDigits:2})}\nAvailable: ${stock.availableShares.toLocaleString()}`);
+            if (!shares) return;
+            const numShares = parseInt(shares);
+            if (isNaN(numShares) || numShares <= 0) { alert('Invalid number of shares'); return; }
+            if (numShares > stock.availableShares) { alert('Not enough shares available'); return; }
+            const totalCost = numShares * parseFloat(stock.currentPrice);
+            if (totalCost > currentUser.balance) { alert('Insufficient balance'); return; }
+            if (confirm(`Buy ${numShares} shares for $${totalCost.toLocaleString('en-US',{minimumFractionDigits:2})}?`)) {
+                buyStock(stock, numShares);
+            }
+        }
+
+        async function buyStock(stock, shares) {
+            const totalCost = shares * parseFloat(stock.currentPrice);
+            const newPrice = stock.currentPrice * (1 + (0.02 + Math.random() * 0.03));
+            await callSheetsAPI('buyStock', {
+                userEmail: currentUser.email, symbol: stock.symbol, companyName: stock.companyName,
+                shares: shares, price: stock.currentPrice, newPrice: newPrice, totalCost: totalCost
+            });
+            alert(`✨ Successfully bought ${shares} shares of ${stock.symbol}!`);
+            setTimeout(() => { loadDashboard(); loadStocks(); loadPortfolio(); }, 1000);
+        }
+
+        async function loadPortfolio() {
+            const data = await getSheetsData('getPortfolio', `&email=${currentUser.email}`);
+            const holdings = data.holdings || [];
+            const stockData = await getSheetsData('getStocks');
+            const stocks = stockData.stocks || [];
+            const container = document.getElementById('portfolioItems');
+            if (!container) return;
+            if (holdings.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💼</div><div>You don\'t own any stocks yet</div></div>';
+            } else {
+                container.innerHTML = holdings.map((holding, i) => {
+                    const stock = stocks.find(s => s.symbol === holding.symbol);
+                    if (!stock) return '';
+                    const currentValue = holding.shares * stock.currentPrice;
+                    const costBasis = holding.shares * holding.avgPrice;
+                    const gain = currentValue - costBasis;
+                    const gainPercent = (gain / costBasis * 100).toFixed(2);
+                    const isGain = gain >= 0;
+                    return `<div class="card scroll-animate scroll-animate-delay-${i%3+1}" style="margin-bottom:24px;background:linear-gradient(135deg,${isGain?'rgba(16,185,129,0.15)':'rgba(239,68,68,0.15)'} 0%,${isGain?'rgba(5,150,105,0.1)':'rgba(220,38,38,0.1)'} 100%);border-color:${isGain?'rgba(16,185,129,0.3)':'rgba(239,68,68,0.3)'}"><div style="display:flex;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:16px"><div><div style="font-size:22px;font-weight:800">${holding.symbol}</div><div style="color:var(--text-secondary)">${holding.companyName}</div></div><button class="btn-danger" onclick='sellStockPrompt(${JSON.stringify(holding).replace(/'/g,"&apos;")},${stock.currentPrice})'>Sell</button></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px"><div style="padding:16px;background:rgba(2,6,23,0.5);border-radius:12px"><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px">Shares</div><div style="font-size:20px;font-weight:800">${holding.shares}</div></div><div style="padding:16px;background:rgba(2,6,23,0.5);border-radius:12px"><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px">Avg Price</div><div style="font-size:20px;font-weight:800">$${parseFloat(holding.avgPrice).toLocaleString('en-US',{minimumFractionDigits:2})}</div></div><div style="padding:16px;background:rgba(2,6,23,0.5);border-radius:12px"><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px">Current</div><div style="font-size:20px;font-weight:800">$${parseFloat(stock.currentPrice).toLocaleString('en-US',{minimumFractionDigits:2})}</div></div><div style="padding:16px;background:rgba(2,6,23,0.5);border-radius:12px"><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px">Value</div><div style="font-size:20px;font-weight:800">$${currentValue.toLocaleString('en-US',{minimumFractionDigits:2})}</div></div><div style="padding:16px;background:rgba(2,6,23,0.5);border-radius:12px"><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px">Gain/Loss</div><div style="font-size:20px;font-weight:800;color:${isGain?'var(--success)':'var(--danger)'}">${isGain?'+':''}$${Math.abs(gain).toLocaleString('en-US',{minimumFractionDigits:2})} (${isGain?'+':''}${gainPercent}%)</div></div></div></div>`;
+                }).join('');
+                initScrollAnimations();
+            }
+        }
+
+        function sellStockPrompt(holding, currentPrice) {
+            const shares = prompt(`How many shares of ${holding.symbol} do you want to sell?\n\nYou own: ${holding.shares} shares\nCurrent price: $${parseFloat(currentPrice).toLocaleString('en-US',{minimumFractionDigits:2})}/share`);
+            if (!shares) return;
+            const numShares = parseInt(shares);
+            if (isNaN(numShares) || numShares <= 0) { alert('Invalid number of shares'); return; }
+            if (numShares > holding.shares) { alert("You don't own that many shares"); return; }
+            const totalReceived = numShares * parseFloat(currentPrice);
+            if (confirm(`Sell ${numShares} shares for $${totalReceived.toLocaleString('en-US',{minimumFractionDigits:2})}?`)) {
+                sellStock(holding, numShares, currentPrice);
+            }
+        }
+
+        async function sellStock(holding, shares, currentPrice) {
+            const totalReceived = shares * parseFloat(currentPrice);
+            const newPrice = currentPrice * (1 - (0.02 + Math.random() * 0.03));
+            await callSheetsAPI('sellStock', {
+                userEmail: currentUser.email, symbol: holding.symbol, companyName: holding.companyName,
+                shares: shares, price: currentPrice, newPrice: newPrice, totalReceived: totalReceived
+            });
+            alert(`✨ Successfully sold ${shares} shares of ${holding.symbol}!`);
+            setTimeout(() => { loadDashboard(); loadStocks(); loadPortfolio(); }, 1000);
+        }
+
+        // === UPDATES PAGE (V2.0) ===
+        async function loadUpdates() {
+            const data = await getSheetsData('getUpdates');
+            const updates = data.updates || [];
+            const container = document.getElementById('updatesList');
+            if (!container) return;
+            if (updates.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔔</div><div>No platform updates yet</div></div>';
+            } else {
+                container.innerHTML = updates.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)).map((update, i) => {
+                    const changes = update.changes.split('\n').filter(c => c.trim());
+                    return `<div class="card scroll-animate scroll-animate-delay-${i%3+1}" style="background:rgba(59,130,246,0.1);border-left:6px solid var(--primary);margin-bottom:24px"><div style="display:flex;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px"><span style="font-size:14px;font-weight:700;color:var(--primary);background:rgba(59,130,246,0.2);padding:6px 12px;border-radius:8px">v${escapeHtml(update.version)}</span><span style="font-size:12px;color:var(--text-muted)">${new Date(update.timestamp).toLocaleDateString()}</span></div><div style="font-size:24px;font-weight:800;margin-bottom:12px">${escapeHtml(update.title)}</div><div style="color:var(--text-secondary);line-height:1.8">${escapeHtml(update.description)}<ul style="list-style:none;margin-top:16px">${changes.map(c => `<li style="padding:8px 0;padding-left:28px;position:relative"><span style="position:absolute;left:0">✨</span>${escapeHtml(c.replace(/^-\s*/,''))}</li>`).join('')}</ul></div></div>`;
+                }).join('');
+                initScrollAnimations();
+            }
         }
     </script>
 </body>
