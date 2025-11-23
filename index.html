@@ -57,12 +57,12 @@
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(59, 130, 246, 0.25) 0%, transparent 50%),
-                radial-gradient(circle at calc(100% - var(--mouse-x)) calc(100% - var(--mouse-y)), rgba(20, 184, 166, 0.2) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% calc(50% + var(--scroll-y) * 0.5px), rgba(251, 191, 36, 0.12) 0%, transparent 60%);
+                radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at calc(100% - var(--mouse-x)) calc(100% - var(--mouse-y)), rgba(20, 184, 166, 0.25) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% calc(50% + var(--scroll-y) * 0.5px), rgba(251, 191, 36, 0.15) 0%, transparent 60%);
             pointer-events: none;
             z-index: 0;
-            transition: background 0.3s ease;
+            transition: background 0.2s ease;
         }
 
         body::after {
@@ -73,11 +73,11 @@
             right: 0;
             bottom: 0;
             background: 
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(59, 130, 246, 0.03) 2px, rgba(59, 130, 246, 0.03) 4px),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(59, 130, 246, 0.03) 2px, rgba(59, 130, 246, 0.03) 4px);
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(59, 130, 246, 0.04) 2px, rgba(59, 130, 246, 0.04) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(59, 130, 246, 0.04) 2px, rgba(59, 130, 246, 0.04) 4px);
             pointer-events: none;
             z-index: 0;
-            transform: translateY(calc(var(--scroll-y) * -0.2px));
+            transform: translateY(calc(var(--scroll-y) * -0.3px));
             transition: transform 0.1s linear;
         }
 
@@ -89,41 +89,65 @@
             z-index: 1;
         }
 
-        /* Scroll Animation Classes */
+        /* DRAMATIC Scroll Animation Classes */
         .scroll-animate {
             opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
-                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(80px) scale(0.95);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .scroll-animate.visible {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
 
         .scroll-animate-slide-left {
             opacity: 0;
-            transform: translateX(-50px);
-            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
-                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateX(-100px) rotate(-5deg);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .scroll-animate-slide-left.visible {
             opacity: 1;
-            transform: translateX(0);
+            transform: translateX(0) rotate(0deg);
         }
 
         .scroll-animate-slide-right {
             opacity: 0;
-            transform: translateX(50px);
-            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
-                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateX(100px) rotate(5deg);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .scroll-animate-slide-right.visible {
             opacity: 1;
-            transform: translateX(0);
+            transform: translateX(0) rotate(0deg);
+        }
+
+        .scroll-animate-zoom {
+            opacity: 0;
+            transform: scale(0.7) translateY(50px);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .scroll-animate-zoom.visible {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        .scroll-animate-delay-1 {
+            transition-delay: 0.1s;
+        }
+
+        .scroll-animate-delay-2 {
+            transition-delay: 0.2s;
+        }
+
+        .scroll-animate-delay-3 {
+            transition-delay: 0.3s;
         }
 
         /* Premium Brand Header */
@@ -327,12 +351,12 @@
         }
 
         button:hover {
-            transform: translateY(-3px);
+            transform: translateY(-3px) scale(1.02);
             box-shadow: 0 12px 40px rgba(59, 130, 246, 0.6);
         }
 
         button:active {
-            transform: translateY(-1px);
+            transform: translateY(-1px) scale(0.98);
         }
 
         .btn-success {
@@ -378,11 +402,13 @@
             border-radius: 20px;
             border: 1px solid var(--border);
             backdrop-filter: blur(30px);
+            flex-wrap: wrap;
         }
 
         .tab {
             flex: 1;
-            padding: 16px 28px;
+            min-width: 120px;
+            padding: 16px 24px;
             background: transparent;
             color: var(--text-secondary);
             border: none;
@@ -398,6 +424,7 @@
         .tab:hover {
             color: var(--text-primary);
             background: rgba(59, 130, 246, 0.2);
+            transform: translateY(-2px);
         }
 
         .tab.active {
@@ -461,6 +488,81 @@
             letter-spacing: -4px;
             margin-bottom: 16px;
             position: relative;
+        }
+
+        /* Leaderboard */
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 32px;
+            background: rgba(2, 6, 23, 0.5);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            margin-bottom: 20px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .leaderboard-item:hover {
+            background: rgba(2, 6, 23, 0.7);
+            transform: translateX(8px);
+            border-color: var(--gold);
+        }
+
+        .leaderboard-rank {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 24px;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+        }
+
+        .leaderboard-rank.rank-1 {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            box-shadow: 0 12px 40px rgba(251, 191, 36, 0.6);
+            font-size: 32px;
+        }
+
+        .leaderboard-rank.rank-2 {
+            background: linear-gradient(135deg, #e5e7eb 0%, #9ca3af 100%);
+            box-shadow: 0 8px 24px rgba(156, 163, 175, 0.4);
+        }
+
+        .leaderboard-rank.rank-3 {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
+        }
+
+        .leaderboard-info {
+            flex: 1;
+        }
+
+        .leaderboard-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .leaderboard-email {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .leaderboard-balance {
+            font-size: 36px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         /* Post Cards */
@@ -537,6 +639,7 @@
             color: var(--text-secondary);
             line-height: 1.8;
             font-size: 15px;
+            white-space: pre-wrap;
         }
 
         .post-category {
@@ -900,6 +1003,7 @@
             .balance-amount { font-size: 64px; }
             .tabs { flex-direction: column; }
             .flight-card { grid-template-columns: 1fr; }
+            .tab { min-width: 100%; }
         }
     </style>
 </head>
@@ -907,7 +1011,7 @@
     <div class="container">
         <!-- Auth Screen -->
         <div id="authScreen">
-            <div class="card scroll-animate" style="max-width: 600px; margin: 60px auto;">
+            <div class="card scroll-animate-zoom" style="max-width: 600px; margin: 60px auto;">
                 <div class="brand-header" style="justify-content: center;">
                     <div class="brand-logo">🏛️</div>
                     <div class="brand-text" style="align-items: center;">
@@ -955,7 +1059,7 @@
 
         <!-- Main App Screen -->
         <div id="appScreen" class="hidden">
-            <div class="brand-header scroll-animate">
+            <div class="brand-header scroll-animate-zoom">
                 <div class="brand-logo">🏛️</div>
                 <div class="brand-text">
                     <div class="brand-name">Lintoria</div>
@@ -977,9 +1081,10 @@
                 </div>
             </div>
 
-            <div class="tabs scroll-animate">
+            <div class="tabs scroll-animate-slide-left">
                 <button class="tab active" onclick="switchTab('dashboard')">🏦 Banking</button>
                 <button class="tab" onclick="switchTab('transfer')">💸 Transfer</button>
+                <button class="tab" onclick="switchTab('leaderboard')">🏆 Leaderboard</button>
                 <button class="tab" onclick="switchTab('tickets')">🎫 My Tickets</button>
                 <button class="tab" onclick="switchTab('news')">📰 News</button>
                 <button class="tab" onclick="switchTab('lore')">📜 Lore</button>
@@ -990,12 +1095,12 @@
 
             <!-- Banking Dashboard -->
             <div id="dashboardContent" class="tab-content active">
-                <div class="card balance-showcase scroll-animate">
+                <div class="card balance-showcase scroll-animate-zoom">
                     <div class="balance-label">Account Balance</div>
                     <div class="balance-amount">$<span id="balanceAmount">0.00</span></div>
                 </div>
 
-                <div class="card scroll-animate-slide-left">
+                <div class="card scroll-animate-slide-right scroll-animate-delay-1">
                     <h2>Transaction History</h2>
                     <div style="max-height: 600px; overflow-y: auto;" id="transactionList">
                         <div class="empty-state">
@@ -1008,7 +1113,7 @@
 
             <!-- Transfer -->
             <div id="transferContent" class="tab-content">
-                <div class="card scroll-animate" style="max-width: 800px; margin: 0 auto;">
+                <div class="card scroll-animate-zoom" style="max-width: 800px; margin: 0 auto;">
                     <h2>Send Money</h2>
                     <div id="transferSuccess" class="hidden"></div>
                     <div id="transferError" class="hidden"></div>
@@ -1028,6 +1133,20 @@
                 </div>
             </div>
 
+            <!-- Leaderboard -->
+            <div id="leaderboardContent" class="tab-content">
+                <div class="card scroll-animate">
+                    <h2>🏆 Top Accounts by Balance</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 32px;">See who's leading the wealth race!</p>
+                    <div id="leaderboardList">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🏆</div>
+                            <div>Loading leaderboard...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- My Tickets -->
             <div id="ticketsContent" class="tab-content">
                 <div class="card scroll-animate">
@@ -1041,8 +1160,67 @@
                 </div>
             </div>
 
-            <!-- News, Lore, Flights, Chat, Admin sections remain the same structure but with scroll-animate classes -->
-            <!-- I'll show the flights section with the buy button -->
+            <!-- News Page -->
+            <div id="newsContent" class="tab-content">
+                <div class="card scroll-animate">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+                        <h2 style="margin: 0;">Latest News</h2>
+                        <button id="newsPostBtn" class="hidden btn-success" onclick="showPostForm('news')">+ New Post</button>
+                    </div>
+                    
+                    <div id="newsPostForm" class="hidden scroll-animate-zoom" style="margin-bottom: 40px; padding: 32px; background: rgba(2, 6, 23, 0.5); border-radius: 16px; border: 2px solid var(--border);">
+                        <h3>Create News Post</h3>
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="newsTitleInput" placeholder="Post title">
+                        </div>
+                        <div class="form-group">
+                            <label>Content</label>
+                            <textarea id="newsContentInput" placeholder="Write your news article..."></textarea>
+                        </div>
+                        <button onclick="publishPost('news')" class="btn-success">Publish</button>
+                        <button onclick="hidePostForm('news')" class="btn-secondary">Cancel</button>
+                    </div>
+
+                    <div id="newsPosts">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📰</div>
+                            <div>No news posts yet</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lore Page -->
+            <div id="loreContent" class="tab-content">
+                <div class="card scroll-animate">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+                        <h2 style="margin: 0;">World Lore</h2>
+                        <button id="lorePostBtn" class="hidden btn-success" onclick="showPostForm('lore')">+ New Post</button>
+                    </div>
+                    
+                    <div id="lorePostForm" class="hidden scroll-animate-zoom" style="margin-bottom: 40px; padding: 32px; background: rgba(2, 6, 23, 0.5); border-radius: 16px; border: 2px solid var(--border);">
+                        <h3>Create Lore Post</h3>
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="loreTitleInput" placeholder="Post title">
+                        </div>
+                        <div class="form-group">
+                            <label>Content</label>
+                            <textarea id="loreContentInput" placeholder="Write your lore story..."></textarea>
+                        </div>
+                        <button onclick="publishPost('lore')" class="btn-success">Publish</button>
+                        <button onclick="hidePostForm('lore')" class="btn-secondary">Cancel</button>
+                    </div>
+
+                    <div id="lorePosts">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📜</div>
+                            <div>No lore posts yet</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Flights Page -->
             <div id="flightsContent" class="tab-content">
@@ -1052,7 +1230,7 @@
                         <button id="flightsPostBtn" class="hidden btn-success" onclick="showFlightForm()">+ New Flight</button>
                     </div>
                     
-                    <div id="flightsPostForm" class="hidden" style="margin-bottom: 40px; padding: 32px; background: rgba(2, 6, 23, 0.5); border-radius: 16px; border: 2px solid var(--border);">
+                    <div id="flightsPostForm" class="hidden scroll-animate-zoom" style="margin-bottom: 40px; padding: 32px; background: rgba(2, 6, 23, 0.5); border-radius: 16px; border: 2px solid var(--border);">
                         <h3>Publish Flight</h3>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                             <div class="form-group">
@@ -1096,69 +1274,6 @@
                         <div class="empty-state">
                             <div class="empty-state-icon">✈️</div>
                             <div>No flights available yet</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Other sections follow similar pattern with scroll-animate classes -->
-            <!-- News Page -->
-            <div id="newsContent" class="tab-content">
-                <div class="card scroll-animate">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
-                        <h2 style="margin: 0;">Latest News</h2>
-                        <button id="newsPostBtn" class="hidden btn-success" onclick="showPostForm('news')">+ New Post</button>
-                    </div>
-                    
-                    <div id="newsPostForm" class="hidden" style="margin-bottom: 40px; padding: 32px; background: rgba(2, 6, 23, 0.5); border-radius: 16px; border: 2px solid var(--border);">
-                        <h3>Create News Post</h3>
-                        <div class="form-group">
-                            <label>Title</label>
-                            <input type="text" id="newsTitle" placeholder="Post title">
-                        </div>
-                        <div class="form-group">
-                            <label>Content</label>
-                            <textarea id="newsContent" placeholder="Write your news article..."></textarea>
-                        </div>
-                        <button onclick="publishPost('news')" class="btn-success">Publish</button>
-                        <button onclick="hidePostForm('news')" class="btn-secondary">Cancel</button>
-                    </div>
-
-                    <div id="newsPosts">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">📰</div>
-                            <div>No news posts yet</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Lore Page -->
-            <div id="loreContent" class="tab-content">
-                <div class="card scroll-animate">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
-                        <h2 style="margin: 0;">World Lore</h2>
-                        <button id="lorePostBtn" class="hidden btn-success" onclick="showPostForm('lore')">+ New Post</button>
-                    </div>
-                    
-                    <div id="lorePostForm" class="hidden" style="margin-bottom: 40px; padding: 32px; background: rgba(2, 6, 23, 0.5); border-radius: 16px; border: 2px solid var(--border);">
-                        <h3>Create Lore Post</h3>
-                        <div class="form-group">
-                            <label>Title</label>
-                            <input type="text" id="loreTitle" placeholder="Post title">
-                        </div>
-                        <div class="form-group">
-                            <label>Content</label>
-                            <textarea id="loreContent" placeholder="Write your lore story..."></textarea>
-                        </div>
-                        <button onclick="publishPost('lore')" class="btn-success">Publish</button>
-                        <button onclick="hidePostForm('lore')" class="btn-secondary">Cancel</button>
-                    </div>
-
-                    <div id="lorePosts">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">📜</div>
-                            <div>No lore posts yet</div>
                         </div>
                     </div>
                 </div>
@@ -1221,7 +1336,7 @@
     </div>
 
     <script>
-        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzsnP4kY95FUrSa-ONluOp_Rn1aogehISrZKnXJhnr62XbhI9D-c8XvozLdH6hheQ0T/exec';
+        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxjv4Wb_GMInk_ygKHexQ54E4fIwnPAIh9C2XpJ7raCtdzTPQjHvmBg367zdkgIP5tg2Q/exec';
         const MASTER_ADMIN = 'sheepishlyroyal@gmail.com';
         
         let currentUser = null;
@@ -1244,10 +1359,10 @@
             document.documentElement.style.setProperty('--scroll-y', scrollY);
         });
 
-        // Scroll Animation Observer
+        // Dramatic Scroll Animation Observer
         const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
+            threshold: 0.05,
+            rootMargin: '0px 0px -50px 0px'
         };
 
         const observer = new IntersectionObserver((entries) => {
@@ -1259,7 +1374,7 @@
         }, observerOptions);
 
         function initScrollAnimations() {
-            document.querySelectorAll('.scroll-animate, .scroll-animate-slide-left, .scroll-animate-slide-right').forEach(el => {
+            document.querySelectorAll('.scroll-animate, .scroll-animate-slide-left, .scroll-animate-slide-right, .scroll-animate-zoom').forEach(el => {
                 observer.observe(el);
             });
         }
@@ -1323,6 +1438,7 @@
                 const text = t.textContent.toLowerCase();
                 if (text.includes('banking')) return 'dashboard';
                 if (text.includes('transfer')) return 'transfer';
+                if (text.includes('leaderboard')) return 'leaderboard';
                 if (text.includes('tickets')) return 'tickets';
                 if (text.includes('news')) return 'news';
                 if (text.includes('lore')) return 'lore';
@@ -1343,6 +1459,7 @@
             if (tab === 'admin') loadAdminPanel();
             else if (tab === 'chat') loadMessages();
             else if (tab === 'dashboard') loadDashboard();
+            else if (tab === 'leaderboard') loadLeaderboard();
             else if (tab === 'tickets') loadTickets();
             else if (tab === 'news') loadPosts('news');
             else if (tab === 'lore') loadPosts('lore');
@@ -1441,7 +1558,7 @@
                     from: data.userEmail,
                     to: 'FLIGHT_PURCHASE',
                     amount: data.amount,
-                    note: `Flight ticket: ${data.ticket.flightNumber}`,
+                    note: `Flight ticket: ${JSON.parse(data.ticket.flightData).flightNumber}`,
                     timestamp: new Date().toISOString()
                 });
                 localStorage.setItem('mockTransactions', JSON.stringify(mockTransactions));
@@ -1497,7 +1614,7 @@
                 email,
                 name,
                 username,
-                balance: 1000,
+                balance: 100000,
                 fingerprint: deviceFingerprint,
                 ip: simulatedIP,
                 created: new Date().toISOString(),
@@ -1506,7 +1623,7 @@
 
             await callSheetsAPI('register', newUser);
 
-            showAlert(errorDiv, '✨ Account created! Starting balance: $1,000.00', 'success');
+            showAlert(errorDiv, '✨ Account created! Starting balance: $100,000.00', 'success');
             setTimeout(() => {
                 switchAuthTab('login');
                 document.getElementById('loginEmail').value = email;
@@ -1575,6 +1692,7 @@
                 const tabText = activeTab.textContent.toLowerCase();
                 if (tabText.includes('chat')) loadMessages();
                 else if (tabText.includes('banking')) loadDashboard();
+                else if (tabText.includes('leaderboard')) loadLeaderboard();
                 else if (tabText.includes('tickets')) loadTickets();
                 else if (tabText.includes('news')) loadPosts('news');
                 else if (tabText.includes('lore')) loadPosts('lore');
@@ -1597,7 +1715,7 @@
             
             if (user) {
                 currentUser.balance = user.balance;
-                document.getElementById('balanceAmount').textContent = user.balance.toFixed(2);
+                document.getElementById('balanceAmount').textContent = user.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
 
             const txData = await getSheetsData('getTransactions', `&email=${currentUser.email}`);
@@ -1607,19 +1725,45 @@
             if (transactions.length === 0) {
                 txList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💰</div><div>No transactions yet</div></div>';
             } else {
-                txList.innerHTML = transactions.slice(-10).reverse().map(tx => {
+                txList.innerHTML = transactions.slice(-10).reverse().map((tx, index) => {
                     const isReceived = tx.to === currentUser.email;
                     const amount = parseFloat(tx.amount);
                     return `
-                        <div class="transaction-item scroll-animate">
+                        <div class="transaction-item scroll-animate scroll-animate-delay-${index % 3 + 1}">
                             <div>
                                 <div style="font-weight: 700; font-size: 16px; margin-bottom: 6px;">${isReceived ? '← From' : '→ To'} ${isReceived ? (tx.from === 'ADMIN' ? 'Admin' : tx.from) : tx.to}</div>
                                 <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 4px;">${tx.note || 'No note'}</div>
                                 <div style="font-size: 12px; color: var(--text-muted);">${new Date(tx.timestamp).toLocaleString()}</div>
                             </div>
                             <div style="font-weight: 800; font-size: 28px; color: ${isReceived ? 'var(--success)' : 'var(--danger)'};">
-                                ${isReceived ? '+' : '-'}$${amount.toFixed(2)}
+                                ${isReceived ? '+' : '-'}$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </div>
+                        </div>
+                    `;
+                }).join('');
+                initScrollAnimations();
+            }
+        }
+
+        async function loadLeaderboard() {
+            const data = await getSheetsData('getUsers');
+            const users = (data.users || []).sort((a, b) => b.balance - a.balance);
+            
+            const leaderboardList = document.getElementById('leaderboardList');
+            if (users.length === 0) {
+                leaderboardList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏆</div><div>No users yet</div></div>';
+            } else {
+                leaderboardList.innerHTML = users.map((user, index) => {
+                    const rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : '';
+                    const rankEmoji = index === 0 ? '👑' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
+                    return `
+                        <div class="leaderboard-item scroll-animate scroll-animate-delay-${index % 3 + 1}">
+                            <div class="leaderboard-rank ${rankClass}">${rankEmoji}</div>
+                            <div class="leaderboard-info">
+                                <div class="leaderboard-name">${user.name}</div>
+                                <div class="leaderboard-email">${user.email}</div>
+                            </div>
+                            <div class="leaderboard-balance">$${user.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                         </div>
                     `;
                 }).join('');
@@ -1671,7 +1815,7 @@
 
             await callSheetsAPI('transfer', transaction);
 
-            showAlert(successDiv, `✨ Successfully sent $${amount.toFixed(2)} to ${recipientUser.name}`, 'success');
+            showAlert(successDiv, `✨ Successfully sent $${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} to ${recipientUser.name}`, 'success');
 
             document.getElementById('recipientEmail').value = '';
             document.getElementById('transferAmount').value = '';
@@ -1688,10 +1832,10 @@
             if (tickets.length === 0) {
                 ticketsList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🎫</div><div>You haven\'t purchased any tickets yet</div></div>';
             } else {
-                ticketsList.innerHTML = tickets.map(ticket => {
+                ticketsList.innerHTML = tickets.map((ticket, index) => {
                     const flightData = JSON.parse(ticket.flightData);
                     return `
-                        <div class="ticket-card scroll-animate">
+                        <div class="ticket-card scroll-animate scroll-animate-delay-${index % 3 + 1}">
                             <div class="ticket-route">${flightData.departureCity} → ${flightData.arrivalCity}</div>
                             <div class="ticket-details">
                                 <div class="ticket-detail">
@@ -1708,7 +1852,7 @@
                                 </div>
                                 <div class="ticket-detail">
                                     <div class="ticket-label">Price Paid</div>
-                                    <div class="ticket-value">$${parseFloat(flightData.price).toFixed(2)}</div>
+                                    <div class="ticket-value">$${parseFloat(flightData.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                                 </div>
                                 <div class="ticket-detail">
                                     <div class="ticket-label">Purchased</div>
@@ -1731,10 +1875,10 @@
             if (flights.length === 0) {
                 flightsContainer.innerHTML = '<div class="empty-state"><div class="empty-state-icon">✈️</div><div>No flights available yet</div></div>';
             } else {
-                flightsContainer.innerHTML = flights.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).map(post => {
+                flightsContainer.innerHTML = flights.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).map((post, index) => {
                     const flightData = JSON.parse(post.content);
                     return `
-                        <div class="flight-card scroll-animate">
+                        <div class="flight-card scroll-animate-zoom scroll-animate-delay-${index % 3 + 1}">
                             <div class="flight-location">
                                 <div class="flight-city">${flightData.departureCity}</div>
                                 <div class="flight-airport">${flightData.departureCode || 'N/A'}</div>
@@ -1743,7 +1887,7 @@
                             <div class="flight-route">
                                 <div class="flight-icon">✈️</div>
                                 <div class="flight-number">${flightData.flightNumber}</div>
-                                <div class="flight-price">$${parseFloat(flightData.price || 0).toFixed(2)}</div>
+                                <div class="flight-price">$${parseFloat(flightData.price || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                                 <button class="btn-buy" onclick='buyTicket(${JSON.stringify(flightData).replace(/'/g, "&apos;")}, ${flightData.price})' style="margin-top: 16px;">Buy Ticket</button>
                             </div>
                             <div class="flight-location">
@@ -1766,7 +1910,7 @@
                 return;
             }
 
-            if (!confirm(`Purchase ticket for $${amount.toFixed(2)}?\n\nFlight: ${flightData.flightNumber}\n${flightData.departureCity} → ${flightData.arrivalCity}`)) {
+            if (!confirm(`Purchase ticket for $${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}?\n\nFlight: ${flightData.flightNumber}\n${flightData.departureCity} → ${flightData.arrivalCity}`)) {
                 return;
             }
 
@@ -1854,8 +1998,8 @@
 
         function hidePostForm(category) {
             document.getElementById(`${category}PostForm`).classList.add('hidden');
-            document.getElementById(`${category}Title`).value = '';
-            document.getElementById(`${category}Content`).value = '';
+            document.getElementById(`${category}TitleInput`).value = '';
+            document.getElementById(`${category}ContentInput`).value = '';
         }
 
         function showFlightForm() {
@@ -1874,8 +2018,10 @@
         }
 
         async function publishPost(category) {
-            const title = document.getElementById(`${category}Title`).value.trim();
-            const content = document.getElementById(`${category}Content`).value.trim();
+            const title = document.getElementById(`${category}TitleInput`).value.trim();
+            const content = document.getElementById(`${category}ContentInput`).value.trim();
+            
+            console.log('Publishing post:', { category, title, content });
             
             if (!title || !content) {
                 alert('Please fill in both title and content');
@@ -1939,10 +2085,10 @@
                 const emojis = { news: '📰', lore: '📜' };
                 postsContainer.innerHTML = `<div class="empty-state"><div class="empty-state-icon">${emojis[category]}</div><div>No ${category} posts yet</div></div>`;
             } else {
-                postsContainer.innerHTML = posts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).map(post => {
+                postsContainer.innerHTML = posts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).map((post, index) => {
                     const initials = post.author.substring(0, 2).toUpperCase();
                     return `
-                        <div class="post scroll-animate">
+                        <div class="post scroll-animate-slide-left scroll-animate-delay-${index % 3 + 1}">
                             <div class="post-header">
                                 <div class="post-author">
                                     <div class="post-avatar">${initials}</div>
@@ -1971,7 +2117,7 @@
             userList.innerHTML = users.map((user, index) => {
                 const permissions = user.permissions || { news: false, lore: false, flights: false, banking: false };
                 return `
-                    <div class="scroll-animate" style="padding: 32px; background: rgba(2, 6, 23, 0.5); border: 2px solid var(--border); border-radius: 20px; margin-bottom: 24px;">
+                    <div class="scroll-animate-zoom scroll-animate-delay-${index % 3 + 1}" style="padding: 32px; background: rgba(2, 6, 23, 0.5); border: 2px solid var(--border); border-radius: 20px; margin-bottom: 24px;">
                         <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 24px;">
                             <div>
                                 <div style="font-weight: 800; font-size: 18px; margin-bottom: 6px;">${user.name}</div>
@@ -1981,7 +2127,7 @@
                                     Joined: ${new Date(user.created).toLocaleDateString()}
                                 </div>
                             </div>
-                            <div style="font-weight: 900; font-size: 32px; color: var(--gold);">$${user.balance.toFixed(2)}</div>
+                            <div style="font-weight: 900; font-size: 32px; color: var(--gold);">$${user.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                         </div>
                         
                         <div style="margin-bottom: 24px; padding: 24px; background: rgba(2, 6, 23, 0.4); border-radius: 16px; border: 1px solid var(--border);">
@@ -2053,7 +2199,7 @@
                 timestamp: new Date().toISOString()
             });
 
-            alert(`✨ Added $${amount.toFixed(2)} to ${user.name}`);
+            alert(`✨ Added $${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} to ${user.name}`);
             loadAdminPanel();
         }
 
@@ -2071,7 +2217,7 @@
 
             await callSheetsAPI('updateBalance', { email: email, balance: user.balance });
 
-            alert(`Removed $${amount.toFixed(2)} from ${user.name}`);
+            alert(`Removed $${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} from ${user.name}`);
             loadAdminPanel();
         }
 
