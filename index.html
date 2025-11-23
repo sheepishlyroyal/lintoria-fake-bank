@@ -1086,12 +1086,15 @@
                 <button class="tab" onclick="switchTab('transfer')">💸 Transfer</button>
                 <button class="tab" onclick="switchTab('stocks')">📈 Stocks</button>
                 <button class="tab" onclick="switchTab('portfolio')">💼 Portfolio</button>
+                <button class="tab" onclick="switchTab('marketplace')">🛒 Market</button>
+                <button class="tab" onclick="switchTab('items')">💎 Items</button>
                 <button class="tab" onclick="switchTab('leaderboard')">🏆 Leaderboard</button>
                 <button class="tab" onclick="switchTab('tickets')">🎫 My Tickets</button>
                 <button class="tab" onclick="switchTab('news')">📰 News</button>
                 <button class="tab" onclick="switchTab('lore')">📜 Lore</button>
                 <button class="tab" onclick="switchTab('flights')">✈️ Flights</button>
                 <button class="tab" onclick="switchTab('chat')">💬 Chat</button>
+                <button class="tab" onclick="switchTab('casino')">🎰 Casino</button>
                 <button class="tab" onclick="switchTab('updates')">🔔 Updates</button>
                 <button class="tab hidden" id="adminTab" onclick="switchTab('admin')">👑 Control</button>
             </div>
@@ -1329,6 +1332,86 @@
                 </div>
             </div>
 
+            <!-- Marketplace -->
+            <div id="marketplaceContent" class="tab-content">
+                <div class="card scroll-animate">
+                    <h2>🛒 Digital Marketplace</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 32px;">Buy unique digital items created by admins. Limited stock available!</p>
+                    <div id="marketplaceItems"></div>
+                </div>
+            </div>
+
+            <!-- User Inventory -->
+            <div id="itemsContent" class="tab-content">
+                <div class="card scroll-animate">
+                    <h2>💎 Your Inventory</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 32px;">Items you own. You can resell them on the marketplace!</p>
+                    <div id="userInventory"></div>
+                </div>
+            </div>
+
+            <!-- Casino -->
+            <div id="casinoContent" class="tab-content">
+                <div class="card scroll-animate">
+                    <h2>🎰 Lintoria Casino</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 32px;">Try your luck! Play roulette or blackjack.</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 32px; margin-top: 40px;">
+                        <!-- Roulette -->
+                        <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.1) 100%); border: 2px solid rgba(239, 68, 68, 0.3); border-radius: 20px; padding: 32px;">
+                            <div style="font-size: 28px; font-weight: 900; margin-bottom: 20px;">🎡 Roulette</div>
+                            <div style="color: var(--text-secondary); margin-bottom: 24px;">Bet on Red, Black, or Green (0). Red/Black pays 2x, Green pays 14x!</div>
+                            
+                            <div style="margin-bottom: 20px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Bet Amount ($)</label>
+                                <input type="number" id="rouletteBet" placeholder="Enter amount" min="1" style="width: 100%;">
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+                                <button onclick="spinRoulette('red')" style="background: linear-gradient(135deg, #ef4444, #dc2626); border: none;">🔴 Red</button>
+                                <button onclick="spinRoulette('black')" style="background: linear-gradient(135deg, #1f2937, #111827); border: none;">⚫ Black</button>
+                                <button onclick="spinRoulette('green')" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">🟢 Green</button>
+                            </div>
+                            
+                            <div id="rouletteResult" style="min-height: 60px; padding: 16px; background: rgba(2, 6, 23, 0.5); border-radius: 12px; text-align: center; font-weight: 700;"></div>
+                        </div>
+
+                        <!-- Blackjack -->
+                        <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.1) 100%); border: 2px solid rgba(59, 130, 246, 0.3); border-radius: 20px; padding: 32px;">
+                            <div style="font-size: 28px; font-weight: 900; margin-bottom: 20px;">🃏 Blackjack</div>
+                            <div style="color: var(--text-secondary); margin-bottom: 24px;">Get 21 or closer than dealer. Blackjack pays 2.5x!</div>
+                            
+                            <div id="blackjackGame" style="display: none;">
+                                <div style="margin-bottom: 20px;">
+                                    <div style="font-weight: 700; margin-bottom: 8px;">Dealer's Hand: <span id="dealerScore"></span></div>
+                                    <div id="dealerCards" style="min-height: 40px; padding: 12px; background: rgba(2, 6, 23, 0.5); border-radius: 8px; font-size: 24px;"></div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <div style="font-weight: 700; margin-bottom: 8px;">Your Hand: <span id="playerScore"></span></div>
+                                    <div id="playerCards" style="min-height: 40px; padding: 12px; background: rgba(2, 6, 23, 0.5); border-radius: 8px; font-size: 24px;"></div>
+                                </div>
+                                
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                                    <button id="hitBtn" onclick="blackjackHit()">👊 Hit</button>
+                                    <button id="standBtn" onclick="blackjackStand()">✋ Stand</button>
+                                </div>
+                            </div>
+                            
+                            <div id="blackjackStart">
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">Bet Amount ($)</label>
+                                    <input type="number" id="blackjackBet" placeholder="Enter amount" min="1" style="width: 100%;">
+                                </div>
+                                <button onclick="startBlackjack()" style="width: 100%;">🎲 Start Game</button>
+                            </div>
+                            
+                            <div id="blackjackResult" style="min-height: 40px; padding: 16px; background: rgba(2, 6, 23, 0.5); border-radius: 12px; text-align: center; font-weight: 700; margin-top: 16px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Admin Panel -->
             <div id="adminContent" class="tab-content">
                 <div class="card scroll-animate">
@@ -1494,12 +1577,15 @@
                 if (text.includes('transfer')) return 'transfer';
                 if (text.includes('stocks')) return 'stocks';
                 if (text.includes('portfolio')) return 'portfolio';
+                if (text.includes('market')) return 'marketplace';
+                if (text.includes('items')) return 'items';
                 if (text.includes('leaderboard')) return 'leaderboard';
                 if (text.includes('tickets')) return 'tickets';
                 if (text.includes('news')) return 'news';
                 if (text.includes('lore')) return 'lore';
                 if (text.includes('flights')) return 'flights';
                 if (text.includes('chat')) return 'chat';
+                if (text.includes('casino')) return 'casino';
                 if (text.includes('updates')) return 'updates';
                 if (text.includes('control')) return 'admin';
                 return '';
@@ -1524,6 +1610,9 @@
             else if (tab === 'stocks') loadStocks();
             else if (tab === 'portfolio') loadPortfolio();
             else if (tab === 'updates') loadUpdates();
+            else if (tab === 'marketplace') loadMarketplace();
+            else if (tab === 'items') loadInventory();
+            else if (tab === 'casino') initCasino();
         }
 
         async function callSheetsAPI(action, data) {
@@ -2272,111 +2361,592 @@
         }
 
         // === STOCK MARKET FUNCTIONS (V2.0) ===
-        async function loadStocks() {
-            const data = await getSheetsData('getStocks');
-            const stocks = data.stocks || [];
-            allStocks = stocks;
-            const container = document.getElementById('stocksList');
-            if (!container) return;
-            if (stocks.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📈</div><div>No companies listed yet</div></div>';
-            } else {
-                container.innerHTML = stocks.map((stock, i) => {
-                    const changePercent = ((stock.currentPrice - stock.startingPrice) / stock.startingPrice * 100).toFixed(2);
-                    const isPositive = changePercent >= 0;
-                    return `<div class="card scroll-animate scroll-animate-delay-${i%3+1}" style="margin-bottom:24px"><div style="display:flex;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:20px"><div><div style="font-size:24px;font-weight:900;color:var(--text-primary)">${escapeHtml(stock.symbol)}</div><div style="color:var(--text-muted);font-size:14px">${escapeHtml(stock.companyName)}</div></div><div style="text-align:right"><div style="font-size:36px;font-weight:900;color:${isPositive?'var(--success)':'var(--danger)'}">$${parseFloat(stock.currentPrice).toLocaleString('en-US',{minimumFractionDigits:2})}</div><div style="font-size:16px;font-weight:700;color:${isPositive?'var(--success)':'var(--danger)'}">$ {isPositive?'+':''}${changePercent}%</div></div></div><div style="color:var(--text-secondary);margin:16px 0">${escapeHtml(stock.description)}</div><div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid var(--border)"><span style="color:var(--text-muted)">Available: ${stock.availableShares.toLocaleString()} shares</span><button onclick='buyStockPrompt(${JSON.stringify(stock).replace(/'/g,"&apos;")})'>Buy Shares</button></div></div>`;
-                }).join('');
-                initScrollAnimations();
-            }
-        }
 
-        function buyStockPrompt(stock) {
-            const shares = prompt(`How many shares of ${stock.symbol} do you want to buy?\n\nPrice per share: $${parseFloat(stock.currentPrice).toLocaleString('en-US',{minimumFractionDigits:2})}\nAvailable: ${stock.availableShares.toLocaleString()}`);
-            if (!shares) return;
-            const numShares = parseInt(shares);
-            if (isNaN(numShares) || numShares <= 0) { alert('Invalid number of shares'); return; }
-            if (numShares > stock.availableShares) { alert('Not enough shares available'); return; }
-            const totalCost = numShares * parseFloat(stock.currentPrice);
-            if (totalCost > currentUser.balance) { alert('Insufficient balance'); return; }
-            if (confirm(`Buy ${numShares} shares for $${totalCost.toLocaleString('en-US',{minimumFractionDigits:2})}?`)) {
-                buyStock(stock, numShares);
-            }
-        }
+// === ENHANCED STOCK MARKET (REALISTIC & ANTI-MANIPULATION) ===
+let marketDepth = {}; // Track buy/sell pressure
 
-        async function buyStock(stock, shares) {
-            const totalCost = shares * parseFloat(stock.currentPrice);
-            const newPrice = stock.currentPrice * (1 + (0.02 + Math.random() * 0.03));
-            await callSheetsAPI('buyStock', {
-                userEmail: currentUser.email, symbol: stock.symbol, companyName: stock.companyName,
-                shares: shares, price: stock.currentPrice, newPrice: newPrice, totalCost: totalCost
+async function loadStocks() {
+    const data = await getSheetsData('getStocks');
+    const stocks = data.stocks || [];
+    allStocks = stocks;
+    
+    const container = document.getElementById('stocksList');
+    if (!container) return;
+    
+    // Admin create button
+    const canCreate = currentUser.email === MASTER_ADMIN || (currentUser.permissions && currentUser.permissions.stocks);
+    let adminHTML = '';
+    if (canCreate) {
+        adminHTML = `
+            <div class="card" style="background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(37,99,235,0.1));border:2px solid rgba(59,130,246,0.4);margin-bottom:24px">
+                <h3 style="margin-bottom:16px">📈 Create Company (Admin Only)</h3>
+                <div style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+                    <input type="text" id="stockSymbol" placeholder="Symbol (e.g. TECH)" style="text-transform:uppercase">
+                    <input type="text" id="stockName" placeholder="Company Name">
+                </div>
+                <textarea id="stockDesc" placeholder="Company description..." style="margin-top:16px;min-height:80px"></textarea>
+                <div style="display:grid;gap:16px;grid-template-columns:1fr 1fr;margin-top:16px">
+                    <input type="number" id="stockPrice" placeholder="Starting Price" min="0.01" step="0.01">
+                    <input type="number" id="stockShares" placeholder="Total Shares" min="100" step="100">
+                </div>
+                <button onclick="createStockCompany()" style="width:100%;margin-top:16px">Create Company</button>
+            </div>
+        `;
+    }
+    
+    if (stocks.length === 0) {
+        container.innerHTML = adminHTML + '<div class="empty-state"><div class="empty-state-icon">📈</div><div>No companies listed yet</div></div>';
+    } else {
+        container.innerHTML = adminHTML + stocks.map((stock, i) => {
+            const changePercent = ((stock.currentPrice - stock.startingPrice) / stock.startingPrice * 100).toFixed(2);
+            const isPositive = changePercent >= 0;
+            const maxBuy = Math.min(stock.availableShares, Math.floor(stock.availableShares * 0.1)); // Max 10% of available
+            
+            return `
+                <div class="card scroll-animate scroll-animate-delay-${i%3+1}" style="margin-bottom:24px">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:20px">
+                        <div>
+                            <div style="font-size:24px;font-weight:900;color:var(--text-primary)">${escapeHtml(stock.symbol)}</div>
+                            <div style="color:var(--text-muted);font-size:14px">${escapeHtml(stock.companyName)}</div>
+                        </div>
+                        <div style="text-align:right">
+                            <div style="font-size:36px;font-weight:900;color:${isPositive?'var(--success)':'var(--danger)'}">$${parseFloat(stock.currentPrice).toLocaleString('en-US',{minimumFractionDigits:2})}</div>
+                            <div style="font-size:16px;font-weight:700;color:${isPositive?'var(--success)':'var(--danger)'}">
+                                ${isPositive?'+':''}${changePercent}%
+                            </div>
+                        </div>
+                    </div>
+                    <div style="color:var(--text-secondary);margin:16px 0">${escapeHtml(stock.description)}</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:16px;border-top:1px solid var(--border)">
+                        <div style="color:var(--text-muted)">Available: ${stock.availableShares.toLocaleString()} / ${stock.totalShares.toLocaleString()}</div>
+                        <div style="text-align:right;color:var(--text-muted)">Max Buy: ${maxBuy.toLocaleString()}</div>
+                    </div>
+                    <button onclick='buyStockPrompt(${JSON.stringify(stock).replace(/'/g,"&apos;")},${maxBuy})' style="width:100%;margin-top:16px">Buy Shares (Max ${maxBuy})</button>
+                </div>
+            `;
+        }).join('');
+        initScrollAnimations();
+    }
+}
+
+async function createStockCompany() {
+    const symbol = document.getElementById('stockSymbol').value.trim().toUpperCase();
+    const name = document.getElementById('stockName').value.trim();
+    const desc = document.getElementById('stockDesc').value.trim();
+    const price = parseFloat(document.getElementById('stockPrice').value);
+    const shares = parseInt(document.getElementById('stockShares').value);
+    
+    if (!symbol || !name || !desc || !price || !shares) {
+        alert('Please fill in all fields');
+        return;
+    }
+    
+    if (symbol.length < 2 || symbol.length > 5) {
+        alert('Symbol must be 2-5 characters');
+        return;
+    }
+    
+    if (price < 0.01) {
+        alert('Price must be at least $0.01');
+        return;
+    }
+    
+    if (shares < 100) {
+        alert('Minimum 100 shares required');
+        return;
+    }
+    
+    await callSheetsAPI('createStock', {
+        symbol, companyName: name, description: desc,
+        startingPrice: price, totalShares: shares, creatorEmail: currentUser.email
+    });
+    
+    alert(`✨ Company ${symbol} created successfully!`);
+    document.getElementById('stockSymbol').value = '';
+    document.getElementById('stockName').value = '';
+    document.getElementById('stockDesc').value = '';
+    document.getElementById('stockPrice').value = '';
+    document.getElementById('stockShares').value = '';
+    loadStocks();
+}
+
+function buyStockPrompt(stock, maxBuy) {
+    const shares = prompt(`Buy ${stock.symbol} shares\n\nCurrent Price: $${parseFloat(stock.currentPrice).toFixed(2)}\nAvailable: ${stock.availableShares.toLocaleString()}\nMax You Can Buy: ${maxBuy}\n\nEnter number of shares:`);
+    if (!shares) return;
+    
+    const numShares = parseInt(shares);
+    if (isNaN(numShares) || numShares <= 0) {
+        alert('Invalid number');
+        return;
+    }
+    if (numShares > maxBuy) {
+        alert(`Maximum ${maxBuy} shares allowed (10% of available supply)`);
+        return;
+    }
+    if (numShares > stock.availableShares) {
+        alert('Not enough shares available');
+        return;
+    }
+    
+    const totalCost = numShares * parseFloat(stock.currentPrice);
+    if (totalCost > currentUser.balance) {
+        alert('Insufficient balance');
+        return;
+    }
+    
+    // Calculate realistic price impact based on order size
+    const impactPercent = (numShares / stock.availableShares) * 100; // % of supply
+    const priceIncrease = 0.01 + (impactPercent * 0.5); // 1% base + 0.5% per % of supply
+    const newPrice = stock.currentPrice * (1 + (priceIncrease / 100));
+    
+    if (confirm(`Buy ${numShares} shares for $${totalCost.toLocaleString('en-US',{minimumFractionDigits:2})}?\n\nNew price will be: $${newPrice.toFixed(2)} (+${priceIncrease.toFixed(2)}%)`)) {
+        buyStock(stock, numShares, newPrice);
+    }
+}
+
+async function buyStock(stock, shares, newPrice) {
+    const totalCost = shares * parseFloat(stock.currentPrice);
+    
+    await callSheetsAPI('buyStock', {
+        userEmail: currentUser.email, symbol: stock.symbol, companyName: stock.companyName,
+        shares: shares, price: stock.currentPrice, newPrice: newPrice, totalCost: totalCost
+    });
+    
+    alert(`✨ Bought ${shares} shares of ${stock.symbol}!`);
+    setTimeout(() => { loadDashboard(); loadStocks(); loadPortfolio(); }, 1000);
+}
+
+function sellStockPrompt(holding, currentPrice) {
+    const maxSell = holding.shares;
+    const shares = prompt(`Sell ${holding.symbol} shares\n\nYou Own: ${holding.shares}\nCurrent Price: $${parseFloat(currentPrice).toFixed(2)}\nYour Avg Cost: $${parseFloat(holding.avgPrice).toFixed(2)}\n\nEnter shares to sell:`);
+    if (!shares) return;
+    
+    const numShares = parseInt(shares);
+    if (isNaN(numShares) || numShares <= 0) {
+        alert('Invalid number');
+        return;
+    }
+    if (numShares > maxSell) {
+        alert(`You only own ${maxSell} shares`);
+        return;
+    }
+    
+    // Find stock to calculate impact
+    const stock = allStocks.find(s => s.symbol === holding.symbol);
+    if (!stock) return;
+    
+    const impactPercent = (numShares / stock.totalShares) * 100;
+    const priceDecrease = 0.01 + (impactPercent * 0.5);
+    const newPrice = currentPrice * (1 - (priceDecrease / 100));
+    
+    const totalReceived = numShares * parseFloat(currentPrice);
+    const profit = totalReceived - (numShares * holding.avgPrice);
+    
+    if (confirm(`Sell ${numShares} shares for $${totalReceived.toLocaleString('en-US',{minimumFractionDigits:2})}?\n\nProfit/Loss: ${profit >= 0 ? '+' : ''}$${profit.toFixed(2)}\nNew price: $${newPrice.toFixed(2)} (-${priceDecrease.toFixed(2)}%)`)) {
+        sellStock(holding, numShares, currentPrice, newPrice);
+    }
+}
+
+async function sellStock(holding, shares, currentPrice, newPrice) {
+    const totalReceived = shares * parseFloat(currentPrice);
+    
+    await callSheetsAPI('sellStock', {
+        userEmail: currentUser.email, symbol: holding.symbol, companyName: holding.companyName,
+        shares: shares, price: currentPrice, newPrice: newPrice, totalReceived: totalReceived
+    });
+    
+    alert(`✨ Sold ${shares} shares of ${holding.symbol}!`);
+    setTimeout(() => { loadDashboard(); loadStocks(); loadPortfolio(); }, 1000);
+}
+
+// === MARKETPLACE (ADMIN-ONLY CREATION WITH STOCK LIMITS) ===
+async function loadMarketplace() {
+    const data = await getSheetsData('getItems');
+    const items = data.items || [];
+    
+    const container = document.getElementById('marketplaceItems');
+    if (!container) return;
+    
+    // Admin create button
+    const canCreate = currentUser.email === MASTER_ADMIN || (currentUser.permissions && currentUser.permissions.marketplace);
+    let adminHTML = '';
+    if (canCreate) {
+        adminHTML = `
+            <div class="card" style="background:linear-gradient(135deg,rgba(168,85,247,0.2),rgba(147,51,234,0.1));border:2px solid rgba(168,85,247,0.4);margin-bottom:24px">
+                <h3 style="margin-bottom:16px">🛒 Create Item (Admin Only)</h3>
+                <input type="text" id="itemName" placeholder="Item Name" style="margin-bottom:12px">
+                <textarea id="itemDesc" placeholder="Item description..." style="margin-bottom:12px;min-height:80px"></textarea>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+                    <input type="number" id="itemPrice" placeholder="Price ($)" min="1" step="1">
+                    <input type="number" id="itemStock" placeholder="Stock (Max 5000)" min="1" max="5000" step="1">
+                </div>
+                <button onclick="createMarketplaceItem()" style="width:100%">Create Item</button>
+            </div>
+        `;
+    }
+    
+    if (items.length === 0) {
+        container.innerHTML = adminHTML + '<div class="empty-state"><div class="empty-state-icon">🛒</div><div>No items for sale</div></div>';
+    } else {
+        container.innerHTML = adminHTML + items.map((item, i) => `
+            <div class="card scroll-animate scroll-animate-delay-${i%3+1}" style="margin-bottom:24px;background:linear-gradient(135deg,rgba(168,85,247,0.15),rgba(147,51,234,0.1));border-color:rgba(168,85,247,0.3)">
+                <div style="display:flex;justify-content:space-between;margin-bottom:16px">
+                    <div>
+                        <div style="font-size:20px;font-weight:800">${escapeHtml(item.name)}</div>
+                        <div style="color:var(--text-muted);font-size:12px">By: ${escapeHtml(item.sellerEmail)}</div>
+                    </div>
+                    <div style="text-align:right">
+                        <div style="font-size:28px;font-weight:900;color:var(--purple)">$${parseFloat(item.currentPrice).toLocaleString('en-US',{minimumFractionDigits:2})}</div>
+                        ${item.stock ? `<div style="color:var(--text-muted);font-size:12px">${item.stock} in stock</div>` : ''}
+                    </div>
+                </div>
+                <div style="color:var(--text-secondary);margin-bottom:16px">${escapeHtml(item.description)}</div>
+                <button onclick='purchaseMarketItem(${JSON.stringify(item).replace(/'/g,"&apos;")})' ${!item.stock || item.stock <= 0 ? 'disabled' : ''}>
+                    ${!item.stock || item.stock <= 0 ? 'Out of Stock' : 'Purchase'}
+                </button>
+            </div>
+        `).join('');
+        initScrollAnimations();
+    }
+}
+
+async function createMarketplaceItem() {
+    const name = document.getElementById('itemName').value.trim();
+    const desc = document.getElementById('itemDesc').value.trim();
+    const price = parseFloat(document.getElementById('itemPrice').value);
+    const stock = parseInt(document.getElementById('itemStock').value);
+    
+    if (!name || !desc || !price || !stock) {
+        alert('Please fill all fields');
+        return;
+    }
+    
+    if (stock > 5000) {
+        alert('Maximum stock is 5000 per item');
+        return;
+    }
+    
+    if (price < 1) {
+        alert('Minimum price is $1');
+        return;
+    }
+    
+    await callSheetsAPI('createItem', {
+        name, description: desc, price, stock, creatorEmail: currentUser.email
+    });
+    
+    alert(`✨ Item "${name}" created with ${stock} in stock!`);
+    document.getElementById('itemName').value = '';
+    document.getElementById('itemDesc').value = '';
+    document.getElementById('itemPrice').value = '';
+    document.getElementById('itemStock').value = '';
+    loadMarketplace();
+}
+
+async function purchaseMarketItem(item) {
+    if (!item.stock || item.stock <= 0) {
+        alert('Item out of stock');
+        return;
+    }
+    
+    const price = parseFloat(item.currentPrice);
+    if (price > currentUser.balance) {
+        alert('Insufficient balance');
+        return;
+    }
+    
+    if (confirm(`Purchase "${item.name}" for $${price.toLocaleString('en-US',{minimumFractionDigits:2})}?`)) {
+        await callSheetsAPI('purchaseItem', {
+            buyerEmail: currentUser.email, sellerEmail: item.sellerEmail,
+            itemId: item.itemId, itemName: item.name, price: price
+        });
+        
+        alert(`✨ Purchased "${item.name}"!`);
+        setTimeout(() => { loadDashboard(); loadMarketplace(); loadInventory(); }, 1000);
+    }
+}
+
+async function loadInventory() {
+    const data = await getSheetsData('getInventory', `&email=${currentUser.email}`);
+    const inventory = data.inventory || [];
+    
+    const container = document.getElementById('userInventory');
+    if (!container) return;
+    
+    if (inventory.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💎</div><div>You don\'t own any items yet</div></div>';
+    } else {
+        container.innerHTML = inventory.map((item, i) => `
+            <div class="card scroll-animate scroll-animate-delay-${i%3+1}" style="margin-bottom:24px">
+                <div style="display:flex;justify-content:space-between;margin-bottom:16px">
+                    <div>
+                        <div style="font-size:20px;font-weight:800">${escapeHtml(item.itemName)}</div>
+                        <div style="color:var(--text-muted);font-size:12px">Purchased: ${new Date(item.purchaseDate).toLocaleDateString()}</div>
+                    </div>
+                    <div style="text-align:right">
+                        <div style="font-size:20px;font-weight:700">Paid: $${parseFloat(item.purchasePrice).toFixed(2)}</div>
+                    </div>
+                </div>
+                <button onclick='resellItemPrompt(${JSON.stringify(item).replace(/'/g,"&apos;")})'>Resell Item</button>
+            </div>
+        `).join('');
+        initScrollAnimations();
+    }
+}
+
+function resellItemPrompt(item) {
+    const newPrice = prompt(`Resell "${item.itemName}"\n\nYou paid: $${parseFloat(item.purchasePrice).toFixed(2)}\n\nEnter resale price ($):`);
+    if (!newPrice) return;
+    
+    const price = parseFloat(newPrice);
+    if (isNaN(price) || price < 1) {
+        alert('Invalid price (minimum $1)');
+        return;
+    }
+    
+    if (confirm(`List "${item.itemName}" for $${price.toFixed(2)}?`)) {
+        resellItem(item, price);
+    }
+}
+
+async function resellItem(item, newPrice) {
+    await callSheetsAPI('resellItem', {
+        userEmail: currentUser.email, itemId: item.itemId, itemName: item.itemName,
+        originalPrice: item.purchasePrice, newPrice: newPrice,
+        description: `Resold by ${currentUser.name}`, originalCreator: item.itemName
+    });
+    
+    alert(`✨ "${item.itemName}" listed for $${newPrice.toFixed(2)}!`);
+    setTimeout(() => { loadMarketplace(); loadInventory(); }, 1000);
+}
+
+// === CASINO: ROULETTE ===
+function initCasino() {
+    document.getElementById('rouletteResult').textContent = 'Place your bet and spin!';
+    document.getElementById('blackjackResult').textContent = '';
+}
+
+async function spinRoulette(color) {
+    const bet = parseFloat(document.getElementById('rouletteBet').value);
+    const resultDiv = document.getElementById('rouletteResult');
+    
+    if (!bet || bet <= 0) {
+        resultDiv.textContent = '❌ Enter a valid bet amount!';
+        return;
+    }
+    
+    if (bet > currentUser.balance) {
+        resultDiv.textContent = '❌ Insufficient balance!';
+        return;
+    }
+    
+    resultDiv.textContent = '🎡 Spinning...';
+    
+    // Roulette simulation: 18 red, 18 black, 1 green (0)
+    const rand = Math.random();
+    let result;
+    if (rand < 18/37) result = 'red';
+    else if (rand < 36/37) result = 'black';
+    else result = 'green';
+    
+    setTimeout(async () => {
+        const icons = {red: '🔴', black: '⚫', green: '🟢'};
+        const win = result === color;
+        let winAmount = 0;
+        
+        if (win) {
+            if (color === 'green') winAmount = bet * 14; // Green pays 14x
+            else winAmount = bet * 2; // Red/Black pays 2x
+            
+            await callSheetsAPI('casinoWin', {
+                userEmail: currentUser.email, game: 'roulette',
+                betAmount: bet, winAmount: winAmount
             });
-            alert(`✨ Successfully bought ${shares} shares of ${stock.symbol}!`);
-            setTimeout(() => { loadDashboard(); loadStocks(); loadPortfolio(); }, 1000);
-        }
-
-        async function loadPortfolio() {
-            const data = await getSheetsData('getPortfolio', `&email=${currentUser.email}`);
-            const holdings = data.holdings || [];
-            const stockData = await getSheetsData('getStocks');
-            const stocks = stockData.stocks || [];
-            const container = document.getElementById('portfolioItems');
-            if (!container) return;
-            if (holdings.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💼</div><div>You don\'t own any stocks yet</div></div>';
-            } else {
-                container.innerHTML = holdings.map((holding, i) => {
-                    const stock = stocks.find(s => s.symbol === holding.symbol);
-                    if (!stock) return '';
-                    const currentValue = holding.shares * stock.currentPrice;
-                    const costBasis = holding.shares * holding.avgPrice;
-                    const gain = currentValue - costBasis;
-                    const gainPercent = (gain / costBasis * 100).toFixed(2);
-                    const isGain = gain >= 0;
-                    return `<div class="card scroll-animate scroll-animate-delay-${i%3+1}" style="margin-bottom:24px;background:linear-gradient(135deg,${isGain?'rgba(16,185,129,0.15)':'rgba(239,68,68,0.15)'} 0%,${isGain?'rgba(5,150,105,0.1)':'rgba(220,38,38,0.1)'} 100%);border-color:${isGain?'rgba(16,185,129,0.3)':'rgba(239,68,68,0.3)'}"><div style="display:flex;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:16px"><div><div style="font-size:22px;font-weight:800">${holding.symbol}</div><div style="color:var(--text-secondary)">${holding.companyName}</div></div><button class="btn-danger" onclick='sellStockPrompt(${JSON.stringify(holding).replace(/'/g,"&apos;")},${stock.currentPrice})'>Sell</button></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px"><div style="padding:16px;background:rgba(2,6,23,0.5);border-radius:12px"><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px">Shares</div><div style="font-size:20px;font-weight:800">${holding.shares}</div></div><div style="padding:16px;background:rgba(2,6,23,0.5);border-radius:12px"><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px">Avg Price</div><div style="font-size:20px;font-weight:800">$${parseFloat(holding.avgPrice).toLocaleString('en-US',{minimumFractionDigits:2})}</div></div><div style="padding:16px;background:rgba(2,6,23,0.5);border-radius:12px"><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px">Current</div><div style="font-size:20px;font-weight:800">$${parseFloat(stock.currentPrice).toLocaleString('en-US',{minimumFractionDigits:2})}</div></div><div style="padding:16px;background:rgba(2,6,23,0.5);border-radius:12px"><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px">Value</div><div style="font-size:20px;font-weight:800">$${currentValue.toLocaleString('en-US',{minimumFractionDigits:2})}</div></div><div style="padding:16px;background:rgba(2,6,23,0.5);border-radius:12px"><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px">Gain/Loss</div><div style="font-size:20px;font-weight:800;color:${isGain?'var(--success)':'var(--danger)'}">${isGain?'+':''}$${Math.abs(gain).toLocaleString('en-US',{minimumFractionDigits:2})} (${isGain?'+':''}${gainPercent}%)</div></div></div></div>`;
-                }).join('');
-                initScrollAnimations();
-            }
-        }
-
-        function sellStockPrompt(holding, currentPrice) {
-            const shares = prompt(`How many shares of ${holding.symbol} do you want to sell?\n\nYou own: ${holding.shares} shares\nCurrent price: $${parseFloat(currentPrice).toLocaleString('en-US',{minimumFractionDigits:2})}/share`);
-            if (!shares) return;
-            const numShares = parseInt(shares);
-            if (isNaN(numShares) || numShares <= 0) { alert('Invalid number of shares'); return; }
-            if (numShares > holding.shares) { alert("You don't own that many shares"); return; }
-            const totalReceived = numShares * parseFloat(currentPrice);
-            if (confirm(`Sell ${numShares} shares for $${totalReceived.toLocaleString('en-US',{minimumFractionDigits:2})}?`)) {
-                sellStock(holding, numShares, currentPrice);
-            }
-        }
-
-        async function sellStock(holding, shares, currentPrice) {
-            const totalReceived = shares * parseFloat(currentPrice);
-            const newPrice = currentPrice * (1 - (0.02 + Math.random() * 0.03));
-            await callSheetsAPI('sellStock', {
-                userEmail: currentUser.email, symbol: holding.symbol, companyName: holding.companyName,
-                shares: shares, price: currentPrice, newPrice: newPrice, totalReceived: totalReceived
+            
+            resultDiv.innerHTML = `${icons[result]} Landed on ${result.toUpperCase()}!<br>🎉 YOU WIN $${winAmount.toFixed(2)}!`;
+            resultDiv.style.color = 'var(--success)';
+        } else {
+            await callSheetsAPI('casinoLose', {
+                userEmail: currentUser.email, game: 'roulette', betAmount: bet
             });
-            alert(`✨ Successfully sold ${shares} shares of ${holding.symbol}!`);
-            setTimeout(() => { loadDashboard(); loadStocks(); loadPortfolio(); }, 1000);
+            
+            resultDiv.innerHTML = `${icons[result]} Landed on ${result.toUpperCase()}!<br>😢 You lost $${bet.toFixed(2)}`;
+            resultDiv.style.color = 'var(--danger)';
         }
+        
+        setTimeout(() => { loadDashboard(); }, 1500);
+    }, 2000);
+}
 
-        // === UPDATES PAGE (V2.0) ===
-        async function loadUpdates() {
-            const data = await getSheetsData('getUpdates');
-            const updates = data.updates || [];
-            const container = document.getElementById('updatesList');
-            if (!container) return;
-            if (updates.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔔</div><div>No platform updates yet</div></div>';
-            } else {
-                container.innerHTML = updates.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)).map((update, i) => {
-                    const changes = update.changes.split('\n').filter(c => c.trim());
-                    return `<div class="card scroll-animate scroll-animate-delay-${i%3+1}" style="background:rgba(59,130,246,0.1);border-left:6px solid var(--primary);margin-bottom:24px"><div style="display:flex;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px"><span style="font-size:14px;font-weight:700;color:var(--primary);background:rgba(59,130,246,0.2);padding:6px 12px;border-radius:8px">v${escapeHtml(update.version)}</span><span style="font-size:12px;color:var(--text-muted)">${new Date(update.timestamp).toLocaleDateString()}</span></div><div style="font-size:24px;font-weight:800;margin-bottom:12px">${escapeHtml(update.title)}</div><div style="color:var(--text-secondary);line-height:1.8">${escapeHtml(update.description)}<ul style="list-style:none;margin-top:16px">${changes.map(c => `<li style="padding:8px 0;padding-left:28px;position:relative"><span style="position:absolute;left:0">✨</span>${escapeHtml(c.replace(/^-\s*/,''))}</li>`).join('')}</ul></div></div>`;
-                }).join('');
-                initScrollAnimations();
-            }
+// === CASINO: BLACKJACK ===
+let blackjackDeck = [];
+let dealerHand = [];
+let playerHand = [];
+let currentBet = 0;
+
+function startBlackjack() {
+    const bet = parseFloat(document.getElementById('blackjackBet').value);
+    const resultDiv = document.getElementById('blackjackResult');
+    
+    if (!bet || bet <= 0) {
+        resultDiv.textContent = '❌ Enter a valid bet amount!';
+        resultDiv.style.color = 'var(--danger)';
+        return;
+    }
+    
+    if (bet > currentUser.balance) {
+        resultDiv.textContent = '❌ Insufficient balance!';
+        resultDiv.style.color = 'var(--danger)';
+        return;
+    }
+    
+    currentBet = bet;
+    blackjackDeck = createDeck();
+    shuffleDeck();
+    
+    dealerHand = [dealCard(), dealCard()];
+    playerHand = [dealCard(), dealCard()];
+    
+    document.getElementById('blackjackStart').style.display = 'none';
+    document.getElementById('blackjackGame').style.display = 'block';
+    resultDiv.textContent = '';
+    
+    updateBlackjackDisplay(true);
+    
+    // Check for blackjack
+    if (getHandValue(playerHand) === 21) {
+        endBlackjack(true, true); // Blackjack!
+    }
+}
+
+function createDeck() {
+    const suits = ['♠', '♥', '♦', '♣'];
+    const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+    const deck = [];
+    for (let suit of suits) {
+        for (let value of values) {
+            deck.push({suit, value});
         }
+    }
+    return deck;
+}
+
+function shuffleDeck() {
+    for (let i = blackjackDeck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [blackjackDeck[i], blackjackDeck[j]] = [blackjackDeck[j], blackjackDeck[i]];
+    }
+}
+
+function dealCard() {
+    return blackjackDeck.pop();
+}
+
+function getCardValue(card) {
+    if (card.value === 'A') return 11;
+    if (['J', 'Q', 'K'].includes(card.value)) return 10;
+    return parseInt(card.value);
+}
+
+function getHandValue(hand) {
+    let value = 0;
+    let aces = 0;
+    
+    for (let card of hand) {
+        value += getCardValue(card);
+        if (card.value === 'A') aces++;
+    }
+    
+    while (value > 21 && aces > 0) {
+        value -= 10;
+        aces--;
+    }
+    
+    return value;
+}
+
+function updateBlackjackDisplay(hideDealer = false) {
+    const dealerCards = hideDealer 
+        ? `🂠 ${dealerHand[1].value}${dealerHand[1].suit}`
+        : dealerHand.map(c => `${c.value}${c.suit}`).join(' ');
+    const dealerScore = hideDealer ? '?' : getHandValue(dealerHand);
+    
+    document.getElementById('dealerCards').textContent = dealerCards;
+    document.getElementById('dealerScore').textContent = dealerScore;
+    
+    document.getElementById('playerCards').textContent = playerHand.map(c => `${c.value}${c.suit}`).join(' ');
+    document.getElementById('playerScore').textContent = getHandValue(playerHand);
+}
+
+function blackjackHit() {
+    playerHand.push(dealCard());
+    updateBlackjackDisplay(true);
+    
+    if (getHandValue(playerHand) > 21) {
+        endBlackjack(false); // Bust!
+    }
+}
+
+function blackjackStand() {
+    // Dealer draws until 17+
+    while (getHandValue(dealerHand) < 17) {
+        dealerHand.push(dealCard());
+    }
+    
+    updateBlackjackDisplay(false);
+    
+    const playerValue = getHandValue(playerHand);
+    const dealerValue = getHandValue(dealerHand);
+    
+    if (dealerValue > 21 || playerValue > dealerValue) {
+        endBlackjack(true, false);
+    } else if (playerValue === dealerValue) {
+        endBlackjack(null); // Push (tie)
+    } else {
+        endBlackjack(false);
+    }
+}
+
+async function endBlackjack(won, blackjack = false) {
+    const resultDiv = document.getElementById('blackjackResult');
+    document.getElementById('hitBtn').disabled = true;
+    document.getElementById('standBtn').disabled = true;
+    
+    updateBlackjackDisplay(false);
+    
+    if (won === null) {
+        resultDiv.textContent = '🤝 Push! Bet returned.';
+        resultDiv.style.color = 'var(--warning)';
+    } else if (won) {
+        const multiplier = blackjack ? 2.5 : 2;
+        const winAmount = currentBet * multiplier;
+        
+        await callSheetsAPI('casinoWin', {
+            userEmail: currentUser.email, game: 'blackjack',
+            betAmount: currentBet, winAmount: winAmount
+        });
+        
+        resultDiv.innerHTML = `${blackjack ? '🃏 BLACKJACK! ' : '🎉 YOU WIN!'}<br>$${winAmount.toFixed(2)}`;
+        resultDiv.style.color = 'var(--success)';
+    } else {
+        await callSheetsAPI('casinoLose', {
+            userEmail: currentUser.email, game: 'blackjack', betAmount: currentBet
+        });
+        
+        resultDiv.innerHTML = `😢 YOU LOSE!<br>Lost $${currentBet.toFixed(2)}`;
+        resultDiv.style.color = 'var(--danger)';
+    }
+    
+    setTimeout(() => {
+        loadDashboard();
+        document.getElementById('blackjackGame').style.display = 'none';
+        document.getElementById('blackjackStart').style.display = 'block';
+        document.getElementById('hitBtn').disabled = false;
+        document.getElementById('standBtn').disabled = false;
+        resultDiv.textContent = '';
+    }, 3000);
+}
+
     </script>
 </body>
 </html>
