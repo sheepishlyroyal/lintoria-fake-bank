@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FakeBank - Modern Banking Demo</title>
+    <title>Lintoria - Premium Banking Platform</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap');
         
         * {
             margin: 0;
@@ -14,32 +14,41 @@
         }
 
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --primary-light: #818cf8;
-            --secondary: #8b5cf6;
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #60a5fa;
+            --accent: #14b8a6;
+            --accent-dark: #0d9488;
+            --gold: #fbbf24;
+            --gold-dark: #f59e0b;
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
-            --bg-main: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: #1e293b;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
+            --info: #3b82f6;
+            --bg-primary: #020617;
+            --bg-secondary: #0f172a;
+            --bg-tertiary: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
             --border: #334155;
-            --shadow: rgba(0, 0, 0, 0.3);
+            --border-light: #475569;
+            --mouse-x: 50%;
+            --mouse-y: 50%;
+            --scroll-y: 0;
         }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg-main);
+            background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Animated background */
+        /* Interactive Animated Background */
         body::before {
             content: '';
             position: fixed;
@@ -48,144 +57,258 @@
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+                radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(59, 130, 246, 0.25) 0%, transparent 50%),
+                radial-gradient(circle at calc(100% - var(--mouse-x)) calc(100% - var(--mouse-y)), rgba(20, 184, 166, 0.2) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% calc(50% + var(--scroll-y) * 0.5px), rgba(251, 191, 36, 0.12) 0%, transparent 60%);
             pointer-events: none;
             z-index: 0;
+            transition: background 0.3s ease;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(59, 130, 246, 0.03) 2px, rgba(59, 130, 246, 0.03) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(59, 130, 246, 0.03) 2px, rgba(59, 130, 246, 0.03) 4px);
+            pointer-events: none;
+            z-index: 0;
+            transform: translateY(calc(var(--scroll-y) * -0.2px));
+            transition: transform 0.1s linear;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 32px;
             position: relative;
             z-index: 1;
         }
 
-        /* Warning Banner */
-        .warning-banner {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.15) 100%);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            backdrop-filter: blur(10px);
-            color: #fca5a5;
-            padding: 16px 24px;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            text-align: center;
-            font-weight: 500;
-            font-size: 14px;
-            animation: slideDown 0.5s ease;
+        /* Scroll Animation Classes */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .scroll-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        /* Glass Card */
+        .scroll-animate-slide-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .scroll-animate-slide-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .scroll-animate-slide-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .scroll-animate-slide-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Premium Brand Header */
+        .brand-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 48px;
+            padding: 24px 0;
+        }
+
+        .brand-logo {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.15), transparent);
+            animation: logoShine 4s linear infinite;
+        }
+
+        @keyframes logoShine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .brand-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent) 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1.5px;
+            text-transform: uppercase;
+        }
+
+        .brand-tagline {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 600;
+        }
+
+        /* Ultra Premium Cards */
         .card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(60px) saturate(200%);
+            border: 1px solid rgba(59, 130, 246, 0.15);
             border-radius: 24px;
-            padding: 32px;
-            box-shadow: 0 20px 60px var(--shadow);
-            margin-bottom: 24px;
-            animation: fadeIn 0.6s ease;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 40px;
+            box-shadow: 
+                0 30px 90px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            margin-bottom: 32px;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
         }
 
         .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 24px 70px var(--shadow);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            transform: translateY(-6px);
+            box-shadow: 
+                0 40px 120px rgba(59, 130, 246, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
         }
 
         /* Typography */
         h1 {
-            font-size: 32px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary) 100%);
+            font-size: 42px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+            letter-spacing: -1.5px;
         }
 
         h2 {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 24px;
-            letter-spacing: -0.3px;
+            margin-bottom: 32px;
+            letter-spacing: -0.8px;
         }
 
         h3 {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         /* Form Elements */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 28px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            font-size: 14px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 13px;
             color: var(--text-secondary);
-            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 14px 16px;
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            padding: 18px 20px;
+            background: rgba(2, 6, 23, 0.6);
+            border: 2px solid var(--border);
+            border-radius: 14px;
             font-size: 15px;
             color: var(--text-primary);
             font-family: inherit;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             outline: none;
         }
 
         input:focus, select:focus, textarea:focus {
             border-color: var(--primary);
-            background: rgba(15, 23, 42, 0.7);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            background: rgba(2, 6, 23, 0.9);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+            transform: translateY(-2px);
         }
 
-        input::placeholder {
-            color: var(--text-secondary);
-            opacity: 0.6;
+        textarea {
+            min-height: 150px;
+            resize: vertical;
         }
 
         /* Buttons */
         button {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 600;
+            padding: 18px 36px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             margin-right: 12px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         button::before {
@@ -195,8 +318,8 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s ease;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s ease;
         }
 
         button:hover::before {
@@ -204,64 +327,87 @@
         }
 
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.6);
         }
 
         button:active {
-            transform: translateY(0);
+            transform: translateY(-1px);
         }
 
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5);
         }
 
-        .logout-btn {
+        .btn-success:hover {
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.6);
+        }
+
+        .btn-danger {
             background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+            box-shadow: 0 8px 30px rgba(239, 68, 68, 0.5);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 12px 40px rgba(239, 68, 68, 0.6);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-buy {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            box-shadow: 0 8px 30px rgba(251, 191, 36, 0.5);
+            color: #78350f;
+        }
+
+        .btn-buy:hover {
+            box-shadow: 0 12px 40px rgba(251, 191, 36, 0.6);
         }
 
         /* Tabs */
         .tabs {
             display: flex;
-            gap: 8px;
-            margin-bottom: 32px;
-            background: rgba(15, 23, 42, 0.5);
-            padding: 6px;
-            border-radius: 16px;
+            gap: 12px;
+            margin-bottom: 40px;
+            background: rgba(2, 6, 23, 0.6);
+            padding: 10px;
+            border-radius: 20px;
             border: 1px solid var(--border);
+            backdrop-filter: blur(30px);
         }
 
         .tab {
             flex: 1;
-            padding: 12px 20px;
+            padding: 16px 28px;
             background: transparent;
             color: var(--text-secondary);
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            position: relative;
+            font-weight: 700;
+            font-size: 13px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .tab:hover {
             color: var(--text-primary);
-            background: rgba(99, 102, 241, 0.1);
+            background: rgba(59, 130, 246, 0.2);
         }
 
         .tab.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5);
         }
 
         .tab-content {
             display: none;
-            animation: fadeIn 0.4s ease;
         }
 
         .tab-content.active {
@@ -269,555 +415,505 @@
         }
 
         /* Balance Display */
-        .balance-display {
+        .balance-showcase {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(20, 184, 166, 0.15) 100%);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 24px;
+            padding: 60px;
             text-align: center;
-            padding: 48px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .balance-showcase::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            animation: balanceGlow 6s ease-in-out infinite;
+        }
+
+        @keyframes balanceGlow {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(5%, 5%) scale(1.1); }
         }
 
         .balance-label {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-            font-weight: 600;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            font-weight: 800;
+            position: relative;
         }
 
         .balance-amount {
-            font-size: 64px;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            font-size: 84px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: -2px;
-            margin-bottom: 8px;
+            letter-spacing: -4px;
+            margin-bottom: 16px;
+            position: relative;
         }
 
-        .balance-change {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        /* Transaction List */
-        .transaction-list {
-            max-height: 400px;
-            overflow-y: auto;
-            padding-right: 8px;
-        }
-
-        .transaction-list::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .transaction-list::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: 10px;
-        }
-
-        .transaction-list::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-        }
-
-        .transaction-item {
-            padding: 20px;
-            background: rgba(15, 23, 42, 0.3);
+        /* Post Cards */
+        .post {
+            padding: 32px;
+            background: rgba(2, 6, 23, 0.5);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            margin-bottom: 12px;
+            border-left: 4px solid var(--primary);
+            border-radius: 20px;
+            margin-bottom: 20px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .post:hover {
+            background: rgba(2, 6, 23, 0.7);
+            border-color: var(--primary-light);
+            transform: translateX(8px);
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.2);
+        }
+
+        .post-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
         }
 
-        .transaction-item:hover {
-            background: rgba(15, 23, 42, 0.5);
-            transform: translateX(4px);
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
-        .transaction-info {
-            flex: 1;
+        .post-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
         }
 
-        .transaction-title {
-            font-weight: 600;
-            font-size: 15px;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .transaction-note {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-
-        .transaction-time {
-            font-size: 12px;
-            color: var(--text-secondary);
-            opacity: 0.7;
-        }
-
-        .transaction-amount {
-            font-weight: 700;
-            font-size: 20px;
-            min-width: 120px;
-            text-align: right;
-        }
-
-        .transaction-amount.positive {
-            color: var(--success);
-        }
-
-        .transaction-amount.negative {
-            color: var(--danger);
-        }
-
-        /* Chat */
-        .chat-container {
-            height: 500px;
+        .post-meta {
             display: flex;
             flex-direction: column;
+            gap: 4px;
         }
 
-        .messages-area {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            background: rgba(15, 23, 42, 0.3);
-            border: 1px solid var(--border);
-            border-radius: 16px;
+        .post-author-name {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 15px;
+        }
+
+        .post-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .post-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
             margin-bottom: 16px;
         }
 
-        .messages-area::-webkit-scrollbar {
-            width: 6px;
+        .post-content {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 15px;
         }
 
-        .messages-area::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: 10px;
-        }
-
-        .messages-area::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-        }
-
-        .message {
-            margin-bottom: 16px;
-            padding: 16px;
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 12px;
-            border-left: 3px solid var(--primary);
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .message.admin-message {
-            background: rgba(245, 158, 11, 0.1);
-            border-left-color: var(--warning);
-        }
-
-        .message-header {
-            display: flex;
-            justify-content: space-between;
+        .post-category {
+            display: inline-flex;
             align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .message-user {
-            font-weight: 600;
-            font-size: 14px;
+            gap: 6px;
+            padding: 8px 16px;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             color: var(--primary-light);
         }
 
-        .message-time {
-            font-size: 11px;
-            color: var(--text-secondary);
+        /* Flight Cards */
+        .flight-card {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 32px;
+            align-items: center;
+            padding: 32px;
+            background: rgba(2, 6, 23, 0.5);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            margin-bottom: 24px;
+            transition: all 0.4s ease;
         }
 
-        .message-text {
+        .flight-card:hover {
+            background: rgba(2, 6, 23, 0.7);
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(20, 184, 166, 0.3);
+        }
+
+        .flight-location {
+            text-align: center;
+        }
+
+        .flight-city {
+            font-size: 32px;
+            font-weight: 800;
             color: var(--text-primary);
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .chat-input-area {
-            display: flex;
-            gap: 12px;
-        }
-
-        .chat-input-area input {
-            flex: 1;
-        }
-
-        .chat-input-area button {
-            margin: 0;
-        }
-
-        /* User List */
-        .user-list {
-            max-height: 600px;
-            overflow-y: auto;
-        }
-
-        .user-item {
-            padding: 24px;
-            background: rgba(15, 23, 42, 0.3);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            margin-bottom: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .user-item:hover {
-            background: rgba(15, 23, 42, 0.5);
-            border-color: var(--primary);
-        }
-
-        .user-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 12px;
-        }
-
-        .user-info {
-            flex: 1;
-        }
-
-        .user-name {
-            font-weight: 700;
-            font-size: 16px;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .user-email {
-            font-size: 13px;
-            color: var(--text-secondary);
             margin-bottom: 8px;
         }
 
-        .user-meta {
-            font-size: 11px;
-            color: var(--text-secondary);
-            opacity: 0.8;
-            line-height: 1.6;
+        .flight-airport {
+            font-size: 14px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
         }
 
-        .user-balance {
-            font-weight: 800;
-            font-size: 28px;
-            color: var(--success);
-        }
-
-        .admin-controls {
+        .flight-route {
             display: flex;
-            gap: 8px;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border);
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
         }
 
-        .admin-controls input {
-            max-width: 140px;
+        .flight-icon {
+            font-size: 40px;
+            transform: rotate(90deg);
         }
 
-        .admin-controls button {
-            padding: 10px 20px;
+        .flight-number {
             font-size: 13px;
-            margin: 0;
+            color: var(--text-secondary);
+            font-weight: 700;
+            background: rgba(59, 130, 246, 0.2);
+            padding: 8px 16px;
+            border-radius: 12px;
+        }
+
+        .flight-price {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--gold);
+            margin-top: 8px;
+        }
+
+        .flight-time {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-top: 12px;
+        }
+
+        /* Ticket Display */
+        .ticket-card {
+            padding: 28px;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.1) 100%);
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            border-radius: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ticket-card::before {
+            content: '✈️';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 48px;
+            opacity: 0.1;
+        }
+
+        .ticket-route {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        .ticket-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .ticket-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .ticket-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .ticket-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid var(--primary);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.8);
+            animation: modalSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(50px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-header {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .modal-body {
+            margin-bottom: 32px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .whatsapp-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 20px 32px;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .whatsapp-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(37, 211, 102, 0.5);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-left: 12px;
+        }
+
+        .badge-master {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: #78350f;
+            box-shadow: 0 8px 24px rgba(251, 191, 36, 0.5);
+        }
+
+        .badge-admin {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
         }
 
         /* Alerts */
         .alert {
-            padding: 16px 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
+            padding: 20px 28px;
+            border-radius: 16px;
+            margin-bottom: 28px;
             font-size: 14px;
-            font-weight: 500;
-            animation: slideDown 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .alert::before {
-            content: '';
-            width: 4px;
-            height: 100%;
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            border-radius: 12px 0 0 12px;
+            font-weight: 600;
+            animation: slideDown 0.4s ease;
+            border: 2px solid;
+            backdrop-filter: blur(30px);
         }
 
         .alert-info {
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.3);
+            background: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.4);
             color: #93c5fd;
         }
 
-        .alert-info::before {
-            background: #3b82f6;
-        }
-
         .alert-error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.4);
             color: #fca5a5;
         }
 
-        .alert-error::before {
-            background: var(--danger);
-        }
-
         .alert-success {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            background: rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.4);
             color: #6ee7b7;
         }
 
-        .alert-success::before {
-            background: var(--success);
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Grid Layout */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 24px;
-        }
-
-        /* Header */
-        .app-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .user-display {
-            flex: 1;
-        }
-
-        .user-display-name {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-
-        .user-display-email {
-            font-size: 13px;
-            color: var(--text-secondary);
-            opacity: 0.7;
-        }
-
-        /* Utility */
-        .hidden {
-            display: none !important;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
+        /* Utilities */
+        .hidden { display: none !important; }
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
-            color: var(--text-secondary);
+            padding: 100px 20px;
+            color: var(--text-muted);
         }
 
         .empty-state-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
+            font-size: 80px;
+            margin-bottom: 20px;
             opacity: 0.3;
         }
 
-        /* Logo */
-        .logo {
+        /* Transaction Items */
+        .transaction-item {
+            padding: 28px;
+            background: rgba(2, 6, 23, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .transaction-item:hover {
+            background: rgba(2, 6, 23, 0.6);
+            transform: translateX(8px);
+            border-color: var(--primary);
+        }
+
+        /* Permission Grid */
+        .permission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .permission-item {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 32px;
-        }
-
-        .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 16px;
+            background: rgba(2, 6, 23, 0.4);
+            border: 2px solid var(--border);
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
-        }
-
-        .logo-text {
-            font-size: 24px;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Stats Card */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .stat-card {
-            background: rgba(15, 23, 42, 0.3);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px;
             transition: all 0.3s ease;
         }
 
-        .stat-card:hover {
+        .permission-item:hover {
+            background: rgba(2, 6, 23, 0.6);
             border-color: var(--primary);
-            transform: translateY(-2px);
         }
 
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-            font-weight: 600;
+        .permission-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+            cursor: pointer;
         }
 
-        .stat-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-primary);
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(2, 6, 23, 0.5);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 10px;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .container {
-                padding: 12px;
-            }
-
-            .card {
-                padding: 20px;
-                border-radius: 16px;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-
-            h2 {
-                font-size: 20px;
-            }
-
-            .balance-amount {
-                font-size: 48px;
-            }
-
-            .tabs {
-                flex-direction: column;
-            }
-
-            .tab {
-                width: 100%;
-            }
-
-            .admin-controls {
-                flex-direction: column;
-            }
-
-            .admin-controls input,
-            .admin-controls button {
-                width: 100%;
-                max-width: none;
-            }
-
-            .user-header {
-                flex-direction: column;
-                gap: 12px;
-            }
-        }
-
-        /* Loading Animation */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Badge */
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .badge-admin {
-            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
-            color: white;
-        }
-
-        .badge-new {
-            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-            color: white;
+            .container { padding: 20px; }
+            .card { padding: 28px; }
+            h1 { font-size: 32px; }
+            .balance-amount { font-size: 64px; }
+            .tabs { flex-direction: column; }
+            .flight-card { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-
         <!-- Auth Screen -->
         <div id="authScreen">
-            <div class="card" style="max-width: 500px; margin: 0 auto;">
-                <div class="logo">
-                    <div class="logo-icon">💳</div>
-                    <div class="logo-text">FakeBank</div>
-                </div>
-
-                <div class="alert alert-info">
-                    <div>
-                        <strong>Technical Demo Features:</strong><br>
-                        Browser fingerprinting • Simulated IP detection • Google Sheets storage<br>
-                        Admin: sheepishlyroyal@gmail.com
+            <div class="card scroll-animate" style="max-width: 600px; margin: 60px auto;">
+                <div class="brand-header" style="justify-content: center;">
+                    <div class="brand-logo">🏛️</div>
+                    <div class="brand-text" style="align-items: center;">
+                        <div class="brand-name">Lintoria</div>
+                        <div class="brand-tagline">Premium Banking</div>
                     </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Google Sheets Configuration</label>
-                    <input type="text" id="sheetsUrl" placeholder="Paste your Google Apps Script Web App URL" 
-                        value="https://script.google.com/macros/s/AKfycbyc8HRuxMhmvBULqq5b6MIlNAjII3YP3oWeizvBXBPjpzcRgx7lBOIUfW7o-6L-A2mQ/exec">
-                    <small style="color: var(--text-secondary); font-size: 12px; display: block; margin-top: 8px;">
-                        Leave as-is to use local storage demo mode
-                    </small>
                 </div>
 
                 <div class="tabs">
@@ -827,72 +923,83 @@
 
                 <div id="loginTab" class="tab-content active">
                     <div class="form-group">
-                        <label>Username</label>
-                        <input type="text" id="loginUsername" placeholder="Enter your username">
-                    </div>
-                    <div class="form-group">
                         <label>Email</label>
                         <input type="email" id="loginEmail" placeholder="Enter your email">
                     </div>
-                    <button onclick="login()" style="width: 100%;">Login</button>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password">
+                    </div>
+                    <button onclick="login()" style="width: 100%; margin: 0;">Login</button>
                 </div>
 
                 <div id="registerTab" class="tab-content">
                     <div id="registerError" class="hidden"></div>
                     <div class="form-group">
-                        <label>Username</label>
-                        <input type="text" id="registerUsername" placeholder="Choose a unique username">
-                    </div>
-                    <div class="form-group">
                         <label>Email</label>
-                        <input type="email" id="registerEmail" placeholder="Enter your email">
+                        <input type="email" id="registerEmail" placeholder="Your email address">
                     </div>
                     <div class="form-group">
                         <label>Full Name</label>
-                        <input type="text" id="registerName" placeholder="Enter your full name">
+                        <input type="text" id="registerName" placeholder="Your full name">
                     </div>
-                    <button onclick="register()" style="width: 100%;">Create Account</button>
+                    <div class="form-group">
+                        <label>Username (Password)</label>
+                        <input type="text" id="registerUsername" placeholder="Choose a username (this will be your password)">
+                        <small style="color: var(--text-muted); font-size: 12px; margin-top: 8px; display: block;">Your username will be used as your password</small>
+                    </div>
+                    <button onclick="register()" style="width: 100%; margin: 0;">Create Account</button>
                 </div>
             </div>
         </div>
 
         <!-- Main App Screen -->
         <div id="appScreen" class="hidden">
-            <div class="card">
-                <div class="app-header">
-                    <div class="user-display">
+            <div class="brand-header scroll-animate">
+                <div class="brand-logo">🏛️</div>
+                <div class="brand-text">
+                    <div class="brand-name">Lintoria</div>
+                    <div class="brand-tagline">Premium Banking</div>
+                </div>
+            </div>
+
+            <div class="card scroll-animate">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
                         <h1>
                             <span id="userDisplayName"></span>
-                            <span id="adminBadge" class="badge badge-admin hidden">Admin</span>
+                            <span id="masterBadge" class="badge badge-master hidden">⚡ Master Admin</span>
+                            <span id="adminBadge" class="badge badge-admin hidden">✦ Admin</span>
                         </h1>
-                        <div class="user-display-email" id="userDisplayEmail"></div>
+                        <div style="color: var(--text-muted); font-size: 14px;" id="userDisplayEmail"></div>
                     </div>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
+                    <button class="btn-danger" onclick="logout()">Logout</button>
                 </div>
             </div>
 
-            <div class="tabs">
-                <button class="tab active" onclick="switchTab('dashboard')">🏠 Dashboard</button>
+            <div class="tabs scroll-animate">
+                <button class="tab active" onclick="switchTab('dashboard')">🏦 Banking</button>
                 <button class="tab" onclick="switchTab('transfer')">💸 Transfer</button>
+                <button class="tab" onclick="switchTab('tickets')">🎫 My Tickets</button>
+                <button class="tab" onclick="switchTab('news')">📰 News</button>
+                <button class="tab" onclick="switchTab('lore')">📜 Lore</button>
+                <button class="tab" onclick="switchTab('flights')">✈️ Flights</button>
                 <button class="tab" onclick="switchTab('chat')">💬 Chat</button>
-                <button class="tab hidden" id="adminTab" onclick="switchTab('admin')">👑 Admin</button>
+                <button class="tab hidden" id="adminTab" onclick="switchTab('admin')">👑 Control</button>
             </div>
 
-            <!-- Dashboard -->
+            <!-- Banking Dashboard -->
             <div id="dashboardContent" class="tab-content active">
-                <div class="card">
-                    <div class="balance-display">
-                        <div class="balance-label">Current Balance</div>
-                        <div class="balance-amount">$<span id="balanceAmount">0.00</span></div>
-                        <div class="balance-change" id="balanceChange">No recent changes</div>
-                    </div>
+                <div class="card balance-showcase scroll-animate">
+                    <div class="balance-label">Account Balance</div>
+                    <div class="balance-amount">$<span id="balanceAmount">0.00</span></div>
                 </div>
 
-                <div class="card">
-                    <h2>Recent Transactions</h2>
-                    <div class="transaction-list" id="transactionList">
+                <div class="card scroll-animate-slide-left">
+                    <h2>Transaction History</h2>
+                    <div style="max-height: 600px; overflow-y: auto;" id="transactionList">
                         <div class="empty-state">
-                            <div class="empty-state-icon">📊</div>
+                            <div class="empty-state-icon">💰</div>
                             <div>No transactions yet</div>
                         </div>
                     </div>
@@ -901,13 +1008,13 @@
 
             <!-- Transfer -->
             <div id="transferContent" class="tab-content">
-                <div class="card" style="max-width: 600px; margin: 0 auto;">
+                <div class="card scroll-animate" style="max-width: 800px; margin: 0 auto;">
                     <h2>Send Money</h2>
                     <div id="transferSuccess" class="hidden"></div>
                     <div id="transferError" class="hidden"></div>
                     <div class="form-group">
-                        <label>Recipient Username</label>
-                        <input type="text" id="recipientUsername" placeholder="@username">
+                        <label>Recipient Email</label>
+                        <input type="email" id="recipientEmail" placeholder="recipient@example.com">
                     </div>
                     <div class="form-group">
                         <label>Amount ($)</label>
@@ -917,22 +1024,158 @@
                         <label>Note (Optional)</label>
                         <input type="text" id="transferNote" placeholder="What's this for?">
                     </div>
-                    <button onclick="transferMoney()" style="width: 100%;">Send Money</button>
+                    <button onclick="transferMoney()" style="width: 100%; margin: 0;">Send Money</button>
+                </div>
+            </div>
+
+            <!-- My Tickets -->
+            <div id="ticketsContent" class="tab-content">
+                <div class="card scroll-animate">
+                    <h2>My Flight Tickets</h2>
+                    <div id="ticketsList">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🎫</div>
+                            <div>You haven't purchased any tickets yet</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- News, Lore, Flights, Chat, Admin sections remain the same structure but with scroll-animate classes -->
+            <!-- I'll show the flights section with the buy button -->
+
+            <!-- Flights Page -->
+            <div id="flightsContent" class="tab-content">
+                <div class="card scroll-animate">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+                        <h2 style="margin: 0;">Available Flights</h2>
+                        <button id="flightsPostBtn" class="hidden btn-success" onclick="showFlightForm()">+ New Flight</button>
+                    </div>
+                    
+                    <div id="flightsPostForm" class="hidden" style="margin-bottom: 40px; padding: 32px; background: rgba(2, 6, 23, 0.5); border-radius: 16px; border: 2px solid var(--border);">
+                        <h3>Publish Flight</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                            <div class="form-group">
+                                <label>Departure City</label>
+                                <input type="text" id="flightDepartureCity" placeholder="New York">
+                            </div>
+                            <div class="form-group">
+                                <label>Departure Airport Code</label>
+                                <input type="text" id="flightDepartureCode" placeholder="JFK">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                            <div class="form-group">
+                                <label>Arrival City</label>
+                                <input type="text" id="flightArrivalCity" placeholder="London">
+                            </div>
+                            <div class="form-group">
+                                <label>Arrival Airport Code</label>
+                                <input type="text" id="flightArrivalCode" placeholder="LHR">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
+                            <div class="form-group">
+                                <label>Flight Number</label>
+                                <input type="text" id="flightNumber" placeholder="LT123">
+                            </div>
+                            <div class="form-group">
+                                <label>Departure Time</label>
+                                <input type="text" id="flightDepartureTime" placeholder="14:30">
+                            </div>
+                            <div class="form-group">
+                                <label>Price ($)</label>
+                                <input type="number" id="flightPrice" placeholder="499.00" step="0.01">
+                            </div>
+                        </div>
+                        <button onclick="publishFlight()" class="btn-success">Publish Flight</button>
+                        <button onclick="hideFlightForm()" class="btn-secondary">Cancel</button>
+                    </div>
+
+                    <div id="flightsPosts">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">✈️</div>
+                            <div>No flights available yet</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other sections follow similar pattern with scroll-animate classes -->
+            <!-- News Page -->
+            <div id="newsContent" class="tab-content">
+                <div class="card scroll-animate">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+                        <h2 style="margin: 0;">Latest News</h2>
+                        <button id="newsPostBtn" class="hidden btn-success" onclick="showPostForm('news')">+ New Post</button>
+                    </div>
+                    
+                    <div id="newsPostForm" class="hidden" style="margin-bottom: 40px; padding: 32px; background: rgba(2, 6, 23, 0.5); border-radius: 16px; border: 2px solid var(--border);">
+                        <h3>Create News Post</h3>
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="newsTitle" placeholder="Post title">
+                        </div>
+                        <div class="form-group">
+                            <label>Content</label>
+                            <textarea id="newsContent" placeholder="Write your news article..."></textarea>
+                        </div>
+                        <button onclick="publishPost('news')" class="btn-success">Publish</button>
+                        <button onclick="hidePostForm('news')" class="btn-secondary">Cancel</button>
+                    </div>
+
+                    <div id="newsPosts">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📰</div>
+                            <div>No news posts yet</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lore Page -->
+            <div id="loreContent" class="tab-content">
+                <div class="card scroll-animate">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+                        <h2 style="margin: 0;">World Lore</h2>
+                        <button id="lorePostBtn" class="hidden btn-success" onclick="showPostForm('lore')">+ New Post</button>
+                    </div>
+                    
+                    <div id="lorePostForm" class="hidden" style="margin-bottom: 40px; padding: 32px; background: rgba(2, 6, 23, 0.5); border-radius: 16px; border: 2px solid var(--border);">
+                        <h3>Create Lore Post</h3>
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="loreTitle" placeholder="Post title">
+                        </div>
+                        <div class="form-group">
+                            <label>Content</label>
+                            <textarea id="loreContent" placeholder="Write your lore story..."></textarea>
+                        </div>
+                        <button onclick="publishPost('lore')" class="btn-success">Publish</button>
+                        <button onclick="hidePostForm('lore')" class="btn-secondary">Cancel</button>
+                    </div>
+
+                    <div id="lorePosts">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📜</div>
+                            <div>No lore posts yet</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Chat -->
             <div id="chatContent" class="tab-content">
-                <div class="card">
+                <div class="card scroll-animate">
                     <h2>Public Chat Room</h2>
-                    <div class="chat-container">
-                        <div class="messages-area" id="messagesArea">
+                    <div style="height: 600px; display: flex; flex-direction: column;">
+                        <div style="flex: 1; overflow-y: auto; padding: 24px; background: rgba(2, 6, 23, 0.5); border: 2px solid var(--border); border-radius: 16px; margin-bottom: 20px;" id="messagesArea">
                             <div class="empty-state">
                                 <div class="empty-state-icon">💬</div>
-                                <div>No messages yet. Start the conversation!</div>
+                                <div>No messages yet</div>
                             </div>
                         </div>
-                        <div class="chat-input-area">
+                        <div style="display: flex; gap: 16px;">
                             <input type="text" id="chatMessage" placeholder="Type your message..." 
                                 onkeypress="if(event.key==='Enter') sendMessage()">
                             <button onclick="sendMessage()">Send</button>
@@ -941,16 +1184,13 @@
                 </div>
             </div>
 
-            <!-- Admin -->
+            <!-- Admin Panel -->
             <div id="adminContent" class="tab-content">
-                <div class="card">
-                    <h2>👑 Admin Panel</h2>
-                    <div class="alert alert-info">
-                        You have administrator privileges. Manage all users and their balances below.
-                    </div>
-
-                    <h3>Registered Users</h3>
-                    <div class="user-list" id="adminUserList">
+                <div class="card scroll-animate">
+                    <h2>👑 Master Control Panel</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 32px;">Manage user permissions and account balances.</p>
+                    
+                    <div id="adminUserList">
                         <div class="empty-state">
                             <div class="empty-state-icon">👥</div>
                             <div>Loading users...</div>
@@ -961,22 +1201,78 @@
         </div>
     </div>
 
+    <!-- WhatsApp Modal -->
+    <div id="whatsappModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">✈️ Ticket Purchased!</div>
+            <div class="modal-body">
+                <p style="margin-bottom: 20px;">Your ticket has been successfully purchased and the amount has been deducted from your account.</p>
+                <p style="margin-bottom: 20px; font-weight: 600;">For booking confirmation and travel details, please contact us on WhatsApp:</p>
+                <a href="https://wa.me/1234567890?text=Hi,%20I%20just%20purchased%20a%20flight%20ticket%20on%20Lintoria%20and%20would%20like%20more%20details." 
+                   target="_blank" 
+                   class="whatsapp-link">
+                    <span style="font-size: 28px;">💬</span>
+                    <span>Contact on WhatsApp</span>
+                </a>
+                <p style="text-align: center; color: var(--text-muted); font-size: 13px;">Your ticket details have been saved to your account</p>
+            </div>
+            <button onclick="closeModal()" style="width: 100%; margin: 0;" class="btn-secondary">Close</button>
+        </div>
+    </div>
+
     <script>
-        // Configuration
-        let SHEETS_URL = '';
+        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzsnP4kY95FUrSa-ONluOp_Rn1aogehISrZKnXJhnr62XbhI9D-c8XvozLdH6hheQ0T/exec';
+        const MASTER_ADMIN = 'sheepishlyroyal@gmail.com';
+        
         let currentUser = null;
         let deviceFingerprint = '';
         let simulatedIP = '';
         let allUsers = [];
         let updateInterval = null;
+        let messageSending = false;
 
-        // Generate device fingerprint
+        // Cursor and Scroll Animation
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth) * 100;
+            const y = (e.clientY / window.innerHeight) * 100;
+            document.documentElement.style.setProperty('--mouse-x', `${x}%`);
+            document.documentElement.style.setProperty('--mouse-y', `${y}%`);
+        });
+
+        document.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            document.documentElement.style.setProperty('--scroll-y', scrollY);
+        });
+
+        // Scroll Animation Observer
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        function initScrollAnimations() {
+            document.querySelectorAll('.scroll-animate, .scroll-animate-slide-left, .scroll-animate-slide-right').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // Initialize animations on load
+        window.addEventListener('load', initScrollAnimations);
+
         function generateDeviceFingerprint() {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             ctx.textBaseline = 'top';
             ctx.font = '14px Arial';
-            ctx.fillText('Browser Fingerprint', 2, 2);
+            ctx.fillText('Lintoria Fingerprint', 2, 2);
             const canvasData = canvas.toDataURL();
             
             const fingerprint = {
@@ -986,8 +1282,7 @@
                 screenResolution: `${screen.width}x${screen.height}`,
                 timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
                 platform: navigator.platform,
-                canvasFingerprint: canvasData.slice(0, 50),
-                plugins: Array.from(navigator.plugins || []).map(p => p.name).join(',')
+                canvasFingerprint: canvasData.slice(0, 50)
             };
             
             return btoa(JSON.stringify(fingerprint)).substring(0, 32);
@@ -1022,38 +1317,56 @@
             document.querySelectorAll('#appScreen > .tabs .tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('#appScreen .tab-content').forEach(c => c.classList.remove('active'));
             
-            const tabs = document.querySelectorAll('#appScreen > .tabs .tab');
-            const tabMap = { 'dashboard': 0, 'transfer': 1, 'chat': 2, 'admin': 3 };
-            tabs[tabMap[tab]].classList.add('active');
+            const tabs = Array.from(document.querySelectorAll('#appScreen > .tabs .tab'));
+            const visibleTabs = tabs.filter(t => !t.classList.contains('hidden'));
+            const tabNames = visibleTabs.map(t => {
+                const text = t.textContent.toLowerCase();
+                if (text.includes('banking')) return 'dashboard';
+                if (text.includes('transfer')) return 'transfer';
+                if (text.includes('tickets')) return 'tickets';
+                if (text.includes('news')) return 'news';
+                if (text.includes('lore')) return 'lore';
+                if (text.includes('flights')) return 'flights';
+                if (text.includes('chat')) return 'chat';
+                if (text.includes('control')) return 'admin';
+                return '';
+            });
+            
+            const index = tabNames.indexOf(tab);
+            if (index !== -1) visibleTabs[index].classList.add('active');
+            
             document.getElementById(tab + 'Content').classList.add('active');
+            
+            // Reinitialize scroll animations for new content
+            setTimeout(initScrollAnimations, 100);
             
             if (tab === 'admin') loadAdminPanel();
             else if (tab === 'chat') loadMessages();
             else if (tab === 'dashboard') loadDashboard();
+            else if (tab === 'tickets') loadTickets();
+            else if (tab === 'news') loadPosts('news');
+            else if (tab === 'lore') loadPosts('lore');
+            else if (tab === 'flights') loadFlights();
         }
 
         async function callSheetsAPI(action, data) {
-            SHEETS_URL = document.getElementById('sheetsUrl').value;
-            if (!SHEETS_URL || SHEETS_URL.includes('YOUR_SCRIPT_ID')) return { success: true };
             try {
-                await fetch(SHEETS_URL, {
+                const response = await fetch(SHEETS_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify({ action, ...data })
                 });
-                return { success: true };
+                return await response.json();
             } catch (error) {
                 console.error('API Error:', error);
-                return null;
+                return mockDataWrite(action, data);
             }
         }
 
         async function getSheetsData(action, params = '') {
-            SHEETS_URL = document.getElementById('sheetsUrl').value;
-            if (!SHEETS_URL || SHEETS_URL.includes('YOUR_SCRIPT_ID')) return mockData(action);
             try {
-                const response = await fetch(`${SHEETS_URL}?action=${action}${params}`);
+                const url = `${SHEETS_URL}?action=${action}${params}`;
+                const response = await fetch(url);
                 return await response.json();
             } catch (error) {
                 return mockData(action);
@@ -1064,31 +1377,100 @@
             const mockUsers = JSON.parse(localStorage.getItem('mockUsers') || '[]');
             const mockTransactions = JSON.parse(localStorage.getItem('mockTransactions') || '[]');
             const mockMessages = JSON.parse(localStorage.getItem('mockMessages') || '[]');
+            const mockPosts = JSON.parse(localStorage.getItem('mockPosts') || '[]');
+            const mockTickets = JSON.parse(localStorage.getItem('mockTickets') || '[]');
+            
             switch(action) {
                 case 'getUsers': return { users: mockUsers };
                 case 'getTransactions':
                     if (currentUser) {
-                        return { transactions: mockTransactions.filter(t => t.from === currentUser.username || t.to === currentUser.username) };
+                        return { transactions: mockTransactions.filter(t => t.from === currentUser.email || t.to === currentUser.email) };
                     }
                     return { transactions: [] };
                 case 'getMessages': return { messages: mockMessages };
+                case 'getPosts': return { posts: mockPosts };
+                case 'getTickets':
+                    if (currentUser) {
+                        return { tickets: mockTickets.filter(t => t.userEmail === currentUser.email) };
+                    }
+                    return { tickets: [] };
                 default: return { success: true };
             }
         }
 
-        function saveMockData(type, data) {
-            localStorage.setItem(type, JSON.stringify(data));
+        function mockDataWrite(action, data) {
+            const mockUsers = JSON.parse(localStorage.getItem('mockUsers') || '[]');
+            const mockTransactions = JSON.parse(localStorage.getItem('mockTransactions') || '[]');
+            const mockMessages = JSON.parse(localStorage.getItem('mockMessages') || '[]');
+            const mockPosts = JSON.parse(localStorage.getItem('mockPosts') || '[]');
+            const mockTickets = JSON.parse(localStorage.getItem('mockTickets') || '[]');
+            
+            if (action === 'register') {
+                mockUsers.push(data);
+                localStorage.setItem('mockUsers', JSON.stringify(mockUsers));
+            } else if (action === 'transfer') {
+                mockTransactions.push(data);
+                localStorage.setItem('mockTransactions', JSON.stringify(mockTransactions));
+                
+                const userIndex = mockUsers.findIndex(u => u.email === data.from);
+                const recipientIndex = mockUsers.findIndex(u => u.email === data.to);
+                if (data.from !== 'ADMIN' && userIndex !== -1) {
+                    mockUsers[userIndex].balance -= parseFloat(data.amount);
+                }
+                if (recipientIndex !== -1) {
+                    mockUsers[recipientIndex].balance += parseFloat(data.amount);
+                }
+                localStorage.setItem('mockUsers', JSON.stringify(mockUsers));
+            } else if (action === 'sendMessage') {
+                mockMessages.push(data);
+                localStorage.setItem('mockMessages', JSON.stringify(mockMessages));
+            } else if (action === 'createPost') {
+                mockPosts.push(data);
+                localStorage.setItem('mockPosts', JSON.stringify(mockPosts));
+            } else if (action === 'buyTicket') {
+                mockTickets.push(data.ticket);
+                localStorage.setItem('mockTickets', JSON.stringify(mockTickets));
+                
+                const userIndex = mockUsers.findIndex(u => u.email === data.userEmail);
+                if (userIndex !== -1) {
+                    mockUsers[userIndex].balance -= parseFloat(data.amount);
+                    localStorage.setItem('mockUsers', JSON.stringify(mockUsers));
+                }
+                
+                mockTransactions.push({
+                    from: data.userEmail,
+                    to: 'FLIGHT_PURCHASE',
+                    amount: data.amount,
+                    note: `Flight ticket: ${data.ticket.flightNumber}`,
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem('mockTransactions', JSON.stringify(mockTransactions));
+            } else if (action === 'updatePermissions') {
+                const userIndex = mockUsers.findIndex(u => u.email === data.email);
+                if (userIndex !== -1) {
+                    mockUsers[userIndex].permissions = data.permissions;
+                    localStorage.setItem('mockUsers', JSON.stringify(mockUsers));
+                }
+            } else if (action === 'updateBalance') {
+                const userIndex = mockUsers.findIndex(u => u.email === data.email);
+                if (userIndex !== -1) {
+                    mockUsers[userIndex].balance = data.balance;
+                    localStorage.setItem('mockUsers', JSON.stringify(mockUsers));
+                }
+            }
+            
+            return { success: true };
         }
 
         async function register() {
-            const username = document.getElementById('registerUsername').value.trim();
             const email = document.getElementById('registerEmail').value.trim();
             const name = document.getElementById('registerName').value.trim();
+            const username = document.getElementById('registerUsername').value.trim();
             const errorDiv = document.getElementById('registerError');
             
             errorDiv.className = 'hidden';
             
-            if (!username || !email || !name) {
+            if (!email || !name || !username) {
                 showAlert(errorDiv, 'Please fill in all fields', 'error');
                 return;
             }
@@ -1096,59 +1478,62 @@
             const data = await getSheetsData('getUsers');
             const existingUsers = data.users || [];
 
-            if (existingUsers.find(u => u.username === username)) {
-                showAlert(errorDiv, 'Username already exists. Please choose another.', 'error');
+            if (existingUsers.find(u => u.email === email)) {
+                showAlert(errorDiv, 'Email already registered', 'error');
                 return;
             }
 
             if (existingUsers.find(u => u.fingerprint === deviceFingerprint)) {
-                showAlert(errorDiv, 'A user with this device already exists.', 'error');
+                showAlert(errorDiv, 'Device already registered', 'error');
                 return;
             }
 
             if (existingUsers.find(u => u.ip === simulatedIP)) {
-                showAlert(errorDiv, 'A user with this IP already exists.', 'error');
+                showAlert(errorDiv, 'IP already registered', 'error');
                 return;
             }
 
             const newUser = {
-                username, email, name,
-                balance: 100,
+                email,
+                name,
+                username,
+                balance: 1000,
                 fingerprint: deviceFingerprint,
                 ip: simulatedIP,
-                created: new Date().toISOString()
+                created: new Date().toISOString(),
+                permissions: { news: false, lore: false, flights: false, banking: false }
             };
 
-            existingUsers.push(newUser);
-            saveMockData('mockUsers', existingUsers);
             await callSheetsAPI('register', newUser);
 
-            showAlert(errorDiv, '✨ Account created! Starting balance: $100.00', 'success');
+            showAlert(errorDiv, '✨ Account created! Starting balance: $1,000.00', 'success');
             setTimeout(() => {
                 switchAuthTab('login');
-                document.getElementById('loginUsername').value = username;
                 document.getElementById('loginEmail').value = email;
             }, 1500);
         }
 
         async function login() {
-            const username = document.getElementById('loginUsername').value.trim();
             const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
             
-            if (!username || !email) {
-                alert('Please enter both username and email');
+            if (!email || !password) {
+                alert('Please enter both email and password');
                 return;
             }
 
             const data = await getSheetsData('getUsers');
-            const user = (data.users || []).find(u => u.username === username && u.email === email);
+            const user = (data.users || []).find(u => u.email === email && u.username === password);
 
             if (!user) {
-                alert('Invalid username or email');
+                alert('Invalid email or password');
                 return;
             }
 
             currentUser = user;
+            if (!currentUser.permissions) {
+                currentUser.permissions = { news: false, lore: false, flights: false, banking: false };
+            }
             showApp();
         }
 
@@ -1158,16 +1543,42 @@
             document.getElementById('userDisplayName').textContent = currentUser.name;
             document.getElementById('userDisplayEmail').textContent = currentUser.email;
 
-            if (currentUser.email === 'sheepishlyroyal@gmail.com') {
+            const isMaster = currentUser.email === MASTER_ADMIN;
+            const hasAnyAdmin = currentUser.permissions && (
+                currentUser.permissions.news || 
+                currentUser.permissions.lore || 
+                currentUser.permissions.flights || 
+                currentUser.permissions.banking
+            );
+
+            if (isMaster) {
+                document.getElementById('masterBadge').classList.remove('hidden');
                 document.getElementById('adminTab').classList.remove('hidden');
-                document.getElementById('adminBadge').classList.remove('hidden');
+                document.getElementById('newsPostBtn').classList.remove('hidden');
+                document.getElementById('lorePostBtn').classList.remove('hidden');
+                document.getElementById('flightsPostBtn').classList.remove('hidden');
+            } else {
+                if (hasAnyAdmin) {
+                    document.getElementById('adminBadge').classList.remove('hidden');
+                }
+                if (currentUser.permissions.news) document.getElementById('newsPostBtn').classList.remove('hidden');
+                if (currentUser.permissions.lore) document.getElementById('lorePostBtn').classList.remove('hidden');
+                if (currentUser.permissions.flights) document.getElementById('flightsPostBtn').classList.remove('hidden');
             }
 
             loadDashboard();
+            initScrollAnimations();
+            
             updateInterval = setInterval(() => {
-                const activeTab = document.querySelector('#appScreen .tab.active').textContent;
-                if (activeTab.includes('Chat')) loadMessages();
-                else if (activeTab.includes('Dashboard')) loadDashboard();
+                const activeTab = document.querySelector('#appScreen .tab.active');
+                if (!activeTab) return;
+                const tabText = activeTab.textContent.toLowerCase();
+                if (tabText.includes('chat')) loadMessages();
+                else if (tabText.includes('banking')) loadDashboard();
+                else if (tabText.includes('tickets')) loadTickets();
+                else if (tabText.includes('news')) loadPosts('news');
+                else if (tabText.includes('lore')) loadPosts('lore');
+                else if (tabText.includes('flights')) loadFlights();
             }, 5000);
         }
 
@@ -1176,49 +1587,48 @@
             currentUser = null;
             document.getElementById('authScreen').classList.remove('hidden');
             document.getElementById('appScreen').classList.add('hidden');
-            document.getElementById('adminTab').classList.add('hidden');
-            document.getElementById('adminBadge').classList.add('hidden');
         }
 
         async function loadDashboard() {
             if (!currentUser) return;
 
             const data = await getSheetsData('getUsers');
-            const user = (data.users || []).find(u => u.username === currentUser.username);
+            const user = (data.users || []).find(u => u.email === currentUser.email);
             
             if (user) {
                 currentUser.balance = user.balance;
                 document.getElementById('balanceAmount').textContent = user.balance.toFixed(2);
             }
 
-            const txData = await getSheetsData('getTransactions', `&username=${currentUser.username}`);
+            const txData = await getSheetsData('getTransactions', `&email=${currentUser.email}`);
             const transactions = txData.transactions || [];
             
             const txList = document.getElementById('transactionList');
             if (transactions.length === 0) {
-                txList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📊</div><div>No transactions yet</div></div>';
+                txList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💰</div><div>No transactions yet</div></div>';
             } else {
                 txList.innerHTML = transactions.slice(-10).reverse().map(tx => {
-                    const isReceived = tx.to === currentUser.username;
+                    const isReceived = tx.to === currentUser.email;
                     const amount = parseFloat(tx.amount);
                     return `
-                        <div class="transaction-item">
-                            <div class="transaction-info">
-                                <div class="transaction-title">${isReceived ? '← From' : '→ To'} ${isReceived ? tx.from : tx.to}</div>
-                                <div class="transaction-note">${tx.note || 'No note'}</div>
-                                <div class="transaction-time">${new Date(tx.timestamp).toLocaleString()}</div>
+                        <div class="transaction-item scroll-animate">
+                            <div>
+                                <div style="font-weight: 700; font-size: 16px; margin-bottom: 6px;">${isReceived ? '← From' : '→ To'} ${isReceived ? (tx.from === 'ADMIN' ? 'Admin' : tx.from) : tx.to}</div>
+                                <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 4px;">${tx.note || 'No note'}</div>
+                                <div style="font-size: 12px; color: var(--text-muted);">${new Date(tx.timestamp).toLocaleString()}</div>
                             </div>
-                            <div class="transaction-amount ${isReceived ? 'positive' : 'negative'}">
+                            <div style="font-weight: 800; font-size: 28px; color: ${isReceived ? 'var(--success)' : 'var(--danger)'};">
                                 ${isReceived ? '+' : '-'}$${amount.toFixed(2)}
                             </div>
                         </div>
                     `;
                 }).join('');
+                initScrollAnimations();
             }
         }
 
         async function transferMoney() {
-            const recipient = document.getElementById('recipientUsername').value.trim();
+            const recipient = document.getElementById('recipientEmail').value.trim();
             const amount = parseFloat(document.getElementById('transferAmount').value);
             const note = document.getElementById('transferNote').value.trim();
             const successDiv = document.getElementById('transferSuccess');
@@ -1228,11 +1638,11 @@
             errorDiv.className = 'hidden';
 
             if (!recipient || !amount || amount <= 0) {
-                showAlert(errorDiv, 'Please enter a valid recipient and amount', 'error');
+                showAlert(errorDiv, 'Please enter valid recipient and amount', 'error');
                 return;
             }
 
-            if (recipient === currentUser.username) {
+            if (recipient === currentUser.email) {
                 showAlert(errorDiv, 'Cannot send money to yourself', 'error');
                 return;
             }
@@ -1244,42 +1654,146 @@
 
             const data = await getSheetsData('getUsers');
             const users = data.users || [];
-            const recipientUser = users.find(u => u.username === recipient);
+            const recipientUser = users.find(u => u.email === recipient);
 
             if (!recipientUser) {
                 showAlert(errorDiv, 'Recipient not found', 'error');
                 return;
             }
 
-            currentUser.balance -= amount;
-            recipientUser.balance += amount;
-
-            const userIndex = users.findIndex(u => u.username === currentUser.username);
-            const recipientIndex = users.findIndex(u => u.username === recipient);
-            users[userIndex] = currentUser;
-            users[recipientIndex] = recipientUser;
-            saveMockData('mockUsers', users);
-
             const transaction = {
-                from: currentUser.username,
+                from: currentUser.email,
                 to: recipient,
                 amount: amount,
                 note: note,
                 timestamp: new Date().toISOString()
             };
 
-            const mockTransactions = JSON.parse(localStorage.getItem('mockTransactions') || '[]');
-            mockTransactions.push(transaction);
-            saveMockData('mockTransactions', mockTransactions);
             await callSheetsAPI('transfer', transaction);
 
-            showAlert(successDiv, `✨ Successfully sent $${amount.toFixed(2)} to ${recipient}`, 'success');
+            showAlert(successDiv, `✨ Successfully sent $${amount.toFixed(2)} to ${recipientUser.name}`, 'success');
 
-            document.getElementById('recipientUsername').value = '';
+            document.getElementById('recipientEmail').value = '';
             document.getElementById('transferAmount').value = '';
             document.getElementById('transferNote').value = '';
 
-            loadDashboard();
+            setTimeout(() => loadDashboard(), 1000);
+        }
+
+        async function loadTickets() {
+            const data = await getSheetsData('getTickets', `&email=${currentUser.email}`);
+            const tickets = data.tickets || [];
+            
+            const ticketsList = document.getElementById('ticketsList');
+            if (tickets.length === 0) {
+                ticketsList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🎫</div><div>You haven\'t purchased any tickets yet</div></div>';
+            } else {
+                ticketsList.innerHTML = tickets.map(ticket => {
+                    const flightData = JSON.parse(ticket.flightData);
+                    return `
+                        <div class="ticket-card scroll-animate">
+                            <div class="ticket-route">${flightData.departureCity} → ${flightData.arrivalCity}</div>
+                            <div class="ticket-details">
+                                <div class="ticket-detail">
+                                    <div class="ticket-label">Flight Number</div>
+                                    <div class="ticket-value">${flightData.flightNumber}</div>
+                                </div>
+                                <div class="ticket-detail">
+                                    <div class="ticket-label">Departure</div>
+                                    <div class="ticket-value">${flightData.departureCode} - ${flightData.departureTime || 'TBA'}</div>
+                                </div>
+                                <div class="ticket-detail">
+                                    <div class="ticket-label">Arrival</div>
+                                    <div class="ticket-value">${flightData.arrivalCode}</div>
+                                </div>
+                                <div class="ticket-detail">
+                                    <div class="ticket-label">Price Paid</div>
+                                    <div class="ticket-value">$${parseFloat(flightData.price).toFixed(2)}</div>
+                                </div>
+                                <div class="ticket-detail">
+                                    <div class="ticket-label">Purchased</div>
+                                    <div class="ticket-value">${new Date(ticket.purchaseDate).toLocaleDateString()}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                initScrollAnimations();
+            }
+        }
+
+        async function loadFlights() {
+            const data = await getSheetsData('getPosts', `&category=flights`);
+            const allPosts = data.posts || [];
+            const flights = allPosts.filter(p => p.category === 'flights');
+            
+            const flightsContainer = document.getElementById('flightsPosts');
+            if (flights.length === 0) {
+                flightsContainer.innerHTML = '<div class="empty-state"><div class="empty-state-icon">✈️</div><div>No flights available yet</div></div>';
+            } else {
+                flightsContainer.innerHTML = flights.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).map(post => {
+                    const flightData = JSON.parse(post.content);
+                    return `
+                        <div class="flight-card scroll-animate">
+                            <div class="flight-location">
+                                <div class="flight-city">${flightData.departureCity}</div>
+                                <div class="flight-airport">${flightData.departureCode || 'N/A'}</div>
+                                <div class="flight-time">${flightData.departureTime || 'TBA'}</div>
+                            </div>
+                            <div class="flight-route">
+                                <div class="flight-icon">✈️</div>
+                                <div class="flight-number">${flightData.flightNumber}</div>
+                                <div class="flight-price">$${parseFloat(flightData.price || 0).toFixed(2)}</div>
+                                <button class="btn-buy" onclick='buyTicket(${JSON.stringify(flightData).replace(/'/g, "&apos;")}, ${flightData.price})' style="margin-top: 16px;">Buy Ticket</button>
+                            </div>
+                            <div class="flight-location">
+                                <div class="flight-city">${flightData.arrivalCity}</div>
+                                <div class="flight-airport">${flightData.arrivalCode || 'N/A'}</div>
+                                <div style="margin-top: 16px; font-size: 13px; color: var(--text-muted);">Posted by ${post.author}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                initScrollAnimations();
+            }
+        }
+
+        async function buyTicket(flightData, price) {
+            const amount = parseFloat(price);
+            
+            if (amount > currentUser.balance) {
+                alert('Insufficient balance to purchase this ticket');
+                return;
+            }
+
+            if (!confirm(`Purchase ticket for $${amount.toFixed(2)}?\n\nFlight: ${flightData.flightNumber}\n${flightData.departureCity} → ${flightData.arrivalCity}`)) {
+                return;
+            }
+
+            const ticket = {
+                userEmail: currentUser.email,
+                flightData: JSON.stringify(flightData),
+                purchaseDate: new Date().toISOString()
+            };
+
+            await callSheetsAPI('buyTicket', {
+                ticket: ticket,
+                userEmail: currentUser.email,
+                amount: amount
+            });
+
+            // Show WhatsApp modal
+            document.getElementById('whatsappModal').classList.add('show');
+
+            // Refresh data
+            setTimeout(() => {
+                loadDashboard();
+                loadTickets();
+            }, 1000);
+        }
+
+        function closeModal() {
+            document.getElementById('whatsappModal').classList.remove('show');
         }
 
         async function loadMessages() {
@@ -1290,40 +1804,162 @@
             if (messages.length === 0) {
                 messagesArea.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💬</div><div>No messages yet</div></div>';
             } else {
-                messagesArea.innerHTML = messages.slice(-50).map(msg => `
-                    <div class="message ${msg.isAdmin ? 'admin-message' : ''}">
-                        <div class="message-header">
-                            <span class="message-user">${msg.username}${msg.isAdmin ? ' 👑' : ''}</span>
-                            <span class="message-time">${new Date(msg.timestamp).toLocaleString()}</span>
+                messagesArea.innerHTML = messages.slice(-50).map(msg => {
+                    const isMaster = msg.email === MASTER_ADMIN;
+                    return `
+                        <div style="margin-bottom: 20px; padding: 20px; background: rgba(2, 6, 23, 0.6); border-radius: 16px; border-left: 4px solid ${isMaster ? 'var(--gold)' : 'var(--primary)'};">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span style="font-weight: 700; color: ${isMaster ? 'var(--gold)' : 'var(--primary-light)'}; font-size: 15px;">
+                                    ${msg.name}${isMaster ? ' ⚡' : ''}
+                                </span>
+                                <span style="font-size: 12px; color: var(--text-muted);">${new Date(msg.timestamp).toLocaleString()}</span>
+                            </div>
+                            <div style="color: var(--text-primary); font-size: 15px;">${escapeHtml(msg.message)}</div>
                         </div>
-                        <div class="message-text">${escapeHtml(msg.message)}</div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
                 messagesArea.scrollTop = messagesArea.scrollHeight;
             }
         }
 
         async function sendMessage() {
+            if (messageSending) return;
+            
             const input = document.getElementById('chatMessage');
             const message = input.value.trim();
             
             if (!message) return;
 
+            messageSending = true;
+            
             const messageData = {
-                username: currentUser.username,
+                name: currentUser.name,
                 email: currentUser.email,
                 message: message,
-                timestamp: new Date().toISOString(),
-                isAdmin: currentUser.email === 'sheepishlyroyal@gmail.com'
+                timestamp: new Date().toISOString()
             };
 
-            const mockMessages = JSON.parse(localStorage.getItem('mockMessages') || '[]');
-            mockMessages.push(messageData);
-            saveMockData('mockMessages', mockMessages);
-            await callSheetsAPI('sendMessage', messageData);
-
             input.value = '';
-            loadMessages();
+            await callSheetsAPI('sendMessage', messageData);
+            
+            setTimeout(() => {
+                messageSending = false;
+                loadMessages();
+            }, 500);
+        }
+
+        function showPostForm(category) {
+            document.getElementById(`${category}PostForm`).classList.remove('hidden');
+        }
+
+        function hidePostForm(category) {
+            document.getElementById(`${category}PostForm`).classList.add('hidden');
+            document.getElementById(`${category}Title`).value = '';
+            document.getElementById(`${category}Content`).value = '';
+        }
+
+        function showFlightForm() {
+            document.getElementById('flightsPostForm').classList.remove('hidden');
+        }
+
+        function hideFlightForm() {
+            document.getElementById('flightsPostForm').classList.add('hidden');
+            document.getElementById('flightDepartureCity').value = '';
+            document.getElementById('flightDepartureCode').value = '';
+            document.getElementById('flightArrivalCity').value = '';
+            document.getElementById('flightArrivalCode').value = '';
+            document.getElementById('flightNumber').value = '';
+            document.getElementById('flightDepartureTime').value = '';
+            document.getElementById('flightPrice').value = '';
+        }
+
+        async function publishPost(category) {
+            const title = document.getElementById(`${category}Title`).value.trim();
+            const content = document.getElementById(`${category}Content`).value.trim();
+            
+            if (!title || !content) {
+                alert('Please fill in both title and content');
+                return;
+            }
+
+            const post = {
+                category: category,
+                title: title,
+                content: content,
+                author: currentUser.name,
+                authorEmail: currentUser.email,
+                timestamp: new Date().toISOString()
+            };
+
+            await callSheetsAPI('createPost', post);
+            
+            hidePostForm(category);
+            loadPosts(category);
+        }
+
+        async function publishFlight() {
+            const departureCity = document.getElementById('flightDepartureCity').value.trim();
+            const departureCode = document.getElementById('flightDepartureCode').value.trim();
+            const arrivalCity = document.getElementById('flightArrivalCity').value.trim();
+            const arrivalCode = document.getElementById('flightArrivalCode').value.trim();
+            const flightNumber = document.getElementById('flightNumber').value.trim();
+            const departureTime = document.getElementById('flightDepartureTime').value.trim();
+            const price = document.getElementById('flightPrice').value.trim();
+            
+            if (!departureCity || !arrivalCity || !flightNumber || !price) {
+                alert('Please fill in required fields');
+                return;
+            }
+
+            const post = {
+                category: 'flights',
+                title: `${departureCity} to ${arrivalCity}`,
+                content: JSON.stringify({
+                    departureCity, departureCode, arrivalCity, arrivalCode,
+                    flightNumber, departureTime, price
+                }),
+                author: currentUser.name,
+                authorEmail: currentUser.email,
+                timestamp: new Date().toISOString()
+            };
+
+            await callSheetsAPI('createPost', post);
+            
+            hideFlightForm();
+            loadFlights();
+        }
+
+        async function loadPosts(category) {
+            const data = await getSheetsData('getPosts', `&category=${category}`);
+            const allPosts = data.posts || [];
+            const posts = allPosts.filter(p => p.category === category);
+            
+            const postsContainer = document.getElementById(`${category}Posts`);
+            if (posts.length === 0) {
+                const emojis = { news: '📰', lore: '📜' };
+                postsContainer.innerHTML = `<div class="empty-state"><div class="empty-state-icon">${emojis[category]}</div><div>No ${category} posts yet</div></div>`;
+            } else {
+                postsContainer.innerHTML = posts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).map(post => {
+                    const initials = post.author.substring(0, 2).toUpperCase();
+                    return `
+                        <div class="post scroll-animate">
+                            <div class="post-header">
+                                <div class="post-author">
+                                    <div class="post-avatar">${initials}</div>
+                                    <div class="post-meta">
+                                        <div class="post-author-name">${post.author}</div>
+                                        <div class="post-date">${new Date(post.timestamp).toLocaleDateString()}</div>
+                                    </div>
+                                </div>
+                                <span class="post-category">${category}</span>
+                            </div>
+                            <div class="post-title">${escapeHtml(post.title)}</div>
+                            <div class="post-content">${escapeHtml(post.content)}</div>
+                        </div>
+                    `;
+                }).join('');
+                initScrollAnimations();
+            }
         }
 
         async function loadAdminPanel() {
@@ -1332,93 +1968,110 @@
             allUsers = users;
             
             const userList = document.getElementById('adminUserList');
-            userList.innerHTML = users.map((user, index) => `
-                <div class="user-item">
-                    <div class="user-header">
-                        <div class="user-info">
-                            <div class="user-name">${user.name} (@${user.username})</div>
-                            <div class="user-email">${user.email}</div>
-                            <div class="user-meta">
-                                IP: ${user.ip} | Device: ${user.fingerprint.substring(0, 8)}...<br>
-                                Joined: ${new Date(user.created).toLocaleDateString()}
+            userList.innerHTML = users.map((user, index) => {
+                const permissions = user.permissions || { news: false, lore: false, flights: false, banking: false };
+                return `
+                    <div class="scroll-animate" style="padding: 32px; background: rgba(2, 6, 23, 0.5); border: 2px solid var(--border); border-radius: 20px; margin-bottom: 24px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 24px;">
+                            <div>
+                                <div style="font-weight: 800; font-size: 18px; margin-bottom: 6px;">${user.name}</div>
+                                <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 10px;">${user.email}</div>
+                                <div style="font-size: 12px; color: var(--text-muted);">
+                                    IP: ${user.ip} | Device: ${user.fingerprint.substring(0, 8)}...<br>
+                                    Joined: ${new Date(user.created).toLocaleDateString()}
+                                </div>
+                            </div>
+                            <div style="font-weight: 900; font-size: 32px; color: var(--gold);">$${user.balance.toFixed(2)}</div>
+                        </div>
+                        
+                        <div style="margin-bottom: 24px; padding: 24px; background: rgba(2, 6, 23, 0.4); border-radius: 16px; border: 1px solid var(--border);">
+                            <div style="font-weight: 700; margin-bottom: 16px; color: var(--text-primary); font-size: 16px;">Admin Permissions</div>
+                            <div class="permission-grid">
+                                <div class="permission-item">
+                                    <input type="checkbox" id="perm_${index}_news" ${permissions.news ? 'checked' : ''} onchange="updatePermission('${user.email}', 'news', this.checked)">
+                                    <label style="margin: 0; color: var(--text-primary); font-weight: 600;">News Admin</label>
+                                </div>
+                                <div class="permission-item">
+                                    <input type="checkbox" id="perm_${index}_lore" ${permissions.lore ? 'checked' : ''} onchange="updatePermission('${user.email}', 'lore', this.checked)">
+                                    <label style="margin: 0; color: var(--text-primary); font-weight: 600;">Lore Admin</label>
+                                </div>
+                                <div class="permission-item">
+                                    <input type="checkbox" id="perm_${index}_flights" ${permissions.flights ? 'checked' : ''} onchange="updatePermission('${user.email}', 'flights', this.checked)">
+                                    <label style="margin: 0; color: var(--text-primary); font-weight: 600;">Flights Admin</label>
+                                </div>
+                                <div class="permission-item">
+                                    <input type="checkbox" id="perm_${index}_banking" ${permissions.banking ? 'checked' : ''} onchange="updatePermission('${user.email}', 'banking', this.checked)">
+                                    <label style="margin: 0; color: var(--text-primary); font-weight: 600;">Banking Admin</label>
+                                </div>
                             </div>
                         </div>
-                        <div class="user-balance">$${user.balance.toFixed(2)}</div>
+                        
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <input type="number" id="adminAmount${index}" placeholder="Amount" step="0.01" style="max-width: 180px; padding: 14px;">
+                            <button onclick="adminAddMoney('${user.email}', ${index})" class="btn-success" style="margin: 0;">Add Money</button>
+                            <button onclick="adminRemoveMoney('${user.email}', ${index})" class="btn-danger" style="margin: 0;">Remove</button>
+                        </div>
                     </div>
-                    <div class="admin-controls">
-                        <input type="number" id="adminAmount${index}" placeholder="Amount" step="0.01">
-                        <button onclick="adminAddMoney(${index})">Add Money</button>
-                        <button onclick="adminRemoveMoney(${index})" style="background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);">Remove Money</button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+            initScrollAnimations();
         }
 
-        async function adminAddMoney(index) {
+        async function updatePermission(email, category, value) {
+            const user = allUsers.find(u => u.email === email);
+            if (!user) return;
+            
+            if (!user.permissions) user.permissions = {};
+            user.permissions[category] = value;
+            
+            await callSheetsAPI('updatePermissions', {
+                email: email,
+                permissions: user.permissions
+            });
+            
+            alert(`✨ Updated ${category} permission for ${user.name}`);
+        }
+
+        async function adminAddMoney(email, index) {
             const amount = parseFloat(document.getElementById(`adminAmount${index}`).value);
             if (!amount || amount <= 0) {
-                alert('Please enter a valid amount');
+                alert('Enter valid amount');
                 return;
             }
 
-            const user = allUsers[index];
+            const user = allUsers.find(u => u.email === email);
+            if (!user) return;
+            
             user.balance += amount;
 
-            const data = await getSheetsData('getUsers');
-            const users = data.users || [];
-            const userIndex = users.findIndex(u => u.username === user.username);
-            users[userIndex] = user;
-            saveMockData('mockUsers', users);
-
-            await callSheetsAPI('updateBalance', { username: user.username, balance: user.balance });
-
-            const transaction = {
+            await callSheetsAPI('updateBalance', { email: email, balance: user.balance });
+            await callSheetsAPI('transfer', {
                 from: 'ADMIN',
-                to: user.username,
+                to: email,
                 amount: amount,
                 note: 'Admin credit',
                 timestamp: new Date().toISOString()
-            };
+            });
 
-            const mockTransactions = JSON.parse(localStorage.getItem('mockTransactions') || '[]');
-            mockTransactions.push(transaction);
-            saveMockData('mockTransactions', mockTransactions);
-
-            alert(`✨ Added $${amount.toFixed(2)} to ${user.username}'s account`);
+            alert(`✨ Added $${amount.toFixed(2)} to ${user.name}`);
             loadAdminPanel();
         }
 
-        async function adminRemoveMoney(index) {
+        async function adminRemoveMoney(email, index) {
             const amount = parseFloat(document.getElementById(`adminAmount${index}`).value);
             if (!amount || amount <= 0) {
-                alert('Please enter a valid amount');
+                alert('Enter valid amount');
                 return;
             }
 
-            const user = allUsers[index];
+            const user = allUsers.find(u => u.email === email);
+            if (!user) return;
+            
             user.balance = Math.max(0, user.balance - amount);
 
-            const data = await getSheetsData('getUsers');
-            const users = data.users || [];
-            const userIndex = users.findIndex(u => u.username === user.username);
-            users[userIndex] = user;
-            saveMockData('mockUsers', users);
+            await callSheetsAPI('updateBalance', { email: email, balance: user.balance });
 
-            await callSheetsAPI('updateBalance', { username: user.username, balance: user.balance });
-
-            const transaction = {
-                from: user.username,
-                to: 'ADMIN',
-                amount: amount,
-                note: 'Admin debit',
-                timestamp: new Date().toISOString()
-            };
-
-            const mockTransactions = JSON.parse(localStorage.getItem('mockTransactions') || '[]');
-            mockTransactions.push(transaction);
-            saveMockData('mockTransactions', mockTransactions);
-
-            alert(`Removed $${amount.toFixed(2)} from ${user.username}'s account`);
+            alert(`Removed $${amount.toFixed(2)} from ${user.name}`);
             loadAdminPanel();
         }
 
