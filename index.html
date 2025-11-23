@@ -1461,7 +1461,7 @@
         let currentResellItem = null;
 
         // === V2.0 VERSION CONTROL ===
-        const APP_VERSION = '2.0.0';
+        const APP_VERSION = '2.0.1';
         const VERSION_KEY = 'lintoria_version';
         
         (function checkVersionAndWipe() {
@@ -1473,7 +1473,7 @@
                 if (savedIP) localStorage.setItem('simulatedIP', savedIP);
                 localStorage.setItem(VERSION_KEY, APP_VERSION);
                 setTimeout(() => {
-                    alert(`🎉 Welcome to Lintoria v${APP_VERSION}!\n\n✨ New Features:\n• Stock Market System\n• Updates Page\n• Bug Fixes\n\nYour client data has been refreshed!`);
+                    alert(`🎉 Welcome to Lintoria v${APP_VERSION}!\n\n✨ New Features:\n• Fixed Admin Panel\n• Fixed Portfolio Page\n• Fixed Stock Selling\n• Bug Fixes\n\nYour client data has been refreshed!`);
                 }, 1000);
             }
         })();
@@ -2241,17 +2241,28 @@
             allUsers = users;
             
             const userList = document.getElementById('adminUserList');
+            if (!userList) return;
+            
+            if (users.length === 0) {
+                userList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><div>No users found</div></div>';
+                return;
+            }
+            
             userList.innerHTML = users.map((user, index) => {
-                const permissions = user.permissions || { news: false, lore: false, flights: false, banking: false };
+                const permissions = user.permissions || { news: false, lore: false, flights: false, banking: false, marketplace: false, stocks: false, updates: false };
+                const deviceId = user.deviceId || 'N/A';
+                const ip = user.ip || 'N/A';
+                const fingerprint = user.fingerprint || user.deviceId || 'N/A';
+                
                 return `
                     <div class="scroll-animate-zoom scroll-animate-delay-${index % 3 + 1}" style="padding: 32px; background: rgba(2, 6, 23, 0.5); border: 2px solid var(--border); border-radius: 20px; margin-bottom: 24px;">
                         <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 24px;">
                             <div>
-                                <div style="font-weight: 800; font-size: 18px; margin-bottom: 6px;">${user.name}</div>
-                                <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 10px;">${user.email}</div>
+                                <div style="font-weight: 800; font-size: 18px; margin-bottom: 6px;">${escapeHtml(user.name)}</div>
+                                <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 10px;">${escapeHtml(user.email)}</div>
                                 <div style="font-size: 12px; color: var(--text-muted);">
-                                    IP: ${user.ip} | Device: ${user.fingerprint.substring(0, 8)}...<br>
-                                    Joined: ${new Date(user.created).toLocaleDateString()}
+                                    IP: ${escapeHtml(ip)} | Device: ${escapeHtml(fingerprint.substring(0, 8))}...<br>
+                                    Joined: ${user.created ? new Date(user.created).toLocaleDateString() : 'N/A'}
                                 </div>
                             </div>
                             <div style="font-weight: 900; font-size: 32px; color: var(--gold);">$${user.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
@@ -2261,28 +2272,40 @@
                             <div style="font-weight: 700; margin-bottom: 16px; color: var(--text-primary); font-size: 16px;">Admin Permissions</div>
                             <div class="permission-grid">
                                 <div class="permission-item">
-                                    <input type="checkbox" id="perm_${index}_news" ${permissions.news ? 'checked' : ''} onchange="updatePermission('${user.email}', 'news', this.checked)">
+                                    <input type="checkbox" id="perm_${index}_news" ${permissions.news ? 'checked' : ''} onchange="updatePermission('${escapeHtml(user.email)}', 'news', this.checked)">
                                     <label style="margin: 0; color: var(--text-primary); font-weight: 600;">News Admin</label>
                                 </div>
                                 <div class="permission-item">
-                                    <input type="checkbox" id="perm_${index}_lore" ${permissions.lore ? 'checked' : ''} onchange="updatePermission('${user.email}', 'lore', this.checked)">
+                                    <input type="checkbox" id="perm_${index}_lore" ${permissions.lore ? 'checked' : ''} onchange="updatePermission('${escapeHtml(user.email)}', 'lore', this.checked)">
                                     <label style="margin: 0; color: var(--text-primary); font-weight: 600;">Lore Admin</label>
                                 </div>
                                 <div class="permission-item">
-                                    <input type="checkbox" id="perm_${index}_flights" ${permissions.flights ? 'checked' : ''} onchange="updatePermission('${user.email}', 'flights', this.checked)">
+                                    <input type="checkbox" id="perm_${index}_flights" ${permissions.flights ? 'checked' : ''} onchange="updatePermission('${escapeHtml(user.email)}', 'flights', this.checked)">
                                     <label style="margin: 0; color: var(--text-primary); font-weight: 600;">Flights Admin</label>
                                 </div>
                                 <div class="permission-item">
-                                    <input type="checkbox" id="perm_${index}_banking" ${permissions.banking ? 'checked' : ''} onchange="updatePermission('${user.email}', 'banking', this.checked)">
+                                    <input type="checkbox" id="perm_${index}_banking" ${permissions.banking ? 'checked' : ''} onchange="updatePermission('${escapeHtml(user.email)}', 'banking', this.checked)">
                                     <label style="margin: 0; color: var(--text-primary); font-weight: 600;">Banking Admin</label>
+                                </div>
+                                <div class="permission-item">
+                                    <input type="checkbox" id="perm_${index}_marketplace" ${permissions.marketplace ? 'checked' : ''} onchange="updatePermission('${escapeHtml(user.email)}', 'marketplace', this.checked)">
+                                    <label style="margin: 0; color: var(--text-primary); font-weight: 600;">Marketplace Admin</label>
+                                </div>
+                                <div class="permission-item">
+                                    <input type="checkbox" id="perm_${index}_stocks" ${permissions.stocks ? 'checked' : ''} onchange="updatePermission('${escapeHtml(user.email)}', 'stocks', this.checked)">
+                                    <label style="margin: 0; color: var(--text-primary); font-weight: 600;">Stocks Admin</label>
+                                </div>
+                                <div class="permission-item">
+                                    <input type="checkbox" id="perm_${index}_updates" ${permissions.updates ? 'checked' : ''} onchange="updatePermission('${escapeHtml(user.email)}', 'updates', this.checked)">
+                                    <label style="margin: 0; color: var(--text-primary); font-weight: 600;">Updates Admin</label>
                                 </div>
                             </div>
                         </div>
                         
                         <div style="display: flex; gap: 12px; align-items: center;">
                             <input type="number" id="adminAmount${index}" placeholder="Amount" step="0.01" style="max-width: 180px; padding: 14px;">
-                            <button onclick="adminAddMoney('${user.email}', ${index})" class="btn-success" style="margin: 0;">Add Money</button>
-                            <button onclick="adminRemoveMoney('${user.email}', ${index})" class="btn-danger" style="margin: 0;">Remove</button>
+                            <button onclick="adminAddMoney('${escapeHtml(user.email)}', ${index})" class="btn-success" style="margin: 0;">Add Money</button>
+                            <button onclick="adminRemoveMoney('${escapeHtml(user.email)}', ${index})" class="btn-danger" style="margin: 0;">Remove</button>
                         </div>
                     </div>
                 `;
@@ -2362,591 +2385,765 @@
 
         // === STOCK MARKET FUNCTIONS (V2.0) ===
 
-// === ENHANCED STOCK MARKET (REALISTIC & ANTI-MANIPULATION) ===
-let marketDepth = {}; // Track buy/sell pressure
-
-async function loadStocks() {
-    const data = await getSheetsData('getStocks');
-    const stocks = data.stocks || [];
-    allStocks = stocks;
-    
-    const container = document.getElementById('stocksList');
-    if (!container) return;
-    
-    // Admin create button
-    const canCreate = currentUser.email === MASTER_ADMIN || (currentUser.permissions && currentUser.permissions.stocks);
-    let adminHTML = '';
-    if (canCreate) {
-        adminHTML = `
-            <div class="card" style="background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(37,99,235,0.1));border:2px solid rgba(59,130,246,0.4);margin-bottom:24px">
-                <h3 style="margin-bottom:16px">📈 Create Company (Admin Only)</h3>
-                <div style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
-                    <input type="text" id="stockSymbol" placeholder="Symbol (e.g. TECH)" style="text-transform:uppercase">
-                    <input type="text" id="stockName" placeholder="Company Name">
-                </div>
-                <textarea id="stockDesc" placeholder="Company description..." style="margin-top:16px;min-height:80px"></textarea>
-                <div style="display:grid;gap:16px;grid-template-columns:1fr 1fr;margin-top:16px">
-                    <input type="number" id="stockPrice" placeholder="Starting Price" min="0.01" step="0.01">
-                    <input type="number" id="stockShares" placeholder="Total Shares" min="100" step="100">
-                </div>
-                <button onclick="createStockCompany()" style="width:100%;margin-top:16px">Create Company</button>
-            </div>
-        `;
-    }
-    
-    if (stocks.length === 0) {
-        container.innerHTML = adminHTML + '<div class="empty-state"><div class="empty-state-icon">📈</div><div>No companies listed yet</div></div>';
-    } else {
-        container.innerHTML = adminHTML + stocks.map((stock, i) => {
-            const changePercent = ((stock.currentPrice - stock.startingPrice) / stock.startingPrice * 100).toFixed(2);
-            const isPositive = changePercent >= 0;
-            const maxBuy = Math.min(stock.availableShares, Math.floor(stock.availableShares * 0.1)); // Max 10% of available
+        async function loadStocks() {
+            const data = await getSheetsData('getStocks');
+            const stocks = data.stocks || [];
+            allStocks = stocks;
             
-            return `
-                <div class="card scroll-animate scroll-animate-delay-${i%3+1}" style="margin-bottom:24px">
-                    <div style="display:flex;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:20px">
-                        <div>
-                            <div style="font-size:24px;font-weight:900;color:var(--text-primary)">${escapeHtml(stock.symbol)}</div>
-                            <div style="color:var(--text-muted);font-size:14px">${escapeHtml(stock.companyName)}</div>
+            const container = document.getElementById('stocksList');
+            if (!container) return;
+            
+            // Admin create button
+            const canCreate = currentUser.email === MASTER_ADMIN || (currentUser.permissions && currentUser.permissions.stocks);
+            let adminHTML = '';
+            if (canCreate) {
+                adminHTML = `
+                    <div class="card" style="background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(37,99,235,0.1));border:2px solid rgba(59,130,246,0.4);margin-bottom:24px">
+                        <h3 style="margin-bottom:16px">📈 Create Company (Admin Only)</h3>
+                        <div style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+                            <input type="text" id="stockSymbol" placeholder="Symbol (e.g. TECH)" style="text-transform:uppercase">
+                            <input type="text" id="stockName" placeholder="Company Name">
                         </div>
-                        <div style="text-align:right">
-                            <div style="font-size:36px;font-weight:900;color:${isPositive?'var(--success)':'var(--danger)'}">$${parseFloat(stock.currentPrice).toLocaleString('en-US',{minimumFractionDigits:2})}</div>
-                            <div style="font-size:16px;font-weight:700;color:${isPositive?'var(--success)':'var(--danger)'}">
-                                ${isPositive?'+':''}${changePercent}%
+                        <textarea id="stockDesc" placeholder="Company description..." style="margin-top:16px;min-height:80px"></textarea>
+                        <div style="display:grid;gap:16px;grid-template-columns:1fr 1fr;margin-top:16px">
+                            <input type="number" id="stockPrice" placeholder="Starting Price" min="0.01" step="0.01">
+                            <input type="number" id="stockShares" placeholder="Total Shares" min="100" step="100">
+                        </div>
+                        <button onclick="createStockCompany()" style="width:100%;margin-top:16px">Create Company</button>
+                    </div>
+                `;
+            }
+            
+            if (stocks.length === 0) {
+                container.innerHTML = adminHTML + '<div class="empty-state"><div class="empty-state-icon">📈</div><div>No companies listed yet</div></div>';
+            } else {
+                container.innerHTML = adminHTML + stocks.map((stock, i) => {
+                    const changePercent = ((stock.currentPrice - stock.startingPrice) / stock.startingPrice * 100).toFixed(2);
+                    const isPositive = changePercent >= 0;
+                    const maxBuy = Math.min(stock.availableShares, Math.floor(stock.availableShares * 0.1)); // Max 10% of available
+                    
+                    return `
+                        <div class="card scroll-animate scroll-animate-delay-${i%3+1}" style="margin-bottom:24px">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:20px">
+                                <div>
+                                    <div style="font-size:24px;font-weight:900;color:var(--text-primary)">${escapeHtml(stock.symbol)}</div>
+                                    <div style="color:var(--text-muted);font-size:14px">${escapeHtml(stock.companyName)}</div>
+                                </div>
+                                <div style="text-align:right">
+                                    <div style="font-size:36px;font-weight:900;color:${isPositive?'var(--success)':'var(--danger)'}">$${parseFloat(stock.currentPrice).toLocaleString('en-US',{minimumFractionDigits:2})}</div>
+                                    <div style="font-size:16px;font-weight:700;color:${isPositive?'var(--success)':'var(--danger)'}">
+                                        ${isPositive?'+':''}${changePercent}%
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="color:var(--text-secondary);margin:16px 0">${escapeHtml(stock.description)}</div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:16px;border-top:1px solid var(--border)">
+                                <div style="color:var(--text-muted)">Available: ${stock.availableShares.toLocaleString()} / ${stock.totalShares.toLocaleString()}</div>
+                                <div style="text-align:right;color:var(--text-muted)">Max Buy: ${maxBuy.toLocaleString()}</div>
+                            </div>
+                            <button onclick='buyStockPrompt(${JSON.stringify(stock).replace(/'/g,"&apos;")},${maxBuy})' style="width:100%;margin-top:16px">Buy Shares (Max ${maxBuy})</button>
+                        </div>
+                    `;
+                }).join('');
+                initScrollAnimations();
+            }
+        }
+
+        async function createStockCompany() {
+            const symbol = document.getElementById('stockSymbol').value.trim().toUpperCase();
+            const name = document.getElementById('stockName').value.trim();
+            const desc = document.getElementById('stockDesc').value.trim();
+            const price = parseFloat(document.getElementById('stockPrice').value);
+            const shares = parseInt(document.getElementById('stockShares').value);
+            
+            if (!symbol || !name || !desc || !price || !shares) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            if (symbol.length < 2 || symbol.length > 5) {
+                alert('Symbol must be 2-5 characters');
+                return;
+            }
+            
+            if (price < 0.01) {
+                alert('Price must be at least $0.01');
+                return;
+            }
+            
+            if (shares < 100) {
+                alert('Minimum 100 shares required');
+                return;
+            }
+            
+            await callSheetsAPI('createStock', {
+                symbol, companyName: name, description: desc,
+                startingPrice: price, totalShares: shares, creatorEmail: currentUser.email
+            });
+            
+            alert(`✨ Company ${symbol} created successfully!`);
+            document.getElementById('stockSymbol').value = '';
+            document.getElementById('stockName').value = '';
+            document.getElementById('stockDesc').value = '';
+            document.getElementById('stockPrice').value = '';
+            document.getElementById('stockShares').value = '';
+            loadStocks();
+        }
+
+        function buyStockPrompt(stock, maxBuy) {
+            const shares = prompt(`Buy ${stock.symbol} shares\n\nCurrent Price: $${parseFloat(stock.currentPrice).toFixed(2)}\nAvailable: ${stock.availableShares.toLocaleString()}\nMax You Can Buy: ${maxBuy}\n\nEnter number of shares:`);
+            if (!shares) return;
+            
+            const numShares = parseInt(shares);
+            if (isNaN(numShares) || numShares <= 0) {
+                alert('Invalid number');
+                return;
+            }
+            if (numShares > maxBuy) {
+                alert(`Maximum ${maxBuy} shares allowed (10% of available supply)`);
+                return;
+            }
+            if (numShares > stock.availableShares) {
+                alert('Not enough shares available');
+                return;
+            }
+            
+            const totalCost = numShares * parseFloat(stock.currentPrice);
+            if (totalCost > currentUser.balance) {
+                alert('Insufficient balance');
+                return;
+            }
+            
+            // Calculate realistic price impact based on order size
+            const impactPercent = (numShares / stock.availableShares) * 100; // % of supply
+            const priceIncrease = 0.01 + (impactPercent * 0.5); // 1% base + 0.5% per % of supply
+            const newPrice = stock.currentPrice * (1 + (priceIncrease / 100));
+            
+            if (confirm(`Buy ${numShares} shares for $${totalCost.toLocaleString('en-US',{minimumFractionDigits:2})}?\n\nNew price will be: $${newPrice.toFixed(2)} (+${priceIncrease.toFixed(2)}%)`)) {
+                buyStock(stock, numShares, newPrice);
+            }
+        }
+
+        async function buyStock(stock, shares, newPrice) {
+            const totalCost = shares * parseFloat(stock.currentPrice);
+            
+            await callSheetsAPI('buyStock', {
+                userEmail: currentUser.email, symbol: stock.symbol, companyName: stock.companyName,
+                shares: shares, price: stock.currentPrice, newPrice: newPrice, totalCost: totalCost
+            });
+            
+            alert(`✨ Bought ${shares} shares of ${stock.symbol}!`);
+            setTimeout(() => { loadDashboard(); loadStocks(); loadPortfolio(); }, 1000);
+        }
+
+        function sellStockPrompt(holding, currentPrice) {
+            const maxSell = holding.shares;
+            const shares = prompt(`Sell ${holding.symbol} shares\n\nYou Own: ${holding.shares}\nCurrent Price: $${parseFloat(currentPrice).toFixed(2)}\nYour Avg Cost: $${parseFloat(holding.avgPrice).toFixed(2)}\n\nEnter shares to sell:`);
+            if (!shares) return;
+            
+            const numShares = parseInt(shares);
+            if (isNaN(numShares) || numShares <= 0) {
+                alert('Invalid number');
+                return;
+            }
+            if (numShares > maxSell) {
+                alert(`You only own ${maxSell} shares`);
+                return;
+            }
+            
+            // Find stock to calculate impact
+            const stock = allStocks.find(s => s.symbol === holding.symbol);
+            if (!stock) return;
+            
+            const impactPercent = (numShares / stock.totalShares) * 100;
+            const priceDecrease = 0.01 + (impactPercent * 0.5);
+            const newPrice = currentPrice * (1 - (priceDecrease / 100));
+            
+            const totalReceived = numShares * parseFloat(currentPrice);
+            const profit = totalReceived - (numShares * holding.avgPrice);
+            
+            if (confirm(`Sell ${numShares} shares for $${totalReceived.toLocaleString('en-US',{minimumFractionDigits:2})}?\n\nProfit/Loss: ${profit >= 0 ? '+' : ''}$${profit.toFixed(2)}\nNew price: $${newPrice.toFixed(2)} (-${priceDecrease.toFixed(2)}%)`)) {
+                sellStock(holding, numShares, currentPrice, newPrice);
+            }
+        }
+
+        async function sellStock(holding, shares, currentPrice, newPrice) {
+            const totalReceived = shares * parseFloat(currentPrice);
+            
+            await callSheetsAPI('sellStock', {
+                userEmail: currentUser.email, symbol: holding.symbol, companyName: holding.companyName,
+                shares: shares, price: currentPrice, newPrice: newPrice, totalReceived: totalReceived
+            });
+            
+            alert(`✨ Sold ${shares} shares of ${holding.symbol}!`);
+            setTimeout(() => { loadDashboard(); loadStocks(); loadPortfolio(); }, 1000);
+        }
+
+        // === PORTFOLIO LOADING (FIXED) ===
+        async function loadPortfolio() {
+            if (!currentUser) return;
+            
+            const data = await getSheetsData('getPortfolio', `&email=${currentUser.email}`);
+            const holdings = data.holdings || [];
+            
+            // Get current stock prices
+            const stockData = await getSheetsData('getStocks');
+            const stocks = stockData.stocks || [];
+            allStocks = stocks;
+            
+            const container = document.getElementById('portfolioItems');
+            if (!container) return;
+            
+            if (holdings.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💼</div><div>You don\'t own any stocks yet</div></div>';
+            } else {
+                let totalValue = 0;
+                let totalCost = 0;
+                
+                container.innerHTML = holdings.map((holding, i) => {
+                    const stock = stocks.find(s => s.symbol === holding.symbol);
+                    if (!stock) return '';
+                    
+                    const currentPrice = parseFloat(stock.currentPrice);
+                    const avgPrice = parseFloat(holding.avgPrice);
+                    const shares = parseInt(holding.shares);
+                    const marketValue = shares * currentPrice;
+                    const costBasis = shares * avgPrice;
+                    const profit = marketValue - costBasis;
+                    const profitPercent = ((profit / costBasis) * 100).toFixed(2);
+                    const isProfit = profit >= 0;
+                    
+                    totalValue += marketValue;
+                    totalCost += costBasis;
+                    
+                    return `
+                        <div class="card scroll-animate scroll-animate-delay-${i%3+1}" style="margin-bottom:24px;background:linear-gradient(135deg,rgba(${isProfit?'16,185,129':'239,68,68'},0.15),rgba(${isProfit?'5,150,105':'220,38,38'},0.1));border-color:rgba(${isProfit?'16,185,129':'239,68,68'},0.3)">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:20px">
+                                <div>
+                                    <div style="font-size:28px;font-weight:900;color:var(--text-primary)">${escapeHtml(holding.symbol)}</div>
+                                    <div style="color:var(--text-muted);font-size:14px">${escapeHtml(holding.companyName)}</div>
+                                    <div style="color:var(--text-secondary);font-size:16px;margin-top:8px">${shares.toLocaleString()} shares</div>
+                                </div>
+                                <div style="text-align:right">
+                                    <div style="font-size:36px;font-weight:900;color:${isProfit?'var(--success)':'var(--danger)'}">$${marketValue.toLocaleString('en-US',{minimumFractionDigits:2})}</div>
+                                    <div style="font-size:16px;font-weight:700;color:${isProfit?'var(--success)':'var(--danger)'}">
+                                        ${isProfit?'+':''}$${profit.toFixed(2)} (${isProfit?'+':''}${profitPercent}%)
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding-top:16px;border-top:1px solid var(--border);margin-bottom:16px">
+                                <div>
+                                    <div style="color:var(--text-muted);font-size:12px">Current Price</div>
+                                    <div style="font-weight:700;color:var(--text-primary)">$${currentPrice.toFixed(2)}</div>
+                                </div>
+                                <div>
+                                    <div style="color:var(--text-muted);font-size:12px">Your Avg Cost</div>
+                                    <div style="font-weight:700;color:var(--text-primary)">$${avgPrice.toFixed(2)}</div>
+                                </div>
+                                <div>
+                                    <div style="color:var(--text-muted);font-size:12px">Cost Basis</div>
+                                    <div style="font-weight:700;color:var(--text-primary)">$${costBasis.toFixed(2)}</div>
+                                </div>
+                            </div>
+                            <button onclick='sellStockPrompt(${JSON.stringify(holding).replace(/'/g,"&apos;")},${currentPrice})' style="width:100%;background:linear-gradient(135deg,var(--danger),#dc2626)">Sell Shares</button>
+                        </div>
+                    `;
+                }).join('');
+                
+                const totalProfit = totalValue - totalCost;
+                const totalProfitPercent = ((totalProfit / totalCost) * 100).toFixed(2);
+                const isTotalProfit = totalProfit >= 0;
+                
+                // Add portfolio summary at the top
+                container.insertAdjacentHTML('afterbegin', `
+                    <div class="card" style="background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(37,99,235,0.15));border:2px solid rgba(59,130,246,0.4);margin-bottom:32px">
+                        <h3 style="margin-bottom:20px">Portfolio Summary</h3>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px">
+                            <div>
+                                <div style="color:var(--text-muted);font-size:12px;margin-bottom:4px">Total Market Value</div>
+                                <div style="font-size:32px;font-weight:900;color:var(--primary-light)">$${totalValue.toLocaleString('en-US',{minimumFractionDigits:2})}</div>
+                            </div>
+                            <div>
+                                <div style="color:var(--text-muted);font-size:12px;margin-bottom:4px">Total Cost Basis</div>
+                                <div style="font-size:32px;font-weight:900;color:var(--text-secondary)">$${totalCost.toLocaleString('en-US',{minimumFractionDigits:2})}</div>
+                            </div>
+                            <div>
+                                <div style="color:var(--text-muted);font-size:12px;margin-bottom:4px">Total Profit/Loss</div>
+                                <div style="font-size:32px;font-weight:900;color:${isTotalProfit?'var(--success)':'var(--danger)'}">
+                                    ${isTotalProfit?'+':''}$${totalProfit.toFixed(2)}
+                                </div>
+                                <div style="font-size:16px;font-weight:700;color:${isTotalProfit?'var(--success)':'var(--danger)'};margin-top:4px">
+                                    ${isTotalProfit?'+':''}${totalProfitPercent}%
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div style="color:var(--text-secondary);margin:16px 0">${escapeHtml(stock.description)}</div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:16px;border-top:1px solid var(--border)">
-                        <div style="color:var(--text-muted)">Available: ${stock.availableShares.toLocaleString()} / ${stock.totalShares.toLocaleString()}</div>
-                        <div style="text-align:right;color:var(--text-muted)">Max Buy: ${maxBuy.toLocaleString()}</div>
-                    </div>
-                    <button onclick='buyStockPrompt(${JSON.stringify(stock).replace(/'/g,"&apos;")},${maxBuy})' style="width:100%;margin-top:16px">Buy Shares (Max ${maxBuy})</button>
-                </div>
-            `;
-        }).join('');
-        initScrollAnimations();
-    }
-}
+                `);
+                
+                initScrollAnimations();
+            }
+        }
 
-async function createStockCompany() {
-    const symbol = document.getElementById('stockSymbol').value.trim().toUpperCase();
-    const name = document.getElementById('stockName').value.trim();
-    const desc = document.getElementById('stockDesc').value.trim();
-    const price = parseFloat(document.getElementById('stockPrice').value);
-    const shares = parseInt(document.getElementById('stockShares').value);
-    
-    if (!symbol || !name || !desc || !price || !shares) {
-        alert('Please fill in all fields');
-        return;
-    }
-    
-    if (symbol.length < 2 || symbol.length > 5) {
-        alert('Symbol must be 2-5 characters');
-        return;
-    }
-    
-    if (price < 0.01) {
-        alert('Price must be at least $0.01');
-        return;
-    }
-    
-    if (shares < 100) {
-        alert('Minimum 100 shares required');
-        return;
-    }
-    
-    await callSheetsAPI('createStock', {
-        symbol, companyName: name, description: desc,
-        startingPrice: price, totalShares: shares, creatorEmail: currentUser.email
-    });
-    
-    alert(`✨ Company ${symbol} created successfully!`);
-    document.getElementById('stockSymbol').value = '';
-    document.getElementById('stockName').value = '';
-    document.getElementById('stockDesc').value = '';
-    document.getElementById('stockPrice').value = '';
-    document.getElementById('stockShares').value = '';
-    loadStocks();
-}
-
-function buyStockPrompt(stock, maxBuy) {
-    const shares = prompt(`Buy ${stock.symbol} shares\n\nCurrent Price: $${parseFloat(stock.currentPrice).toFixed(2)}\nAvailable: ${stock.availableShares.toLocaleString()}\nMax You Can Buy: ${maxBuy}\n\nEnter number of shares:`);
-    if (!shares) return;
-    
-    const numShares = parseInt(shares);
-    if (isNaN(numShares) || numShares <= 0) {
-        alert('Invalid number');
-        return;
-    }
-    if (numShares > maxBuy) {
-        alert(`Maximum ${maxBuy} shares allowed (10% of available supply)`);
-        return;
-    }
-    if (numShares > stock.availableShares) {
-        alert('Not enough shares available');
-        return;
-    }
-    
-    const totalCost = numShares * parseFloat(stock.currentPrice);
-    if (totalCost > currentUser.balance) {
-        alert('Insufficient balance');
-        return;
-    }
-    
-    // Calculate realistic price impact based on order size
-    const impactPercent = (numShares / stock.availableShares) * 100; // % of supply
-    const priceIncrease = 0.01 + (impactPercent * 0.5); // 1% base + 0.5% per % of supply
-    const newPrice = stock.currentPrice * (1 + (priceIncrease / 100));
-    
-    if (confirm(`Buy ${numShares} shares for $${totalCost.toLocaleString('en-US',{minimumFractionDigits:2})}?\n\nNew price will be: $${newPrice.toFixed(2)} (+${priceIncrease.toFixed(2)}%)`)) {
-        buyStock(stock, numShares, newPrice);
-    }
-}
-
-async function buyStock(stock, shares, newPrice) {
-    const totalCost = shares * parseFloat(stock.currentPrice);
-    
-    await callSheetsAPI('buyStock', {
-        userEmail: currentUser.email, symbol: stock.symbol, companyName: stock.companyName,
-        shares: shares, price: stock.currentPrice, newPrice: newPrice, totalCost: totalCost
-    });
-    
-    alert(`✨ Bought ${shares} shares of ${stock.symbol}!`);
-    setTimeout(() => { loadDashboard(); loadStocks(); loadPortfolio(); }, 1000);
-}
-
-function sellStockPrompt(holding, currentPrice) {
-    const maxSell = holding.shares;
-    const shares = prompt(`Sell ${holding.symbol} shares\n\nYou Own: ${holding.shares}\nCurrent Price: $${parseFloat(currentPrice).toFixed(2)}\nYour Avg Cost: $${parseFloat(holding.avgPrice).toFixed(2)}\n\nEnter shares to sell:`);
-    if (!shares) return;
-    
-    const numShares = parseInt(shares);
-    if (isNaN(numShares) || numShares <= 0) {
-        alert('Invalid number');
-        return;
-    }
-    if (numShares > maxSell) {
-        alert(`You only own ${maxSell} shares`);
-        return;
-    }
-    
-    // Find stock to calculate impact
-    const stock = allStocks.find(s => s.symbol === holding.symbol);
-    if (!stock) return;
-    
-    const impactPercent = (numShares / stock.totalShares) * 100;
-    const priceDecrease = 0.01 + (impactPercent * 0.5);
-    const newPrice = currentPrice * (1 - (priceDecrease / 100));
-    
-    const totalReceived = numShares * parseFloat(currentPrice);
-    const profit = totalReceived - (numShares * holding.avgPrice);
-    
-    if (confirm(`Sell ${numShares} shares for $${totalReceived.toLocaleString('en-US',{minimumFractionDigits:2})}?\n\nProfit/Loss: ${profit >= 0 ? '+' : ''}$${profit.toFixed(2)}\nNew price: $${newPrice.toFixed(2)} (-${priceDecrease.toFixed(2)}%)`)) {
-        sellStock(holding, numShares, currentPrice, newPrice);
-    }
-}
-
-async function sellStock(holding, shares, currentPrice, newPrice) {
-    const totalReceived = shares * parseFloat(currentPrice);
-    
-    await callSheetsAPI('sellStock', {
-        userEmail: currentUser.email, symbol: holding.symbol, companyName: holding.companyName,
-        shares: shares, price: currentPrice, newPrice: newPrice, totalReceived: totalReceived
-    });
-    
-    alert(`✨ Sold ${shares} shares of ${holding.symbol}!`);
-    setTimeout(() => { loadDashboard(); loadStocks(); loadPortfolio(); }, 1000);
-}
-
-// === MARKETPLACE (ADMIN-ONLY CREATION WITH STOCK LIMITS) ===
-async function loadMarketplace() {
-    const data = await getSheetsData('getItems');
-    const items = data.items || [];
-    
-    const container = document.getElementById('marketplaceItems');
-    if (!container) return;
-    
-    // Admin create button
-    const canCreate = currentUser.email === MASTER_ADMIN || (currentUser.permissions && currentUser.permissions.marketplace);
-    let adminHTML = '';
-    if (canCreate) {
-        adminHTML = `
-            <div class="card" style="background:linear-gradient(135deg,rgba(168,85,247,0.2),rgba(147,51,234,0.1));border:2px solid rgba(168,85,247,0.4);margin-bottom:24px">
-                <h3 style="margin-bottom:16px">🛒 Create Item (Admin Only)</h3>
-                <input type="text" id="itemName" placeholder="Item Name" style="margin-bottom:12px">
-                <textarea id="itemDesc" placeholder="Item description..." style="margin-bottom:12px;min-height:80px"></textarea>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-                    <input type="number" id="itemPrice" placeholder="Price ($)" min="1" step="1">
-                    <input type="number" id="itemStock" placeholder="Stock (Max 5000)" min="1" max="5000" step="1">
-                </div>
-                <button onclick="createMarketplaceItem()" style="width:100%">Create Item</button>
-            </div>
-        `;
-    }
-    
-    if (items.length === 0) {
-        container.innerHTML = adminHTML + '<div class="empty-state"><div class="empty-state-icon">🛒</div><div>No items for sale</div></div>';
-    } else {
-        container.innerHTML = adminHTML + items.map((item, i) => `
-            <div class="card scroll-animate scroll-animate-delay-${i%3+1}" style="margin-bottom:24px;background:linear-gradient(135deg,rgba(168,85,247,0.15),rgba(147,51,234,0.1));border-color:rgba(168,85,247,0.3)">
-                <div style="display:flex;justify-content:space-between;margin-bottom:16px">
-                    <div>
-                        <div style="font-size:20px;font-weight:800">${escapeHtml(item.name)}</div>
-                        <div style="color:var(--text-muted);font-size:12px">By: ${escapeHtml(item.sellerEmail)}</div>
-                    </div>
-                    <div style="text-align:right">
-                        <div style="font-size:28px;font-weight:900;color:var(--purple)">$${parseFloat(item.currentPrice).toLocaleString('en-US',{minimumFractionDigits:2})}</div>
-                        ${item.stock ? `<div style="color:var(--text-muted);font-size:12px">${item.stock} in stock</div>` : ''}
-                    </div>
-                </div>
-                <div style="color:var(--text-secondary);margin-bottom:16px">${escapeHtml(item.description)}</div>
-                <button onclick='purchaseMarketItem(${JSON.stringify(item).replace(/'/g,"&apos;")})' ${!item.stock || item.stock <= 0 ? 'disabled' : ''}>
-                    ${!item.stock || item.stock <= 0 ? 'Out of Stock' : 'Purchase'}
-                </button>
-            </div>
-        `).join('');
-        initScrollAnimations();
-    }
-}
-
-async function createMarketplaceItem() {
-    const name = document.getElementById('itemName').value.trim();
-    const desc = document.getElementById('itemDesc').value.trim();
-    const price = parseFloat(document.getElementById('itemPrice').value);
-    const stock = parseInt(document.getElementById('itemStock').value);
-    
-    if (!name || !desc || !price || !stock) {
-        alert('Please fill all fields');
-        return;
-    }
-    
-    if (stock > 5000) {
-        alert('Maximum stock is 5000 per item');
-        return;
-    }
-    
-    if (price < 1) {
-        alert('Minimum price is $1');
-        return;
-    }
-    
-    await callSheetsAPI('createItem', {
-        name, description: desc, price, stock, creatorEmail: currentUser.email
-    });
-    
-    alert(`✨ Item "${name}" created with ${stock} in stock!`);
-    document.getElementById('itemName').value = '';
-    document.getElementById('itemDesc').value = '';
-    document.getElementById('itemPrice').value = '';
-    document.getElementById('itemStock').value = '';
-    loadMarketplace();
-}
-
-async function purchaseMarketItem(item) {
-    if (!item.stock || item.stock <= 0) {
-        alert('Item out of stock');
-        return;
-    }
-    
-    const price = parseFloat(item.currentPrice);
-    if (price > currentUser.balance) {
-        alert('Insufficient balance');
-        return;
-    }
-    
-    if (confirm(`Purchase "${item.name}" for $${price.toLocaleString('en-US',{minimumFractionDigits:2})}?`)) {
-        await callSheetsAPI('purchaseItem', {
-            buyerEmail: currentUser.email, sellerEmail: item.sellerEmail,
-            itemId: item.itemId, itemName: item.name, price: price
-        });
-        
-        alert(`✨ Purchased "${item.name}"!`);
-        setTimeout(() => { loadDashboard(); loadMarketplace(); loadInventory(); }, 1000);
-    }
-}
-
-async function loadInventory() {
-    const data = await getSheetsData('getInventory', `&email=${currentUser.email}`);
-    const inventory = data.inventory || [];
-    
-    const container = document.getElementById('userInventory');
-    if (!container) return;
-    
-    if (inventory.length === 0) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💎</div><div>You don\'t own any items yet</div></div>';
-    } else {
-        container.innerHTML = inventory.map((item, i) => `
-            <div class="card scroll-animate scroll-animate-delay-${i%3+1}" style="margin-bottom:24px">
-                <div style="display:flex;justify-content:space-between;margin-bottom:16px">
-                    <div>
-                        <div style="font-size:20px;font-weight:800">${escapeHtml(item.itemName)}</div>
-                        <div style="color:var(--text-muted);font-size:12px">Purchased: ${new Date(item.purchaseDate).toLocaleDateString()}</div>
-                    </div>
-                    <div style="text-align:right">
-                        <div style="font-size:20px;font-weight:700">Paid: $${parseFloat(item.purchasePrice).toFixed(2)}</div>
-                    </div>
-                </div>
-                <button onclick='resellItemPrompt(${JSON.stringify(item).replace(/'/g,"&apos;")})'>Resell Item</button>
-            </div>
-        `).join('');
-        initScrollAnimations();
-    }
-}
-
-function resellItemPrompt(item) {
-    const newPrice = prompt(`Resell "${item.itemName}"\n\nYou paid: $${parseFloat(item.purchasePrice).toFixed(2)}\n\nEnter resale price ($):`);
-    if (!newPrice) return;
-    
-    const price = parseFloat(newPrice);
-    if (isNaN(price) || price < 1) {
-        alert('Invalid price (minimum $1)');
-        return;
-    }
-    
-    if (confirm(`List "${item.itemName}" for $${price.toFixed(2)}?`)) {
-        resellItem(item, price);
-    }
-}
-
-async function resellItem(item, newPrice) {
-    await callSheetsAPI('resellItem', {
-        userEmail: currentUser.email, itemId: item.itemId, itemName: item.itemName,
-        originalPrice: item.purchasePrice, newPrice: newPrice,
-        description: `Resold by ${currentUser.name}`, originalCreator: item.itemName
-    });
-    
-    alert(`✨ "${item.itemName}" listed for $${newPrice.toFixed(2)}!`);
-    setTimeout(() => { loadMarketplace(); loadInventory(); }, 1000);
-}
-
-// === CASINO: ROULETTE ===
-function initCasino() {
-    document.getElementById('rouletteResult').textContent = 'Place your bet and spin!';
-    document.getElementById('blackjackResult').textContent = '';
-}
-
-async function spinRoulette(color) {
-    const bet = parseFloat(document.getElementById('rouletteBet').value);
-    const resultDiv = document.getElementById('rouletteResult');
-    
-    if (!bet || bet <= 0) {
-        resultDiv.textContent = '❌ Enter a valid bet amount!';
-        return;
-    }
-    
-    if (bet > currentUser.balance) {
-        resultDiv.textContent = '❌ Insufficient balance!';
-        return;
-    }
-    
-    resultDiv.textContent = '🎡 Spinning...';
-    
-    // Roulette simulation: 18 red, 18 black, 1 green (0)
-    const rand = Math.random();
-    let result;
-    if (rand < 18/37) result = 'red';
-    else if (rand < 36/37) result = 'black';
-    else result = 'green';
-    
-    setTimeout(async () => {
-        const icons = {red: '🔴', black: '⚫', green: '🟢'};
-        const win = result === color;
-        let winAmount = 0;
-        
-        if (win) {
-            if (color === 'green') winAmount = bet * 14; // Green pays 14x
-            else winAmount = bet * 2; // Red/Black pays 2x
+        // === UPDATES PAGE LOADING (FIXED) ===
+        async function loadUpdates() {
+            const data = await getSheetsData('getUpdates');
+            const updates = data.updates || [];
             
-            await callSheetsAPI('casinoWin', {
-                userEmail: currentUser.email, game: 'roulette',
-                betAmount: bet, winAmount: winAmount
+            const container = document.getElementById('updatesList');
+            if (!container) return;
+            
+            // Admin create button
+            const canCreate = currentUser.email === MASTER_ADMIN || (currentUser.permissions && currentUser.permissions.updates);
+            let adminHTML = '';
+            if (canCreate) {
+                adminHTML = `
+                    <div class="card" style="background:linear-gradient(135deg,rgba(251,191,36,0.2),rgba(245,158,11,0.1));border:2px solid rgba(251,191,36,0.4);margin-bottom:24px">
+                        <h3 style="margin-bottom:16px">🔔 Create Update (Admin Only)</h3>
+                        <input type="text" id="updateVersion" placeholder="Version (e.g. 2.1.0)" style="margin-bottom:12px">
+                        <input type="text" id="updateTitle" placeholder="Update Title" style="margin-bottom:12px">
+                        <textarea id="updateDesc" placeholder="Brief description..." style="margin-bottom:12px;min-height:60px"></textarea>
+                        <textarea id="updateChanges" placeholder="Changes list (one per line)..." style="margin-bottom:12px;min-height:100px"></textarea>
+                        <button onclick="createUpdate()" style="width:100%">Publish Update</button>
+                    </div>
+                `;
+            }
+            
+            if (updates.length === 0) {
+                container.innerHTML = adminHTML + '<div class="empty-state"><div class="empty-state-icon">🔔</div><div>No updates yet</div></div>';
+            } else {
+                container.innerHTML = adminHTML + updates.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)).map((update, i) => `
+                    <div class="card scroll-animate scroll-animate-delay-${i%3+1}" style="margin-bottom:24px;border-left:4px solid var(--gold)">
+                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:16px">
+                            <div>
+                                <span style="display:inline-block;padding:6px 12px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#78350f;border-radius:8px;font-weight:800;font-size:12px;margin-bottom:8px">v${escapeHtml(update.version)}</span>
+                                <h3 style="margin:8px 0">${escapeHtml(update.title)}</h3>
+                                <div style="color:var(--text-muted);font-size:12px">By ${escapeHtml(update.author)} • ${new Date(update.timestamp).toLocaleDateString()}</div>
+                            </div>
+                        </div>
+                        <div style="color:var(--text-secondary);margin-bottom:16px">${escapeHtml(update.description)}</div>
+                        ${update.changes ? `
+                            <div style="background:rgba(2,6,23,0.4);padding:16px;border-radius:12px;border:1px solid var(--border)">
+                                <div style="font-weight:700;margin-bottom:8px;color:var(--text-primary)">What's New:</div>
+                                <div style="color:var(--text-secondary);white-space:pre-line">${escapeHtml(update.changes)}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('');
+                initScrollAnimations();
+            }
+        }
+
+        async function createUpdate() {
+            const version = document.getElementById('updateVersion').value.trim();
+            const title = document.getElementById('updateTitle').value.trim();
+            const desc = document.getElementById('updateDesc').value.trim();
+            const changes = document.getElementById('updateChanges').value.trim();
+            
+            if (!version || !title || !desc) {
+                alert('Please fill in version, title, and description');
+                return;
+            }
+            
+            await callSheetsAPI('createUpdate', {
+                version, title, description: desc, changes,
+                author: currentUser.name, authorEmail: currentUser.email
             });
             
-            resultDiv.innerHTML = `${icons[result]} Landed on ${result.toUpperCase()}!<br>🎉 YOU WIN $${winAmount.toFixed(2)}!`;
-            resultDiv.style.color = 'var(--success)';
-        } else {
-            await callSheetsAPI('casinoLose', {
-                userEmail: currentUser.email, game: 'roulette', betAmount: bet
+            alert(`✨ Update v${version} published!`);
+            document.getElementById('updateVersion').value = '';
+            document.getElementById('updateTitle').value = '';
+            document.getElementById('updateDesc').value = '';
+            document.getElementById('updateChanges').value = '';
+            loadUpdates();
+        }
+
+        // === MARKETPLACE (ADMIN-ONLY CREATION WITH STOCK LIMITS) ===
+        async function loadMarketplace() {
+            const data = await getSheetsData('getItems');
+            const items = data.items || [];
+            
+            const container = document.getElementById('marketplaceItems');
+            if (!container) return;
+            
+            // Admin create button
+            const canCreate = currentUser.email === MASTER_ADMIN || (currentUser.permissions && currentUser.permissions.marketplace);
+            let adminHTML = '';
+            if (canCreate) {
+                adminHTML = `
+                    <div class="card" style="background:linear-gradient(135deg,rgba(168,85,247,0.2),rgba(147,51,234,0.1));border:2px solid rgba(168,85,247,0.4);margin-bottom:24px">
+                        <h3 style="margin-bottom:16px">🛒 Create Item (Admin Only)</h3>
+                        <input type="text" id="itemName" placeholder="Item Name" style="margin-bottom:12px">
+                        <textarea id="itemDesc" placeholder="Item description..." style="margin-bottom:12px;min-height:80px"></textarea>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+                            <input type="number" id="itemPrice" placeholder="Price ($)" min="1" step="1">
+                            <input type="number" id="itemStock" placeholder="Stock (Max 5000)" min="1" max="5000" step="1">
+                        </div>
+                        <button onclick="createMarketplaceItem()" style="width:100%">Create Item</button>
+                    </div>
+                `;
+            }
+            
+            if (items.length === 0) {
+                container.innerHTML = adminHTML + '<div class="empty-state"><div class="empty-state-icon">🛒</div><div>No items for sale</div></div>';
+            } else {
+                container.innerHTML = adminHTML + items.map((item, i) => `
+                    <div class="card scroll-animate scroll-animate-delay-${i%3+1}" style="margin-bottom:24px;background:linear-gradient(135deg,rgba(168,85,247,0.15),rgba(147,51,234,0.1));border-color:rgba(168,85,247,0.3)">
+                        <div style="display:flex;justify-content:space-between;margin-bottom:16px">
+                            <div>
+                                <div style="font-size:20px;font-weight:800">${escapeHtml(item.name)}</div>
+                                <div style="color:var(--text-muted);font-size:12px">By: ${escapeHtml(item.sellerEmail)}</div>
+                            </div>
+                            <div style="text-align:right">
+                                <div style="font-size:28px;font-weight:900;color:var(--purple)">$${parseFloat(item.currentPrice).toLocaleString('en-US',{minimumFractionDigits:2})}</div>
+                                ${item.stock ? `<div style="color:var(--text-muted);font-size:12px">${item.stock} in stock</div>` : ''}
+                            </div>
+                        </div>
+                        <div style="color:var(--text-secondary);margin-bottom:16px">${escapeHtml(item.description)}</div>
+                        <button onclick='purchaseMarketItem(${JSON.stringify(item).replace(/'/g,"&apos;")})' ${!item.stock || item.stock <= 0 ? 'disabled' : ''}>
+                            ${!item.stock || item.stock <= 0 ? 'Out of Stock' : 'Purchase'}
+                        </button>
+                    </div>
+                `).join('');
+                initScrollAnimations();
+            }
+        }
+
+        async function createMarketplaceItem() {
+            const name = document.getElementById('itemName').value.trim();
+            const desc = document.getElementById('itemDesc').value.trim();
+            const price = parseFloat(document.getElementById('itemPrice').value);
+            const stock = parseInt(document.getElementById('itemStock').value);
+            
+            if (!name || !desc || !price || !stock) {
+                alert('Please fill all fields');
+                return;
+            }
+            
+            if (stock > 5000) {
+                alert('Maximum stock is 5000 per item');
+                return;
+            }
+            
+            if (price < 1) {
+                alert('Minimum price is $1');
+                return;
+            }
+            
+            await callSheetsAPI('createItem', {
+                name, description: desc, price, stock, creatorEmail: currentUser.email
             });
             
-            resultDiv.innerHTML = `${icons[result]} Landed on ${result.toUpperCase()}!<br>😢 You lost $${bet.toFixed(2)}`;
-            resultDiv.style.color = 'var(--danger)';
+            alert(`✨ Item "${name}" created with ${stock} in stock!`);
+            document.getElementById('itemName').value = '';
+            document.getElementById('itemDesc').value = '';
+            document.getElementById('itemPrice').value = '';
+            document.getElementById('itemStock').value = '';
+            loadMarketplace();
         }
-        
-        setTimeout(() => { loadDashboard(); }, 1500);
-    }, 2000);
-}
 
-// === CASINO: BLACKJACK ===
-let blackjackDeck = [];
-let dealerHand = [];
-let playerHand = [];
-let currentBet = 0;
-
-function startBlackjack() {
-    const bet = parseFloat(document.getElementById('blackjackBet').value);
-    const resultDiv = document.getElementById('blackjackResult');
-    
-    if (!bet || bet <= 0) {
-        resultDiv.textContent = '❌ Enter a valid bet amount!';
-        resultDiv.style.color = 'var(--danger)';
-        return;
-    }
-    
-    if (bet > currentUser.balance) {
-        resultDiv.textContent = '❌ Insufficient balance!';
-        resultDiv.style.color = 'var(--danger)';
-        return;
-    }
-    
-    currentBet = bet;
-    blackjackDeck = createDeck();
-    shuffleDeck();
-    
-    dealerHand = [dealCard(), dealCard()];
-    playerHand = [dealCard(), dealCard()];
-    
-    document.getElementById('blackjackStart').style.display = 'none';
-    document.getElementById('blackjackGame').style.display = 'block';
-    resultDiv.textContent = '';
-    
-    updateBlackjackDisplay(true);
-    
-    // Check for blackjack
-    if (getHandValue(playerHand) === 21) {
-        endBlackjack(true, true); // Blackjack!
-    }
-}
-
-function createDeck() {
-    const suits = ['♠', '♥', '♦', '♣'];
-    const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-    const deck = [];
-    for (let suit of suits) {
-        for (let value of values) {
-            deck.push({suit, value});
+        async function purchaseMarketItem(item) {
+            if (!item.stock || item.stock <= 0) {
+                alert('Item out of stock');
+                return;
+            }
+            
+            const price = parseFloat(item.currentPrice);
+            if (price > currentUser.balance) {
+                alert('Insufficient balance');
+                return;
+            }
+            
+            if (confirm(`Purchase "${item.name}" for $${price.toLocaleString('en-US',{minimumFractionDigits:2})}?`)) {
+                await callSheetsAPI('purchaseItem', {
+                    buyerEmail: currentUser.email, sellerEmail: item.sellerEmail,
+                    itemId: item.itemId, itemName: item.name, price: price
+                });
+                
+                alert(`✨ Purchased "${item.name}"!`);
+                setTimeout(() => { loadDashboard(); loadMarketplace(); loadInventory(); }, 1000);
+            }
         }
-    }
-    return deck;
-}
 
-function shuffleDeck() {
-    for (let i = blackjackDeck.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [blackjackDeck[i], blackjackDeck[j]] = [blackjackDeck[j], blackjackDeck[i]];
-    }
-}
+        async function loadInventory() {
+            const data = await getSheetsData('getInventory', `&email=${currentUser.email}`);
+            const inventory = data.inventory || [];
+            
+            const container = document.getElementById('userInventory');
+            if (!container) return;
+            
+            if (inventory.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💎</div><div>You don\'t own any items yet</div></div>';
+            } else {
+                container.innerHTML = inventory.map((item, i) => `
+                    <div class="card scroll-animate scroll-animate-delay-${i%3+1}" style="margin-bottom:24px">
+                        <div style="display:flex;justify-content:space-between;margin-bottom:16px">
+                            <div>
+                                <div style="font-size:20px;font-weight:800">${escapeHtml(item.itemName)}</div>
+                                <div style="color:var(--text-muted);font-size:12px">Purchased: ${new Date(item.purchaseDate).toLocaleDateString()}</div>
+                            </div>
+                            <div style="text-align:right">
+                                <div style="font-size:20px;font-weight:700">Paid: $${parseFloat(item.purchasePrice).toFixed(2)}</div>
+                            </div>
+                        </div>
+                        <button onclick='resellItemPrompt(${JSON.stringify(item).replace(/'/g,"&apos;")})'>Resell Item</button>
+                    </div>
+                `).join('');
+                initScrollAnimations();
+            }
+        }
 
-function dealCard() {
-    return blackjackDeck.pop();
-}
+        function resellItemPrompt(item) {
+            const newPrice = prompt(`Resell "${item.itemName}"\n\nYou paid: $${parseFloat(item.purchasePrice).toFixed(2)}\n\nEnter resale price ($):`);
+            if (!newPrice) return;
+            
+            const price = parseFloat(newPrice);
+            if (isNaN(price) || price < 1) {
+                alert('Invalid price (minimum $1)');
+                return;
+            }
+            
+            if (confirm(`List "${item.itemName}" for $${price.toFixed(2)}?`)) {
+                resellItem(item, price);
+            }
+        }
 
-function getCardValue(card) {
-    if (card.value === 'A') return 11;
-    if (['J', 'Q', 'K'].includes(card.value)) return 10;
-    return parseInt(card.value);
-}
+        async function resellItem(item, newPrice) {
+            await callSheetsAPI('resellItem', {
+                userEmail: currentUser.email, itemId: item.itemId, itemName: item.itemName,
+                originalPrice: item.purchasePrice, newPrice: newPrice,
+                description: `Resold by ${currentUser.name}`, originalCreator: item.itemName
+            });
+            
+            alert(`✨ "${item.itemName}" listed for $${newPrice.toFixed(2)}!`);
+            setTimeout(() => { loadMarketplace(); loadInventory(); }, 1000);
+        }
 
-function getHandValue(hand) {
-    let value = 0;
-    let aces = 0;
-    
-    for (let card of hand) {
-        value += getCardValue(card);
-        if (card.value === 'A') aces++;
-    }
-    
-    while (value > 21 && aces > 0) {
-        value -= 10;
-        aces--;
-    }
-    
-    return value;
-}
+        // === CASINO: ROULETTE ===
+        function initCasino() {
+            document.getElementById('rouletteResult').textContent = 'Place your bet and spin!';
+            document.getElementById('blackjackResult').textContent = '';
+        }
 
-function updateBlackjackDisplay(hideDealer = false) {
-    const dealerCards = hideDealer 
-        ? `🂠 ${dealerHand[1].value}${dealerHand[1].suit}`
-        : dealerHand.map(c => `${c.value}${c.suit}`).join(' ');
-    const dealerScore = hideDealer ? '?' : getHandValue(dealerHand);
-    
-    document.getElementById('dealerCards').textContent = dealerCards;
-    document.getElementById('dealerScore').textContent = dealerScore;
-    
-    document.getElementById('playerCards').textContent = playerHand.map(c => `${c.value}${c.suit}`).join(' ');
-    document.getElementById('playerScore').textContent = getHandValue(playerHand);
-}
+        async function spinRoulette(color) {
+            const bet = parseFloat(document.getElementById('rouletteBet').value);
+            const resultDiv = document.getElementById('rouletteResult');
+            
+            if (!bet || bet <= 0) {
+                resultDiv.textContent = '❌ Enter a valid bet amount!';
+                return;
+            }
+            
+            if (bet > currentUser.balance) {
+                resultDiv.textContent = '❌ Insufficient balance!';
+                return;
+            }
+            
+            resultDiv.textContent = '🎡 Spinning...';
+            
+            // Roulette simulation: 18 red, 18 black, 1 green (0)
+            const rand = Math.random();
+            let result;
+            if (rand < 18/37) result = 'red';
+            else if (rand < 36/37) result = 'black';
+            else result = 'green';
+            
+            setTimeout(async () => {
+                const icons = {red: '🔴', black: '⚫', green: '🟢'};
+                const win = result === color;
+                let winAmount = 0;
+                
+                if (win) {
+                    if (color === 'green') winAmount = bet * 14; // Green pays 14x
+                    else winAmount = bet * 2; // Red/Black pays 2x
+                    
+                    await callSheetsAPI('casinoWin', {
+                        userEmail: currentUser.email, game: 'roulette',
+                        betAmount: bet, winAmount: winAmount
+                    });
+                    
+                    resultDiv.innerHTML = `${icons[result]} Landed on ${result.toUpperCase()}!<br>🎉 YOU WIN $${winAmount.toFixed(2)}!`;
+                    resultDiv.style.color = 'var(--success)';
+                } else {
+                    await callSheetsAPI('casinoLose', {
+                        userEmail: currentUser.email, game: 'roulette', betAmount: bet
+                    });
+                    
+                    resultDiv.innerHTML = `${icons[result]} Landed on ${result.toUpperCase()}!<br>😢 You lost $${bet.toFixed(2)}`;
+                    resultDiv.style.color = 'var(--danger)';
+                }
+                
+                setTimeout(() => { loadDashboard(); }, 1500);
+            }, 2000);
+        }
 
-function blackjackHit() {
-    playerHand.push(dealCard());
-    updateBlackjackDisplay(true);
-    
-    if (getHandValue(playerHand) > 21) {
-        endBlackjack(false); // Bust!
-    }
-}
+        // === CASINO: BLACKJACK ===
+        let blackjackDeck = [];
+        let dealerHand = [];
+        let playerHand = [];
+        let currentBet = 0;
 
-function blackjackStand() {
-    // Dealer draws until 17+
-    while (getHandValue(dealerHand) < 17) {
-        dealerHand.push(dealCard());
-    }
-    
-    updateBlackjackDisplay(false);
-    
-    const playerValue = getHandValue(playerHand);
-    const dealerValue = getHandValue(dealerHand);
-    
-    if (dealerValue > 21 || playerValue > dealerValue) {
-        endBlackjack(true, false);
-    } else if (playerValue === dealerValue) {
-        endBlackjack(null); // Push (tie)
-    } else {
-        endBlackjack(false);
-    }
-}
+        function startBlackjack() {
+            const bet = parseFloat(document.getElementById('blackjackBet').value);
+            const resultDiv = document.getElementById('blackjackResult');
+            
+            if (!bet || bet <= 0) {
+                resultDiv.textContent = '❌ Enter a valid bet amount!';
+                resultDiv.style.color = 'var(--danger)';
+                return;
+            }
+            
+            if (bet > currentUser.balance) {
+                resultDiv.textContent = '❌ Insufficient balance!';
+                resultDiv.style.color = 'var(--danger)';
+                return;
+            }
+            
+            currentBet = bet;
+            blackjackDeck = createDeck();
+            shuffleDeck();
+            
+            dealerHand = [dealCard(), dealCard()];
+            playerHand = [dealCard(), dealCard()];
+            
+            document.getElementById('blackjackStart').style.display = 'none';
+            document.getElementById('blackjackGame').style.display = 'block';
+            resultDiv.textContent = '';
+            
+            updateBlackjackDisplay(true);
+            
+            // Check for blackjack
+            if (getHandValue(playerHand) === 21) {
+                endBlackjack(true, true); // Blackjack!
+            }
+        }
 
-async function endBlackjack(won, blackjack = false) {
-    const resultDiv = document.getElementById('blackjackResult');
-    document.getElementById('hitBtn').disabled = true;
-    document.getElementById('standBtn').disabled = true;
-    
-    updateBlackjackDisplay(false);
-    
-    if (won === null) {
-        resultDiv.textContent = '🤝 Push! Bet returned.';
-        resultDiv.style.color = 'var(--warning)';
-    } else if (won) {
-        const multiplier = blackjack ? 2.5 : 2;
-        const winAmount = currentBet * multiplier;
-        
-        await callSheetsAPI('casinoWin', {
-            userEmail: currentUser.email, game: 'blackjack',
-            betAmount: currentBet, winAmount: winAmount
-        });
-        
-        resultDiv.innerHTML = `${blackjack ? '🃏 BLACKJACK! ' : '🎉 YOU WIN!'}<br>$${winAmount.toFixed(2)}`;
-        resultDiv.style.color = 'var(--success)';
-    } else {
-        await callSheetsAPI('casinoLose', {
-            userEmail: currentUser.email, game: 'blackjack', betAmount: currentBet
-        });
-        
-        resultDiv.innerHTML = `😢 YOU LOSE!<br>Lost $${currentBet.toFixed(2)}`;
-        resultDiv.style.color = 'var(--danger)';
-    }
-    
-    setTimeout(() => {
-        loadDashboard();
-        document.getElementById('blackjackGame').style.display = 'none';
-        document.getElementById('blackjackStart').style.display = 'block';
-        document.getElementById('hitBtn').disabled = false;
-        document.getElementById('standBtn').disabled = false;
-        resultDiv.textContent = '';
-    }, 3000);
-}
+        function createDeck() {
+            const suits = ['♠', '♥', '♦', '♣'];
+            const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+            const deck = [];
+            for (let suit of suits) {
+                for (let value of values) {
+                    deck.push({suit, value});
+                }
+            }
+            return deck;
+        }
 
+        function shuffleDeck() {
+            for (let i = blackjackDeck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [blackjackDeck[i], blackjackDeck[j]] = [blackjackDeck[j], blackjackDeck[i]];
+            }
+        }
+
+        function dealCard() {
+            return blackjackDeck.pop();
+        }
+
+        function getCardValue(card) {
+            if (card.value === 'A') return 11;
+            if (['J', 'Q', 'K'].includes(card.value)) return 10;
+            return parseInt(card.value);
+        }
+
+        function getHandValue(hand) {
+            let value = 0;
+            let aces = 0;
+            
+            for (let card of hand) {
+                value += getCardValue(card);
+                if (card.value === 'A') aces++;
+            }
+            
+            while (value > 21 && aces > 0) {
+                value -= 10;
+                aces--;
+            }
+            
+            return value;
+        }
+
+        function updateBlackjackDisplay(hideDealer = false) {
+            const dealerCards = hideDealer 
+                ? `🂠 ${dealerHand[1].value}${dealerHand[1].suit}`
+                : dealerHand.map(c => `${c.value}${c.suit}`).join(' ');
+            const dealerScore = hideDealer ? '?' : getHandValue(dealerHand);
+            
+            document.getElementById('dealerCards').textContent = dealerCards;
+            document.getElementById('dealerScore').textContent = dealerScore;
+            
+            document.getElementById('playerCards').textContent = playerHand.map(c => `${c.value}${c.suit}`).join(' ');
+            document.getElementById('playerScore').textContent = getHandValue(playerHand);
+        }
+
+        function blackjackHit() {
+            playerHand.push(dealCard());
+            updateBlackjackDisplay(true);
+            
+            if (getHandValue(playerHand) > 21) {
+                endBlackjack(false); // Bust!
+            }
+        }
+
+        function blackjackStand() {
+            // Dealer draws until 17+
+            while (getHandValue(dealerHand) < 17) {
+                dealerHand.push(dealCard());
+            }
+            
+            updateBlackjackDisplay(false);
+            
+            const playerValue = getHandValue(playerHand);
+            const dealerValue = getHandValue(dealerHand);
+            
+            if (dealerValue > 21 || playerValue > dealerValue) {
+                endBlackjack(true, false);
+            } else if (playerValue === dealerValue) {
+                endBlackjack(null); // Push (tie)
+            } else {
+                endBlackjack(false);
+            }
+        }
+
+        async function endBlackjack(won, blackjack = false) {
+            const resultDiv = document.getElementById('blackjackResult');
+            document.getElementById('hitBtn').disabled = true;
+            document.getElementById('standBtn').disabled = true;
+            
+            updateBlackjackDisplay(false);
+            
+            if (won === null) {
+                resultDiv.textContent = '🤝 Push! Bet returned.';
+                resultDiv.style.color = 'var(--warning)';
+            } else if (won) {
+                const multiplier = blackjack ? 2.5 : 2;
+                const winAmount = currentBet * multiplier;
+                
+                await callSheetsAPI('casinoWin', {
+                    userEmail: currentUser.email, game: 'blackjack',
+                    betAmount: currentBet, winAmount: winAmount
+                });
+                
+                resultDiv.innerHTML = `${blackjack ? '🃏 BLACKJACK! ' : '🎉 YOU WIN!'}<br>$${winAmount.toFixed(2)}`;
+                resultDiv.style.color = 'var(--success)';
+            } else {
+                await callSheetsAPI('casinoLose', {
+                    userEmail: currentUser.email, game: 'blackjack', betAmount: currentBet
+                });
+                
+                resultDiv.innerHTML = `😢 YOU LOSE!<br>Lost $${currentBet.toFixed(2)}`;
+                resultDiv.style.color = 'var(--danger)';
+            }
+            
+            setTimeout(() => {
+                loadDashboard();
+                document.getElementById('blackjackGame').style.display = 'none';
+                document.getElementById('blackjackStart').style.display = 'block';
+                document.getElementById('hitBtn').disabled = false;
+                document.getElementById('standBtn').disabled = false;
+                resultDiv.textContent = '';
+            }, 3000);
+        }
     </script>
 </body>
 </html>
