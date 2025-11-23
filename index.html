@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FakeBank - Modern Banking Demo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-main: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Warning Banner */
+        .warning-banner {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.15) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            backdrop-filter: blur(10px);
+            color: #fca5a5;
+            padding: 16px 24px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 14px;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glass Card */
+        .card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 20px 60px var(--shadow);
+            margin-bottom: 24px;
+            animation: fadeIn 0.6s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 24px 70px var(--shadow);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            letter-spacing: -0.3px;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-secondary);
+            letter-spacing: 0.3px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 15px;
+            color: var(--text-primary);
+            font-family: inherit;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            background: rgba(15, 23, 42, 0.7);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.6;
+        }
+
+        /* Buttons */
+        button {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 12px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            background: rgba(15, 23, 42, 0.5);
+            padding: 6px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 20px;
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Balance Display */
+        .balance-display {
+            text-align: center;
+            padding: 48px 0;
+        }
+
+        .balance-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .balance-amount {
+            font-size: 64px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -2px;
+            margin-bottom: 8px;
+        }
+
+        .balance-change {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Transaction List */
+        .transaction-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .transaction-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .transaction-list::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 10px;
+        }
+
+        .transaction-list::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .transaction-item {
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .transaction-item:hover {
+            background: rgba(15, 23, 42, 0.5);
+            transform: translateX(4px);
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-title {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .transaction-note {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .transaction-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        .transaction-amount {
+            font-weight: 700;
+            font-size: 20px;
+            min-width: 120px;
+            text-align: right;
+        }
+
+        .transaction-amount.positive {
+            color: var(--success);
+        }
+
+        .transaction-amount.negative {
+            color: var(--danger);
+        }
+
+        /* Chat */
+        .chat-container {
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin-bottom: 16px;
+        }
+
+        .messages-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .messages-area::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 10px;
+        }
+
+        .messages-area::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .message {
+            margin-bottom: 16px;
+            padding: 16px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            border-left: 3px solid var(--primary);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .message.admin-message {
+            background: rgba(245, 158, 11, 0.1);
+            border-left-color: var(--warning);
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .message-user {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--primary-light);
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .message-text {
+            color: var(--text-primary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 12px;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+        }
+
+        .chat-input-area button {
+            margin: 0;
+        }
+
+        /* User List */
+        .user-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            padding: 24px;
+            background: rgba(15, 23, 42, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .user-item:hover {
+            background: rgba(15, 23, 42, 0.5);
+            border-color: var(--primary);
+        }
+
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .user-email {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .user-meta {
+            font-size: 11px;
+            color: var(--text-secondary);
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .user-balance {
+            font-weight: 800;
+            font-size: 28px;
+            color: var(--success);
+        }
+
+        .admin-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .admin-controls input {
+            max-width: 140px;
+        }
+
+        .admin-controls button {
+            padding: 10px 20px;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            animation: slideDown 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert::before {
+            content: '';
+            width: 4px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            border-radius: 12px 0 0 12px;
+        }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #93c5fd;
+        }
+
+        .alert-info::before {
+            background: #3b82f6;
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        .alert-error::before {
+            background: var(--danger);
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+        }
+
+        .alert-success::before {
+            background: var(--success);
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        /* Header */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .user-display {
+            flex: 1;
+        }
+
+        .user-display-name {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .user-display-email {
+            font-size: 13px;
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        /* Logo */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Stats Card */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 12px;
+            }
+
+            .card {
+                padding: 20px;
+                border-radius: 16px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .balance-amount {
+                font-size: 48px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                width: 100%;
+            }
+
+            .admin-controls {
+                flex-direction: column;
+            }
+
+            .admin-controls input,
+            .admin-controls button {
+                width: 100%;
+                max-width: none;
+            }
+
+            .user-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-admin {
+            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+            color: white;
+        }
+
+        .badge-new {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="warning-banner">
+            ⚠️ EDUCATIONAL DEMO ONLY - This is NOT a real banking application
+        </div>
+
+        <!-- Auth Screen -->
+        <div id="authScreen">
+            <div class="card" style="max-width: 500px; margin: 0 auto;">
+                <div class="logo">
+                    <div class="logo-icon">💳</div>
+                    <div class="logo-text">FakeBank</div>
+                </div>
+
+                <div class="alert alert-info">
+                    <div>
+                        <strong>Technical Demo Features:</strong><br>
+                        Browser fingerprinting • Simulated IP detection • Google Sheets storage<br>
+                        Admin: sheepishlyroyal@gmail.com
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Google Sheets Configuration</label>
+                    <input type="text" id="sheetsUrl" placeholder="Paste your Google Apps Script Web App URL" 
+                        value="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec">
+                    <small style="color: var(--text-secondary); font-size: 12px; display: block; margin-top: 8px;">
+                        Leave as-is to use local storage demo mode
+                    </small>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="switchAuthTab('login')">Login</button>
+                    <button class="tab" onclick="switchAuthTab('register')">Register</button>
+                </div>
+
+                <div id="loginTab" class="tab-content active">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="loginUsername" placeholder="Enter your username">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="loginEmail" placeholder="Enter your email">
+                    </div>
+                    <button onclick="login()" style="width: 100%;">Login</button>
+                </div>
+
+                <div id="registerTab" class="tab-content">
+                    <div id="registerError" class="hidden"></div>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="registerUsername" placeholder="Choose a unique username">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="registerEmail" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="registerName" placeholder="Enter your full name">
+                    </div>
+                    <button onclick="register()" style="width: 100%;">Create Account</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main App Screen -->
+        <div id="appScreen" class="hidden">
+            <div class="card">
+                <div class="app-header">
+                    <div class="user-display">
+                        <h1>
+                            <span id="userDisplayName"></span>
+                            <span id="adminBadge" class="badge badge-admin hidden">Admin</span>
+                        </h1>
+                        <div class="user-display-email" id="userDisplayEmail"></div>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('dashboard')">🏠 Dashboard</button>
+                <button class="tab" onclick="switchTab('transfer')">💸 Transfer</button>
+                <button class="tab" onclick="switchTab('chat')">💬 Chat</button>
+                <button class="tab hidden" id="adminTab" onclick="switchTab('admin')">👑 Admin</button>
+            </div>
+
+            <!-- Dashboard -->
+            <div id="dashboardContent" class="tab-content active">
+                <div class="card">
+                    <div class="balance-display">
+                        <div class="balance-label">Current Balance</div>
+                        <div class="balance-amount">$<span id="balanceAmount">0.00</span></div>
+                        <div class="balance-change" id="balanceChange">No recent changes</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Recent Transactions</h2>
+                    <div class="transaction-list" id="transactionList">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📊</div>
+                            <div>No transactions yet</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transfer -->
+            <div id="transferContent" class="tab-content">
+                <div class="card" style="max-width: 600px; margin: 0 auto;">
+                    <h2>Send Money</h2>
+                    <div id="transferSuccess" class="hidden"></div>
+                    <div id="transferError" class="hidden"></div>
+                    <div class="form-group">
+                        <label>Recipient Username</label>
+                        <input type="text" id="recipientUsername" placeholder="@username">
+                    </div>
+                    <div class="form-group">
+                        <label>Amount ($)</label>
+                        <input type="number" id="transferAmount" placeholder="0.00" step="0.01" min="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Note (Optional)</label>
+                        <input type="text" id="transferNote" placeholder="What's this for?">
+                    </div>
+                    <button onclick="transferMoney()" style="width: 100%;">Send Money</button>
+                </div>
+            </div>
+
+            <!-- Chat -->
+            <div id="chatContent" class="tab-content">
+                <div class="card">
+                    <h2>Public Chat Room</h2>
+                    <div class="chat-container">
+                        <div class="messages-area" id="messagesArea">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">💬</div>
+                                <div>No messages yet. Start the conversation!</div>
+                            </div>
+                        </div>
+                        <div class="chat-input-area">
+                            <input type="text" id="chatMessage" placeholder="Type your message..." 
+                                onkeypress="if(event.key==='Enter') sendMessage()">
+                            <button onclick="sendMessage()">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin -->
+            <div id="adminContent" class="tab-content">
+                <div class="card">
+                    <h2>👑 Admin Panel</h2>
+                    <div class="alert alert-info">
+                        You have administrator privileges. Manage all users and their balances below.
+                    </div>
+
+                    <h3>Registered Users</h3>
+                    <div class="user-list" id="adminUserList">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">👥</div>
+                            <div>Loading users...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        let SHEETS_URL = '';
+        let currentUser = null;
+        let deviceFingerprint = '';
+        let simulatedIP = '';
+        let allUsers = [];
+        let updateInterval = null;
+
+        // Generate device fingerprint
+        function generateDeviceFingerprint() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.textBaseline = 'top';
+            ctx.font = '14px Arial';
+            ctx.fillText('Browser Fingerprint', 2, 2);
+            const canvasData = canvas.toDataURL();
+            
+            const fingerprint = {
+                userAgent: navigator.userAgent,
+                language: navigator.language,
+                colorDepth: screen.colorDepth,
+                screenResolution: `${screen.width}x${screen.height}`,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                platform: navigator.platform,
+                canvasFingerprint: canvasData.slice(0, 50),
+                plugins: Array.from(navigator.plugins || []).map(p => p.name).join(',')
+            };
+            
+            return btoa(JSON.stringify(fingerprint)).substring(0, 32);
+        }
+
+        function generateSimulatedIP() {
+            const stored = localStorage.getItem('simulatedIP');
+            if (stored) return stored;
+            
+            const ip = `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+            localStorage.setItem('simulatedIP', ip);
+            return ip;
+        }
+
+        deviceFingerprint = generateDeviceFingerprint();
+        simulatedIP = generateSimulatedIP();
+
+        function switchAuthTab(tab) {
+            document.querySelectorAll('#authScreen .tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#authScreen .tab-content').forEach(c => c.classList.remove('active'));
+            
+            if (tab === 'login') {
+                document.querySelector('#authScreen .tab:nth-child(1)').classList.add('active');
+                document.getElementById('loginTab').classList.add('active');
+            } else {
+                document.querySelector('#authScreen .tab:nth-child(2)').classList.add('active');
+                document.getElementById('registerTab').classList.add('active');
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('#appScreen > .tabs .tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#appScreen .tab-content').forEach(c => c.classList.remove('active'));
+            
+            const tabs = document.querySelectorAll('#appScreen > .tabs .tab');
+            const tabMap = { 'dashboard': 0, 'transfer': 1, 'chat': 2, 'admin': 3 };
+            tabs[tabMap[tab]].classList.add('active');
+            document.getElementById(tab + 'Content').classList.add('active');
+            
+            if (tab === 'admin') loadAdminPanel();
+            else if (tab === 'chat') loadMessages();
+            else if (tab === 'dashboard') loadDashboard();
+        }
+
+        async function callSheetsAPI(action, data) {
+            SHEETS_URL = document.getElementById('sheetsUrl').value;
+            if (!SHEETS_URL || SHEETS_URL.includes('YOUR_SCRIPT_ID')) return { success: true };
+            try {
+                await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action, ...data })
+                });
+                return { success: true };
+            } catch (error) {
+                console.error('API Error:', error);
+                return null;
+            }
+        }
+
+        async function getSheetsData(action, params = '') {
+            SHEETS_URL = document.getElementById('sheetsUrl').value;
+            if (!SHEETS_URL || SHEETS_URL.includes('YOUR_SCRIPT_ID')) return mockData(action);
+            try {
+                const response = await fetch(`${SHEETS_URL}?action=${action}${params}`);
+                return await response.json();
+            } catch (error) {
+                return mockData(action);
+            }
+        }
+
+        function mockData(action) {
+            const mockUsers = JSON.parse(localStorage.getItem('mockUsers') || '[]');
+            const mockTransactions = JSON.parse(localStorage.getItem('mockTransactions') || '[]');
+            const mockMessages = JSON.parse(localStorage.getItem('mockMessages') || '[]');
+            switch(action) {
+                case 'getUsers': return { users: mockUsers };
+                case 'getTransactions':
+                    if (currentUser) {
+                        return { transactions: mockTransactions.filter(t => t.from === currentUser.username || t.to === currentUser.username) };
+                    }
+                    return { transactions: [] };
+                case 'getMessages': return { messages: mockMessages };
+                default: return { success: true };
+            }
+        }
+
+        function saveMockData(type, data) {
+            localStorage.setItem(type, JSON.stringify(data));
+        }
+
+        async function register() {
+            const username = document.getElementById('registerUsername').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const name = document.getElementById('registerName').value.trim();
+            const errorDiv = document.getElementById('registerError');
+            
+            errorDiv.className = 'hidden';
+            
+            if (!username || !email || !name) {
+                showAlert(errorDiv, 'Please fill in all fields', 'error');
+                return;
+            }
+
+            const data = await getSheetsData('getUsers');
+            const existingUsers = data.users || [];
+
+            if (existingUsers.find(u => u.username === username)) {
+                showAlert(errorDiv, 'Username already exists. Please choose another.', 'error');
+                return;
+            }
+
+            if (existingUsers.find(u => u.fingerprint === deviceFingerprint)) {
+                showAlert(errorDiv, 'A user with this device already exists.', 'error');
+                return;
+            }
+
+            if (existingUsers.find(u => u.ip === simulatedIP)) {
+                showAlert(errorDiv, 'A user with this IP already exists.', 'error');
+                return;
+            }
+
+            const newUser = {
+                username, email, name,
+                balance: 100,
+                fingerprint: deviceFingerprint,
+                ip: simulatedIP,
+                created: new Date().toISOString()
+            };
+
+            existingUsers.push(newUser);
+            saveMockData('mockUsers', existingUsers);
+            await callSheetsAPI('register', newUser);
+
+            showAlert(errorDiv, '✨ Account created! Starting balance: $100.00', 'success');
+            setTimeout(() => {
+                switchAuthTab('login');
+                document.getElementById('loginUsername').value = username;
+                document.getElementById('loginEmail').value = email;
+            }, 1500);
+        }
+
+        async function login() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const email = document.getElementById('loginEmail').value.trim();
+            
+            if (!username || !email) {
+                alert('Please enter both username and email');
+                return;
+            }
+
+            const data = await getSheetsData('getUsers');
+            const user = (data.users || []).find(u => u.username === username && u.email === email);
+
+            if (!user) {
+                alert('Invalid username or email');
+                return;
+            }
+
+            currentUser = user;
+            showApp();
+        }
+
+        function showApp() {
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('appScreen').classList.remove('hidden');
+            document.getElementById('userDisplayName').textContent = currentUser.name;
+            document.getElementById('userDisplayEmail').textContent = currentUser.email;
+
+            if (currentUser.email === 'sheepishlyroyal@gmail.com') {
+                document.getElementById('adminTab').classList.remove('hidden');
+                document.getElementById('adminBadge').classList.remove('hidden');
+            }
+
+            loadDashboard();
+            updateInterval = setInterval(() => {
+                const activeTab = document.querySelector('#appScreen .tab.active').textContent;
+                if (activeTab.includes('Chat')) loadMessages();
+                else if (activeTab.includes('Dashboard')) loadDashboard();
+            }, 5000);
+        }
+
+        function logout() {
+            if (updateInterval) clearInterval(updateInterval);
+            currentUser = null;
+            document.getElementById('authScreen').classList.remove('hidden');
+            document.getElementById('appScreen').classList.add('hidden');
+            document.getElementById('adminTab').classList.add('hidden');
+            document.getElementById('adminBadge').classList.add('hidden');
+        }
+
+        async function loadDashboard() {
+            if (!currentUser) return;
+
+            const data = await getSheetsData('getUsers');
+            const user = (data.users || []).find(u => u.username === currentUser.username);
+            
+            if (user) {
+                currentUser.balance = user.balance;
+                document.getElementById('balanceAmount').textContent = user.balance.toFixed(2);
+            }
+
+            const txData = await getSheetsData('getTransactions', `&username=${currentUser.username}`);
+            const transactions = txData.transactions || [];
+            
+            const txList = document.getElementById('transactionList');
+            if (transactions.length === 0) {
+                txList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📊</div><div>No transactions yet</div></div>';
+            } else {
+                txList.innerHTML = transactions.slice(-10).reverse().map(tx => {
+                    const isReceived = tx.to === currentUser.username;
+                    const amount = parseFloat(tx.amount);
+                    return `
+                        <div class="transaction-item">
+                            <div class="transaction-info">
+                                <div class="transaction-title">${isReceived ? '← From' : '→ To'} ${isReceived ? tx.from : tx.to}</div>
+                                <div class="transaction-note">${tx.note || 'No note'}</div>
+                                <div class="transaction-time">${new Date(tx.timestamp).toLocaleString()}</div>
+                            </div>
+                            <div class="transaction-amount ${isReceived ? 'positive' : 'negative'}">
+                                ${isReceived ? '+' : '-'}$${amount.toFixed(2)}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        async function transferMoney() {
+            const recipient = document.getElementById('recipientUsername').value.trim();
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+            const note = document.getElementById('transferNote').value.trim();
+            const successDiv = document.getElementById('transferSuccess');
+            const errorDiv = document.getElementById('transferError');
+            
+            successDiv.className = 'hidden';
+            errorDiv.className = 'hidden';
+
+            if (!recipient || !amount || amount <= 0) {
+                showAlert(errorDiv, 'Please enter a valid recipient and amount', 'error');
+                return;
+            }
+
+            if (recipient === currentUser.username) {
+                showAlert(errorDiv, 'Cannot send money to yourself', 'error');
+                return;
+            }
+
+            if (amount > currentUser.balance) {
+                showAlert(errorDiv, 'Insufficient balance', 'error');
+                return;
+            }
+
+            const data = await getSheetsData('getUsers');
+            const users = data.users || [];
+            const recipientUser = users.find(u => u.username === recipient);
+
+            if (!recipientUser) {
+                showAlert(errorDiv, 'Recipient not found', 'error');
+                return;
+            }
+
+            currentUser.balance -= amount;
+            recipientUser.balance += amount;
+
+            const userIndex = users.findIndex(u => u.username === currentUser.username);
+            const recipientIndex = users.findIndex(u => u.username === recipient);
+            users[userIndex] = currentUser;
+            users[recipientIndex] = recipientUser;
+            saveMockData('mockUsers', users);
+
+            const transaction = {
+                from: currentUser.username,
+                to: recipient,
+                amount: amount,
+                note: note,
+                timestamp: new Date().toISOString()
+            };
+
+            const mockTransactions = JSON.parse(localStorage.getItem('mockTransactions') || '[]');
+            mockTransactions.push(transaction);
+            saveMockData('mockTransactions', mockTransactions);
+            await callSheetsAPI('transfer', transaction);
+
+            showAlert(successDiv, `✨ Successfully sent $${amount.toFixed(2)} to ${recipient}`, 'success');
+
+            document.getElementById('recipientUsername').value = '';
+            document.getElementById('transferAmount').value = '';
+            document.getElementById('transferNote').value = '';
+
+            loadDashboard();
+        }
+
+        async function loadMessages() {
+            const data = await getSheetsData('getMessages');
+            const messages = data.messages || [];
+            
+            const messagesArea = document.getElementById('messagesArea');
+            if (messages.length === 0) {
+                messagesArea.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💬</div><div>No messages yet</div></div>';
+            } else {
+                messagesArea.innerHTML = messages.slice(-50).map(msg => `
+                    <div class="message ${msg.isAdmin ? 'admin-message' : ''}">
+                        <div class="message-header">
+                            <span class="message-user">${msg.username}${msg.isAdmin ? ' 👑' : ''}</span>
+                            <span class="message-time">${new Date(msg.timestamp).toLocaleString()}</span>
+                        </div>
+                        <div class="message-text">${escapeHtml(msg.message)}</div>
+                    </div>
+                `).join('');
+                messagesArea.scrollTop = messagesArea.scrollHeight;
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatMessage');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            const messageData = {
+                username: currentUser.username,
+                email: currentUser.email,
+                message: message,
+                timestamp: new Date().toISOString(),
+                isAdmin: currentUser.email === 'sheepishlyroyal@gmail.com'
+            };
+
+            const mockMessages = JSON.parse(localStorage.getItem('mockMessages') || '[]');
+            mockMessages.push(messageData);
+            saveMockData('mockMessages', mockMessages);
+            await callSheetsAPI('sendMessage', messageData);
+
+            input.value = '';
+            loadMessages();
+        }
+
+        async function loadAdminPanel() {
+            const data = await getSheetsData('getUsers');
+            const users = data.users || [];
+            allUsers = users;
+            
+            const userList = document.getElementById('adminUserList');
+            userList.innerHTML = users.map((user, index) => `
+                <div class="user-item">
+                    <div class="user-header">
+                        <div class="user-info">
+                            <div class="user-name">${user.name} (@${user.username})</div>
+                            <div class="user-email">${user.email}</div>
+                            <div class="user-meta">
+                                IP: ${user.ip} | Device: ${user.fingerprint.substring(0, 8)}...<br>
+                                Joined: ${new Date(user.created).toLocaleDateString()}
+                            </div>
+                        </div>
+                        <div class="user-balance">$${user.balance.toFixed(2)}</div>
+                    </div>
+                    <div class="admin-controls">
+                        <input type="number" id="adminAmount${index}" placeholder="Amount" step="0.01">
+                        <button onclick="adminAddMoney(${index})">Add Money</button>
+                        <button onclick="adminRemoveMoney(${index})" style="background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);">Remove Money</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function adminAddMoney(index) {
+            const amount = parseFloat(document.getElementById(`adminAmount${index}`).value);
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+
+            const user = allUsers[index];
+            user.balance += amount;
+
+            const data = await getSheetsData('getUsers');
+            const users = data.users || [];
+            const userIndex = users.findIndex(u => u.username === user.username);
+            users[userIndex] = user;
+            saveMockData('mockUsers', users);
+
+            await callSheetsAPI('updateBalance', { username: user.username, balance: user.balance });
+
+            const transaction = {
+                from: 'ADMIN',
+                to: user.username,
+                amount: amount,
+                note: 'Admin credit',
+                timestamp: new Date().toISOString()
+            };
+
+            const mockTransactions = JSON.parse(localStorage.getItem('mockTransactions') || '[]');
+            mockTransactions.push(transaction);
+            saveMockData('mockTransactions', mockTransactions);
+
+            alert(`✨ Added $${amount.toFixed(2)} to ${user.username}'s account`);
+            loadAdminPanel();
+        }
+
+        async function adminRemoveMoney(index) {
+            const amount = parseFloat(document.getElementById(`adminAmount${index}`).value);
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+
+            const user = allUsers[index];
+            user.balance = Math.max(0, user.balance - amount);
+
+            const data = await getSheetsData('getUsers');
+            const users = data.users || [];
+            const userIndex = users.findIndex(u => u.username === user.username);
+            users[userIndex] = user;
+            saveMockData('mockUsers', users);
+
+            await callSheetsAPI('updateBalance', { username: user.username, balance: user.balance });
+
+            const transaction = {
+                from: user.username,
+                to: 'ADMIN',
+                amount: amount,
+                note: 'Admin debit',
+                timestamp: new Date().toISOString()
+            };
+
+            const mockTransactions = JSON.parse(localStorage.getItem('mockTransactions') || '[]');
+            mockTransactions.push(transaction);
+            saveMockData('mockTransactions', mockTransactions);
+
+            alert(`Removed $${amount.toFixed(2)} from ${user.username}'s account`);
+            loadAdminPanel();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showAlert(element, message, type) {
+            element.className = `alert alert-${type}`;
+            element.textContent = message;
+            setTimeout(() => element.className = 'hidden', 5000);
+        }
+    </script>
+</body>
+</html>
