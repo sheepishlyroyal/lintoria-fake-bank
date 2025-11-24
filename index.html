@@ -69,52 +69,135 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
+            overflow: hidden;
         }
 
-        /* Animated Grid */
+        /* 3D Animated Grid */
         .grid-layer {
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(rgba(37, 99, 235, 0.08) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.08) 2px, transparent 2px);
+            background-size: 80px 80px;
+            transform: perspective(500px) rotateX(60deg) translateY(-50%);
+            transform-origin: center center;
+            animation: gridScroll 20s linear infinite;
+        }
+
+        @keyframes gridScroll {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(-50%); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(calc(-50% + 80px)); }
+        }
+
+        /* Secondary grid layer for depth */
+        .grid-layer-2 {
+            position: absolute;
+            top: 0;
+            left: -25%;
+            width: 150%;
+            height: 150%;
+            background-image: 
+                linear-gradient(rgba(251, 191, 36, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(251, 191, 36, 0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+            transform: perspective(400px) rotateX(55deg) translateY(-30%);
+            animation: gridScroll2 15s linear infinite;
+        }
+
+        @keyframes gridScroll2 {
+            0% { transform: perspective(400px) rotateX(55deg) translateY(-30%); }
+            100% { transform: perspective(400px) rotateX(55deg) translateY(calc(-30% + 40px)); }
+        }
+
+        /* Particle System */
+        .particle-container {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
-                linear-gradient(rgba(37, 99, 235, 0.03) 2px, transparent 2px),
-                linear-gradient(90deg, rgba(37, 99, 235, 0.03) 2px, transparent 2px),
-                linear-gradient(rgba(251, 191, 36, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(251, 191, 36, 0.02) 1px, transparent 1px);
-            background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
-            animation: gridFloat 20s linear infinite;
+            overflow: hidden;
         }
 
-        @keyframes gridFloat {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-100px); }
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+            opacity: 0;
         }
 
-        /* Mouse-Reactive Gradient Orbs */
-        .gradient-orb {
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-20vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Mouse-Reactive Glow System */
+        .glow-system {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .center-point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px var(--gold), 0 0 40px var(--gold-dark);
+        }
+
+        .glow-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--primary) 100%);
+            transform-origin: left center;
+            opacity: 0.3;
+        }
+
+        .glow-orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.6;
+            filter: blur(80px);
             mix-blend-mode: screen;
-            transition: transform 0.3s ease-out;
+            transition: transform 0.1s ease-out;
             pointer-events: none;
         }
 
-        .orb-blue {
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, #2563eb 0%, transparent 70%);
-            transform: translate(-300px, -300px);
+        .orb-primary {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.4) 0%, transparent 70%);
         }
 
-        .orb-gold {
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, #fbbf24 0%, transparent 70%);
-            transform: translate(-250px, -250px);
+        .orb-secondary {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.3) 0%, transparent 70%);
         }
 
         /* Main Container */
@@ -155,7 +238,7 @@
             border-color: rgba(251, 191, 36, 0.3);
         }
 
-        /* Logo - NO SPINNING */
+        /* Logo */
         .logo-container {
             display: inline-flex;
             align-items: center;
@@ -287,7 +370,7 @@
             letter-spacing: 1px;
         }
 
-        .form-input, select {
+        .form-input, select, textarea {
             width: 100%;
             padding: 1rem 1.5rem;
             background: rgba(15, 23, 42, 0.6);
@@ -296,13 +379,14 @@
             color: var(--text-primary);
             font-size: 1rem;
             transition: all 0.3s ease;
+            font-family: inherit;
         }
 
         select {
             cursor: pointer;
         }
 
-        .form-input:focus, select:focus {
+        .form-input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--gold);
             background: rgba(15, 23, 42, 0.8);
@@ -334,6 +418,12 @@
             transform: translateY(0);
         }
 
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .btn-success {
             background: var(--gradient-gold);
             color: var(--bg-primary);
@@ -343,6 +433,11 @@
         .btn-danger {
             background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
             box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
         }
 
         /* Balance Display */
@@ -423,6 +518,32 @@
             box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
         }
 
+        /* Inventory Card */
+        .inventory-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 16px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .inventory-card:hover {
+            transform: translateX(5px);
+            border-color: var(--success);
+        }
+
+        .inventory-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--gradient-gold);
+            color: var(--bg-primary);
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
         /* Toast */
         .toast {
             position: fixed;
@@ -488,11 +609,104 @@
             margin-top: 1rem;
         }
 
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .section-header h2 {
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .section-header .badge {
+            padding: 0.25rem 0.75rem;
+            background: rgba(251, 191, 36, 0.2);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--gold);
+        }
+
+        /* Flight Card */
+        .flight-card {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .flight-route {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .flight-city {
+            text-align: center;
+        }
+
+        .flight-city-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .flight-city-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .flight-arrow {
+            font-size: 2rem;
+            color: var(--accent);
+        }
+
+        /* City Card */
+        .city-card {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .city-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(251, 191, 36, 0.2);
+        }
+
         @media (max-width: 768px) {
             .logo-text { font-size: 2rem; }
             .balance-amount { font-size: 3rem; }
             .tab-container { flex-direction: column; }
             .tab-section { width: 100%; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-light);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
         }
     </style>
 </head>
@@ -500,8 +714,16 @@
     <!-- Interactive Background -->
     <div class="interactive-bg">
         <div class="grid-layer"></div>
-        <div class="gradient-orb orb-blue" id="orbBlue"></div>
-        <div class="gradient-orb orb-gold" id="orbGold"></div>
+        <div class="grid-layer-2"></div>
+        <div class="particle-container" id="particleContainer"></div>
+    </div>
+
+    <!-- Glow System -->
+    <div class="glow-system" id="glowSystem">
+        <div class="center-point" id="centerPoint"></div>
+        <div class="glow-line" id="glowLine"></div>
+        <div class="glow-orb orb-primary" id="glowOrb"></div>
+        <div class="glow-orb orb-secondary" id="glowOrb2"></div>
     </div>
 
     <div class="app-container">
@@ -559,7 +781,7 @@
         <div id="appScreen" class="hidden">
             <!-- Header -->
             <div class="glass-card" style="margin-bottom: 2rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                     <div class="logo-container" style="margin-bottom: 0;">
                         <div class="logo-icon">🏛️</div>
                         <div>
@@ -570,6 +792,7 @@
                                 <span id="stockAdminBadge" class="hidden" style="margin-left: 0.5rem; color: var(--primary-light);">📈 Stock Admin</span>
                                 <span id="marketAdminBadge" class="hidden" style="margin-left: 0.5rem; color: var(--primary-light);">🛒 Market Admin</span>
                                 <span id="newsAdminBadge" class="hidden" style="margin-left: 0.5rem; color: var(--primary-light);">📰 News Admin</span>
+                                <span id="passportAdminBadge" class="hidden" style="margin-left: 0.5rem; color: var(--accent-light);">🛂 Passport Admin</span>
                             </div>
                         </div>
                     </div>
@@ -592,11 +815,17 @@
                     <button class="tab-btn" onclick="switchTab('portfolio')">
                         <span class="tab-icon">💼</span>Portfolio
                     </button>
+                    <button class="tab-btn" onclick="switchTab('inventory')">
+                        <span class="tab-icon">🎒</span>Inventory
+                    </button>
                 </div>
 
                 <div class="tab-section" data-label="City Services">
                     <button class="tab-btn" onclick="switchTab('passport')">
                         <span class="tab-icon">🛂</span>Passport
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('travel')">
+                        <span class="tab-icon">✈️</span>Travel
                     </button>
                     <button class="tab-btn" onclick="switchTab('permits')">
                         <span class="tab-icon">📋</span>Permits
@@ -651,7 +880,10 @@
                 </div>
 
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Recent Transactions</h2>
+                    <div class="section-header">
+                        <h2>📊 Recent Transactions</h2>
+                        <span class="badge" id="transactionCount">0 transactions</span>
+                    </div>
                     <div id="transactionList">
                         <div class="empty-state">
                             <div class="empty-icon">💰</div>
@@ -664,7 +896,7 @@
             <!-- Transfer -->
             <div id="transferContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Send Money</h2>
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">💸 Send Money</h2>
                     <div class="form-group">
                         <label class="form-label">Recipient Email</label>
                         <input type="email" id="recipientEmail" class="form-input" placeholder="recipient@example.com">
@@ -684,7 +916,7 @@
             <!-- Stocks -->
             <div id="stocksContent" class="tab-content hidden">
                 <div class="glass-card hidden" id="createStockCard">
-                    <h3 style="margin-bottom: 1rem; color: var(--gold);">Create New Stock (Stock Admin Only)</h3>
+                    <h3 style="margin-bottom: 1rem; color: var(--gold);">📈 Create New Stock (Admin Only)</h3>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                         <input type="text" id="stockSymbol" class="form-input" placeholder="Symbol (e.g., LINT)">
                         <input type="text" id="stockName" class="form-input" placeholder="Company Name">
@@ -695,7 +927,9 @@
                 </div>
 
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Stock Market</h2>
+                    <div class="section-header">
+                        <h2>📊 Stock Market</h2>
+                    </div>
                     <div id="stocksList">
                         <div class="empty-state">
                             <div class="empty-icon">📈</div>
@@ -708,7 +942,9 @@
             <!-- Portfolio -->
             <div id="portfolioContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Your Portfolio</h2>
+                    <div class="section-header">
+                        <h2>💼 Your Portfolio</h2>
+                    </div>
                     <div id="portfolioList">
                         <div class="empty-state">
                             <div class="empty-icon">💼</div>
@@ -718,43 +954,149 @@
                 </div>
             </div>
 
+            <!-- Inventory -->
+            <div id="inventoryContent" class="tab-content hidden">
+                <div class="glass-card">
+                    <div class="section-header">
+                        <h2>🎒 Your Inventory</h2>
+                        <span class="badge" id="inventoryCount">0 items</span>
+                    </div>
+                    <div id="inventoryList">
+                        <div class="empty-state">
+                            <div class="empty-icon">🎒</div>
+                            <p>Your inventory is empty</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Passport -->
             <div id="passportContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Immigration & Passport Services</h2>
+                    <div class="section-header">
+                        <h2>🛂 Immigration & Passport Services</h2>
+                    </div>
                     <div id="passportInfo"></div>
-                    <button class="btn" onclick="applyPassport()" style="margin-top: 1rem;">Apply for Passport ($500)</button>
+                    <button class="btn" onclick="applyPassport()" style="margin-top: 1rem;" id="applyPassportBtn">Apply for Passport ($500)</button>
+                    
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--gold);">🌍 Your Visas</h3>
+                    <div id="visasList">
+                        <div class="empty-state" style="padding: 2rem;">
+                            <p>No visas yet. Apply for visas in the Travel section.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Travel (Flights & Cities) -->
+            <div id="travelContent" class="tab-content hidden">
+                <!-- Admin: Create City -->
+                <div class="glass-card hidden" id="createCityCard">
+                    <h3 style="margin-bottom: 1rem; color: var(--gold);">🌆 Create New City (Passport Admin)</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <input type="text" id="cityName" class="form-input" placeholder="City Name">
+                        <input type="text" id="cityCountry" class="form-input" placeholder="Country">
+                    </div>
+                    <input type="text" id="cityDescription" class="form-input" placeholder="Description" style="margin-top: 1rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                        <input type="number" id="cityVisaPrice" class="form-input" placeholder="Visa Price" value="100">
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="cityVisaRequired" checked> Visa Required
+                        </label>
+                    </div>
+                    <button class="btn btn-success" onclick="createCity()" style="width: 100%; margin-top: 1rem;">Create City</button>
+                </div>
+
+                <!-- Admin: Create Flight -->
+                <div class="glass-card hidden" id="createFlightCard">
+                    <h3 style="margin-bottom: 1rem; color: var(--gold);">✈️ Create New Flight (Passport Admin)</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <select id="flightFromCity" class="form-input">
+                            <option value="">Select Departure City</option>
+                        </select>
+                        <select id="flightToCity" class="form-input">
+                            <option value="">Select Arrival City</option>
+                        </select>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                        <input type="datetime-local" id="flightDeparture" class="form-input">
+                        <input type="datetime-local" id="flightArrival" class="form-input">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                        <input type="number" id="flightPrice" class="form-input" placeholder="Price ($)" value="250">
+                        <input type="number" id="flightSeats" class="form-input" placeholder="Available Seats" value="100">
+                    </div>
+                    <button class="btn btn-success" onclick="createFlight()" style="width: 100%; margin-top: 1rem;">Create Flight</button>
+                </div>
+
+                <!-- Cities List -->
+                <div class="glass-card">
+                    <div class="section-header">
+                        <h2>🌍 Available Destinations</h2>
+                    </div>
+                    <div class="service-grid" id="citiesList">
+                        <div class="empty-state">
+                            <div class="empty-icon">🌍</div>
+                            <p>No cities available yet</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flights List -->
+                <div class="glass-card" style="margin-top: 2rem;">
+                    <div class="section-header">
+                        <h2>✈️ Available Flights</h2>
+                    </div>
+                    <div id="flightsList">
+                        <div class="empty-state">
+                            <div class="empty-icon">✈️</div>
+                            <p>No flights available yet</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Your Bookings -->
+                <div class="glass-card" style="margin-top: 2rem;">
+                    <div class="section-header">
+                        <h2>🎫 Your Flight Bookings</h2>
+                    </div>
+                    <div id="bookingsList">
+                        <div class="empty-state">
+                            <div class="empty-icon">🎫</div>
+                            <p>No bookings yet</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Permits -->
             <div id="permitsContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Permits & Licenses</h2>
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">📋 Permits & Licenses</h2>
                     <div class="service-grid">
                         <div class="service-card">
                             <h3>📄 Business License</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$250</p>
                             <p style="color: var(--text-muted);">Valid for 1 year</p>
-                            <button class="btn" onclick="applyPermit('business', 250)">Apply</button>
+                            <button class="btn" onclick="applyPermit('business', 250)" style="margin-top: 1rem;">Apply</button>
                         </div>
                         <div class="service-card">
                             <h3>🏗️ Building Permit</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$500</p>
                             <p style="color: var(--text-muted);">For construction projects</p>
-                            <button class="btn" onclick="applyPermit('building', 500)">Apply</button>
+                            <button class="btn" onclick="applyPermit('building', 500)" style="margin-top: 1rem;">Apply</button>
                         </div>
                         <div class="service-card">
                             <h3>🎪 Event Permit</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$100</p>
                             <p style="color: var(--text-muted);">For public events</p>
-                            <button class="btn" onclick="applyPermit('event', 100)">Apply</button>
+                            <button class="btn" onclick="applyPermit('event', 100)" style="margin-top: 1rem;">Apply</button>
                         </div>
                         <div class="service-card">
                             <h3>🚗 Driving License</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$75</p>
                             <p style="color: var(--text-muted);">Valid for 5 years</p>
-                            <button class="btn" onclick="applyPermit('driving', 75)">Apply</button>
+                            <button class="btn" onclick="applyPermit('driving', 75)" style="margin-top: 1rem;">Apply</button>
                         </div>
                     </div>
                 </div>
@@ -763,31 +1105,31 @@
             <!-- Telecom -->
             <div id="telecomContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Telecommunications Services</h2>
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">📡 Telecommunications Services</h2>
                     <div class="service-grid">
                         <div class="service-card">
                             <h3>📶 Basic Internet</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$49/mo</p>
                             <p style="color: var(--text-muted);">100 Mbps • Unlimited data</p>
-                            <button class="btn" onclick="subscribeTelecom('basic', 49)">Subscribe</button>
+                            <button class="btn" onclick="subscribeTelecom('basic', 49)" style="margin-top: 1rem;">Subscribe</button>
                         </div>
                         <div class="service-card">
                             <h3>⚡ Pro Internet</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$79/mo</p>
                             <p style="color: var(--text-muted);">500 Mbps • Priority support</p>
-                            <button class="btn" onclick="subscribeTelecom('pro', 79)">Subscribe</button>
+                            <button class="btn" onclick="subscribeTelecom('pro', 79)" style="margin-top: 1rem;">Subscribe</button>
                         </div>
                         <div class="service-card">
                             <h3>🚀 Ultra Internet</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$149/mo</p>
                             <p style="color: var(--text-muted);">1 Gbps • Business features</p>
-                            <button class="btn" onclick="subscribeTelecom('ultra', 149)">Subscribe</button>
+                            <button class="btn" onclick="subscribeTelecom('ultra', 149)" style="margin-top: 1rem;">Subscribe</button>
                         </div>
                         <div class="service-card">
                             <h3>📱 Mobile Plan</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$35/mo</p>
                             <p style="color: var(--text-muted);">Unlimited calls & 50GB data</p>
-                            <button class="btn" onclick="subscribeTelecom('mobile', 35)">Subscribe</button>
+                            <button class="btn" onclick="subscribeTelecom('mobile', 35)" style="margin-top: 1rem;">Subscribe</button>
                         </div>
                     </div>
                 </div>
@@ -796,27 +1138,27 @@
             <!-- Utilities -->
             <div id="utilitiesContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Utility Services</h2>
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">⚡ Utility Services</h2>
                     <div class="service-grid">
                         <div class="service-card">
                             <h3>⚡ Electricity</h3>
                             <p>Current Bill: <span style="color: var(--gold);">$85.40</span></p>
-                            <button class="btn" onclick="payUtility('electricity', 85.40)">Pay Bill</button>
+                            <button class="btn" onclick="payUtility('electricity', 85.40)" style="margin-top: 1rem;">Pay Bill</button>
                         </div>
                         <div class="service-card">
                             <h3>💧 Water</h3>
                             <p>Current Bill: <span style="color: var(--gold);">$42.15</span></p>
-                            <button class="btn" onclick="payUtility('water', 42.15)">Pay Bill</button>
+                            <button class="btn" onclick="payUtility('water', 42.15)" style="margin-top: 1rem;">Pay Bill</button>
                         </div>
                         <div class="service-card">
                             <h3>🔥 Gas</h3>
                             <p>Current Bill: <span style="color: var(--gold);">$67.80</span></p>
-                            <button class="btn" onclick="payUtility('gas', 67.80)">Pay Bill</button>
+                            <button class="btn" onclick="payUtility('gas', 67.80)" style="margin-top: 1rem;">Pay Bill</button>
                         </div>
                         <div class="service-card">
                             <h3>🗑️ Waste Management</h3>
                             <p>Current Bill: <span style="color: var(--gold);">$25.00</span></p>
-                            <button class="btn" onclick="payUtility('waste', 25.00)">Pay Bill</button>
+                            <button class="btn" onclick="payUtility('waste', 25.00)" style="margin-top: 1rem;">Pay Bill</button>
                         </div>
                     </div>
                 </div>
@@ -825,31 +1167,31 @@
             <!-- Transport -->
             <div id="transportContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Public Transportation</h2>
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">🚇 Public Transportation</h2>
                     <div class="service-grid">
                         <div class="service-card">
                             <h3>🎫 Daily Pass</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$8</p>
                             <p style="color: var(--text-muted);">24-hour unlimited travel</p>
-                            <button class="btn" onclick="buyTransportPass('daily', 8)">Purchase</button>
+                            <button class="btn" onclick="buyTransportPass('daily', 8)" style="margin-top: 1rem;">Purchase</button>
                         </div>
                         <div class="service-card">
                             <h3>🚇 Weekly Pass</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$35</p>
                             <p style="color: var(--text-muted);">7-day unlimited travel</p>
-                            <button class="btn" onclick="buyTransportPass('weekly', 35)">Purchase</button>
+                            <button class="btn" onclick="buyTransportPass('weekly', 35)" style="margin-top: 1rem;">Purchase</button>
                         </div>
                         <div class="service-card">
                             <h3>🚌 Monthly Pass</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$120</p>
                             <p style="color: var(--text-muted);">30-day unlimited travel</p>
-                            <button class="btn" onclick="buyTransportPass('monthly', 120)">Purchase</button>
+                            <button class="btn" onclick="buyTransportPass('monthly', 120)" style="margin-top: 1rem;">Purchase</button>
                         </div>
                         <div class="service-card">
-                            <h3>✈️ Airport Express</h3>
+                            <h3>🚕 Airport Express</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$25</p>
                             <p style="color: var(--text-muted);">Direct to airport</p>
-                            <button class="btn" onclick="buyTransportPass('airport', 25)">Purchase</button>
+                            <button class="btn" onclick="buyTransportPass('airport', 25)" style="margin-top: 1rem;">Purchase</button>
                         </div>
                     </div>
                 </div>
@@ -858,31 +1200,31 @@
             <!-- Healthcare -->
             <div id="healthcareContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Healthcare Services</h2>
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">🏥 Healthcare Services</h2>
                     <div class="service-grid">
                         <div class="service-card">
                             <h3>🏥 Basic Health Plan</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$199/mo</p>
                             <p style="color: var(--text-muted);">Essential coverage</p>
-                            <button class="btn" onclick="subscribeHealthcare('basic', 199)">Subscribe</button>
+                            <button class="btn" onclick="subscribeHealthcare('basic', 199)" style="margin-top: 1rem;">Subscribe</button>
                         </div>
                         <div class="service-card">
                             <h3>⭐ Premium Health Plan</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$399/mo</p>
                             <p style="color: var(--text-muted);">Full coverage + dental</p>
-                            <button class="btn" onclick="subscribeHealthcare('premium', 399)">Subscribe</button>
+                            <button class="btn" onclick="subscribeHealthcare('premium', 399)" style="margin-top: 1rem;">Subscribe</button>
                         </div>
                         <div class="service-card">
                             <h3>👨‍👩‍👧‍👦 Family Plan</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$699/mo</p>
                             <p style="color: var(--text-muted);">Coverage for up to 5</p>
-                            <button class="btn" onclick="subscribeHealthcare('family', 699)">Subscribe</button>
+                            <button class="btn" onclick="subscribeHealthcare('family', 699)" style="margin-top: 1rem;">Subscribe</button>
                         </div>
                         <div class="service-card">
                             <h3>💊 Pharmacy Plan</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$49/mo</p>
                             <p style="color: var(--text-muted);">Prescription coverage</p>
-                            <button class="btn" onclick="subscribeHealthcare('pharmacy', 49)">Subscribe</button>
+                            <button class="btn" onclick="subscribeHealthcare('pharmacy', 49)" style="margin-top: 1rem;">Subscribe</button>
                         </div>
                     </div>
                 </div>
@@ -891,31 +1233,31 @@
             <!-- Education -->
             <div id="educationContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Education Services</h2>
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">🎓 Education Services</h2>
                     <div class="service-grid">
                         <div class="service-card">
                             <h3>💻 Online Courses</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$49/course</p>
                             <p style="color: var(--text-muted);">Professional development</p>
-                            <button class="btn" onclick="enrollCourse('online', 49)">Enroll</button>
+                            <button class="btn" onclick="enrollCourse('online', 49)" style="margin-top: 1rem;">Enroll</button>
                         </div>
                         <div class="service-card">
                             <h3>🎓 Certification Programs</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$299/program</p>
                             <p style="color: var(--text-muted);">Industry certifications</p>
-                            <button class="btn" onclick="enrollCourse('certification', 299)">Enroll</button>
+                            <button class="btn" onclick="enrollCourse('certification', 299)" style="margin-top: 1rem;">Enroll</button>
                         </div>
                         <div class="service-card">
                             <h3>📚 University Degree</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$5,000/semester</p>
                             <p style="color: var(--text-muted);">Bachelor's programs</p>
-                            <button class="btn" onclick="enrollCourse('degree', 5000)">Enroll</button>
+                            <button class="btn" onclick="enrollCourse('degree', 5000)" style="margin-top: 1rem;">Enroll</button>
                         </div>
                         <div class="service-card">
                             <h3>🏫 K-12 Education</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$200/mo</p>
                             <p style="color: var(--text-muted);">Elementary to high school</p>
-                            <button class="btn" onclick="enrollCourse('k12', 200)">Enroll</button>
+                            <button class="btn" onclick="enrollCourse('k12', 200)" style="margin-top: 1rem;">Enroll</button>
                         </div>
                     </div>
                 </div>
@@ -924,31 +1266,31 @@
             <!-- Housing -->
             <div id="housingContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Housing & Real Estate</h2>
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">🏠 Housing & Real Estate</h2>
                     <div class="service-grid">
                         <div class="service-card">
                             <h3>🏢 Studio Apartment</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$800/mo</p>
                             <p style="color: var(--text-muted);">Downtown location</p>
-                            <button class="btn" onclick="rentProperty('studio', 800)">Rent</button>
+                            <button class="btn" onclick="rentProperty('studio', 800)" style="margin-top: 1rem;">Rent</button>
                         </div>
                         <div class="service-card">
                             <h3>🏠 2BR Apartment</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$1,500/mo</p>
                             <p style="color: var(--text-muted);">Residential area</p>
-                            <button class="btn" onclick="rentProperty('2br', 1500)">Rent</button>
+                            <button class="btn" onclick="rentProperty('2br', 1500)" style="margin-top: 1rem;">Rent</button>
                         </div>
                         <div class="service-card">
                             <h3>🏡 Family House</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$2,500/mo</p>
                             <p style="color: var(--text-muted);">3BR with garden</p>
-                            <button class="btn" onclick="rentProperty('house', 2500)">Rent</button>
+                            <button class="btn" onclick="rentProperty('house', 2500)" style="margin-top: 1rem;">Rent</button>
                         </div>
                         <div class="service-card">
                             <h3>🏰 Luxury Villa</h3>
                             <p style="font-size: 2rem; color: var(--gold);">$5,000/mo</p>
                             <p style="color: var(--text-muted);">5BR with pool</p>
-                            <button class="btn" onclick="rentProperty('villa', 5000)">Rent</button>
+                            <button class="btn" onclick="rentProperty('villa', 5000)" style="margin-top: 1rem;">Rent</button>
                         </div>
                     </div>
                 </div>
@@ -957,7 +1299,7 @@
             <!-- Marketplace -->
             <div id="marketplaceContent" class="tab-content hidden">
                 <div class="glass-card hidden" id="createItemCard">
-                    <h3 style="margin-bottom: 1rem; color: var(--gold);">Create New Item (Market Admin Only)</h3>
+                    <h3 style="margin-bottom: 1rem; color: var(--gold);">🛒 Create New Item (Admin Only)</h3>
                     <input type="text" id="itemName" class="form-input" placeholder="Item Name">
                     <input type="number" id="itemPrice" class="form-input" placeholder="Price" step="0.01" style="margin-top: 1rem;">
                     <input type="number" id="itemStock" class="form-input" placeholder="Stock Quantity" style="margin-top: 1rem;">
@@ -965,8 +1307,10 @@
                 </div>
 
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Digital Marketplace</h2>
-                    <div id="marketplaceList">
+                    <div class="section-header">
+                        <h2>🛒 Digital Marketplace</h2>
+                    </div>
+                    <div class="service-grid" id="marketplaceList">
                         <div class="empty-state">
                             <div class="empty-icon">🛒</div>
                             <p>No items available yet</p>
@@ -978,7 +1322,7 @@
             <!-- Casino -->
             <div id="casinoContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Lintoria Casino</h2>
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">🎰 Lintoria Casino</h2>
                     
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
                         <!-- Roulette -->
@@ -991,7 +1335,7 @@
                                 <button class="btn" onclick="playRoulette('black')" style="background: linear-gradient(135deg, #1f2937, #111827);">Black</button>
                                 <button class="btn btn-success" onclick="playRoulette('green')">Green</button>
                             </div>
-                            <div id="rouletteResult" style="margin-top: 1rem; font-weight: 700;"></div>
+                            <div id="rouletteResult" style="margin-top: 1rem; font-weight: 700; min-height: 24px;"></div>
                         </div>
 
                         <!-- Dice -->
@@ -1000,7 +1344,7 @@
                             <p style="color: var(--text-muted); margin-bottom: 1rem;">Roll higher than 3 to win 2x</p>
                             <input type="number" id="diceBet" class="form-input" placeholder="Bet amount" min="1" style="margin-bottom: 1rem;">
                             <button class="btn" onclick="playDice()" style="width: 100%;">Roll Dice</button>
-                            <div id="diceResult" style="margin-top: 1rem; font-weight: 700;"></div>
+                            <div id="diceResult" style="margin-top: 1rem; font-weight: 700; min-height: 24px;"></div>
                         </div>
 
                         <!-- Coin Flip -->
@@ -1012,17 +1356,17 @@
                                 <button class="btn" onclick="playCoin('heads')">Heads</button>
                                 <button class="btn" onclick="playCoin('tails')">Tails</button>
                             </div>
-                            <div id="coinResult" style="margin-top: 1rem; font-weight: 700;"></div>
+                            <div id="coinResult" style="margin-top: 1rem; font-weight: 700; min-height: 24px;"></div>
                         </div>
 
                         <!-- Slots -->
                         <div class="service-card">
                             <h3>🎰 Slot Machine</h3>
-                            <p style="color: var(--text-muted); margin-bottom: 1rem;">Match 3 symbols to win!</p>
+                            <p style="color: var(--text-muted); margin-bottom: 1rem;">Match symbols to win!</p>
                             <input type="number" id="slotsBet" class="form-input" placeholder="Bet amount" min="1" style="margin-bottom: 1rem;">
                             <button class="btn btn-success" onclick="playSlots()" style="width: 100%;">Spin!</button>
                             <div id="slotsDisplay" style="font-size: 3rem; text-align: center; margin: 1rem 0;">🎰 🎰 🎰</div>
-                            <div id="slotsResult" style="font-weight: 700;"></div>
+                            <div id="slotsResult" style="font-weight: 700; min-height: 24px;"></div>
                         </div>
                     </div>
                 </div>
@@ -1031,14 +1375,16 @@
             <!-- News -->
             <div id="newsContent" class="tab-content hidden">
                 <div class="glass-card hidden" id="createNewsCard">
-                    <h3 style="margin-bottom: 1rem; color: var(--gold);">Create News Article (News Admin Only)</h3>
+                    <h3 style="margin-bottom: 1rem; color: var(--gold);">📰 Create News Article (Admin Only)</h3>
                     <input type="text" id="newsTitle" class="form-input" placeholder="Article Title">
                     <textarea id="newsContentText" class="form-input" placeholder="Article content..." style="margin-top: 1rem; min-height: 100px;"></textarea>
                     <button class="btn btn-success" onclick="createNewsArticle()" style="width: 100%; margin-top: 1rem;">Publish Article</button>
                 </div>
 
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Latest News</h2>
+                    <div class="section-header">
+                        <h2>📰 Latest News</h2>
+                    </div>
                     <div id="newsList">
                         <div class="empty-state">
                             <div class="empty-icon">📰</div>
@@ -1051,7 +1397,9 @@
             <!-- Leaderboard -->
             <div id="leaderboardContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">🏆 Wealth Leaderboard</h2>
+                    <div class="section-header">
+                        <h2>🏆 Wealth Leaderboard</h2>
+                    </div>
                     <div id="leaderboardList">
                         <div class="empty-state">
                             <div class="empty-icon">🏆</div>
@@ -1064,7 +1412,10 @@
             <!-- Admin Panel -->
             <div id="adminContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">👑 Master Admin Control Panel</h2>
+                    <div class="section-header">
+                        <h2>👑 Master Admin Control Panel</h2>
+                        <span class="badge" id="userCount">0 users</span>
+                    </div>
                     <div id="adminUsersList">
                         <div class="empty-state">
                             <div class="empty-icon">👥</div>
@@ -1083,7 +1434,7 @@
 
     <script>
         const APP_VERSION = '3.00';
-        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxBIIEbOozUsJpnLgxJHK7VIN3zrqMxuMj1OReYhQoEJMfLfUtC_76NowJToaU0-A_r7Q/exec';
+        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzqSEpZIr8mRzhOSEL0uawFBkasjYROkmz_DCur-ULGWMgx_xmHe_bxVEF7uaJ7etP-pQ/exec'; // Replace with your deployed Google Apps Script URL
         const MASTER_ADMIN = 'sheepishlyroyal@gmail.com';
         
         let currentUser = null;
@@ -1091,10 +1442,16 @@
         let allUsers = [];
         let stocks = [];
         let portfolio = [];
+        let cities = [];
+        let userVisas = [];
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             initApp();
+            initParticles();
+            initGlowSystem();
         });
 
         function initApp() {
@@ -1107,27 +1464,109 @@
 
             // Generate device fingerprint
             deviceFingerprint = generateDeviceFingerprint();
-
-            // Mouse tracking for background orbs
-            document.addEventListener('mousemove', (e) => {
-                const x = e.clientX;
-                const y = e.clientY;
-                
-                // Move blue orb towards mouse
-                const blueOrb = document.getElementById('orbBlue');
-                if (blueOrb) {
-                    blueOrb.style.left = (x - 300) + 'px';
-                    blueOrb.style.top = (y - 300) + 'px';
-                }
-                
-                // Move gold orb opposite to mouse
-                const goldOrb = document.getElementById('orbGold');
-                if (goldOrb) {
-                    goldOrb.style.left = (window.innerWidth - x - 250) + 'px';
-                    goldOrb.style.top = (window.innerHeight - y - 250) + 'px';
-                }
-            });
         }
+
+        // Particle System
+        function initParticles() {
+            const container = document.getElementById('particleContainer');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                createParticle(container, i);
+            }
+        }
+
+        function createParticle(container, index) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            // Random position and timing
+            const left = Math.random() * 100;
+            const delay = Math.random() * 10;
+            const duration = 8 + Math.random() * 8;
+            const size = 2 + Math.random() * 4;
+            
+            // Random color (blue or gold)
+            const isGold = Math.random() > 0.5;
+            particle.style.background = isGold 
+                ? 'radial-gradient(circle, #fbbf24 0%, transparent 70%)'
+                : 'radial-gradient(circle, #3b82f6 0%, transparent 70%)';
+            
+            particle.style.left = `${left}%`;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.animationDelay = `${delay}s`;
+            particle.style.animationDuration = `${duration}s`;
+            
+            container.appendChild(particle);
+        }
+
+        // Glow System with line from center to mouse
+        function initGlowSystem() {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+
+            // Position center point
+            const centerPoint = document.getElementById('centerPoint');
+            centerPoint.style.left = `${centerX}px`;
+            centerPoint.style.top = `${centerY}px`;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                updateGlowSystem();
+            });
+
+            // Initial update
+            updateGlowSystem();
+        }
+
+        function updateGlowSystem() {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+
+            // Update center point
+            const centerPoint = document.getElementById('centerPoint');
+            centerPoint.style.left = `${centerX}px`;
+            centerPoint.style.top = `${centerY}px`;
+
+            // Calculate line from center to mouse
+            const dx = mouseX - centerX;
+            const dy = mouseY - centerY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+            // Update line
+            const glowLine = document.getElementById('glowLine');
+            glowLine.style.left = `${centerX}px`;
+            glowLine.style.top = `${centerY}px`;
+            glowLine.style.width = `${distance}px`;
+            glowLine.style.transform = `rotate(${angle}deg)`;
+
+            // Position glow orb along the line
+            // Calculate position at a certain ratio along the line
+            const ratio = 0.6; // 60% along the line
+            const orbX = centerX + dx * ratio;
+            const orbY = centerY + dy * ratio;
+
+            const glowOrb = document.getElementById('glowOrb');
+            glowOrb.style.left = `${orbX - 200}px`;
+            glowOrb.style.top = `${orbY - 200}px`;
+
+            // Secondary orb closer to mouse
+            const ratio2 = 0.85;
+            const orb2X = centerX + dx * ratio2;
+            const orb2Y = centerY + dy * ratio2;
+
+            const glowOrb2 = document.getElementById('glowOrb2');
+            glowOrb2.style.left = `${orb2X - 150}px`;
+            glowOrb2.style.top = `${orb2Y - 150}px`;
+        }
+
+        // Window resize handler
+        window.addEventListener('resize', () => {
+            updateGlowSystem();
+        });
 
         function generateDeviceFingerprint() {
             const canvas = document.createElement('canvas');
@@ -1157,7 +1596,6 @@
                 nav.platform
             ].join('|');
             
-            // Create a hash
             let hash = 0;
             for (let i = 0; i < fingerprint.length; i++) {
                 const char = fingerprint.charCodeAt(i);
@@ -1201,17 +1639,21 @@
             }
 
             // Set active tab
-            event.target.closest('.tab-btn').classList.add('active');
+            if (event && event.target) {
+                event.target.closest('.tab-btn').classList.add('active');
+            }
 
             // Load content
             if (tab === 'dashboard') loadDashboard();
             else if (tab === 'stocks') loadStocks();
             else if (tab === 'portfolio') loadPortfolio();
+            else if (tab === 'inventory') loadInventory();
             else if (tab === 'marketplace') loadMarketplace();
             else if (tab === 'news') loadNews();
             else if (tab === 'leaderboard') loadLeaderboard();
             else if (tab === 'admin') loadAdminPanel();
             else if (tab === 'passport') loadPassport();
+            else if (tab === 'travel') loadTravel();
         }
 
         async function register() {
@@ -1289,34 +1731,42 @@
             document.getElementById('userName').textContent = currentUser.name;
             
             // Show badges and admin controls based on permissions
-            if (currentUser.email === MASTER_ADMIN) {
+            const isMaster = currentUser.email === MASTER_ADMIN;
+            
+            if (isMaster) {
                 document.getElementById('masterBadge').classList.remove('hidden');
                 document.getElementById('adminSection').classList.remove('hidden');
-                // Show all admin controls for master admin
                 document.getElementById('createStockCard').classList.remove('hidden');
                 document.getElementById('createItemCard').classList.remove('hidden');
                 document.getElementById('createNewsCard').classList.remove('hidden');
+                document.getElementById('createCityCard').classList.remove('hidden');
+                document.getElementById('createFlightCard').classList.remove('hidden');
             } else if (currentUser.permissions) {
-                // Show specific admin controls based on permissions
-                if (currentUser.permissions.stocks) {
+                const perms = currentUser.permissions;
+                
+                if (perms.stocks) {
                     document.getElementById('stockAdminBadge').classList.remove('hidden');
                     document.getElementById('createStockCard').classList.remove('hidden');
                 }
-                if (currentUser.permissions.marketplace) {
+                if (perms.marketplace) {
                     document.getElementById('marketAdminBadge').classList.remove('hidden');
                     document.getElementById('createItemCard').classList.remove('hidden');
                 }
-                if (currentUser.permissions.news) {
+                if (perms.news) {
                     document.getElementById('newsAdminBadge').classList.remove('hidden');
                     document.getElementById('createNewsCard').classList.remove('hidden');
                 }
-                // Show admin tab if any permission exists
-                if (currentUser.permissions.stocks || currentUser.permissions.marketplace || currentUser.permissions.news) {
+                if (perms.passport) {
+                    document.getElementById('passportAdminBadge').classList.remove('hidden');
+                    document.getElementById('createCityCard').classList.remove('hidden');
+                    document.getElementById('createFlightCard').classList.remove('hidden');
+                }
+                
+                if (perms.stocks || perms.marketplace || perms.news || perms.passport) {
                     document.getElementById('adminSection').classList.remove('hidden');
                 }
             }
 
-            // Load dashboard
             loadDashboard();
         }
 
@@ -1324,7 +1774,6 @@
             currentUser = null;
             document.getElementById('authScreen').classList.remove('hidden');
             document.getElementById('appScreen').classList.add('hidden');
-            // Clear form fields
             document.getElementById('loginEmail').value = '';
             document.getElementById('loginPassword').value = '';
             showToast('Logged out successfully', 'success');
@@ -1334,7 +1783,6 @@
             if (!currentUser) return;
 
             try {
-                // Get updated user data
                 const response = await fetch(`${SHEETS_URL}?action=getUser&email=${encodeURIComponent(currentUser.email)}`);
                 const result = await response.json();
                 
@@ -1350,16 +1798,20 @@
                 
                 const txList = document.getElementById('transactionList');
                 if (txResult.transactions && txResult.transactions.length > 0) {
-                    txList.innerHTML = txResult.transactions.slice(-10).reverse().map(tx => {
+                    document.getElementById('transactionCount').textContent = `${txResult.transactions.length} transactions`;
+                    txList.innerHTML = txResult.transactions.slice(-15).reverse().map(tx => {
                         const isReceived = tx.to === currentUser.email;
                         return `
                             <div class="transaction-item">
                                 <div>
-                                    <div style="font-weight: 700;">${isReceived ? 'From' : 'To'}: ${isReceived ? tx.from : tx.to}</div>
-                                    <div style="color: var(--text-muted); font-size: 0.875rem;">${tx.note || 'Transfer'}</div>
+                                    <div style="font-weight: 700;">${tx.type || 'TRANSFER'}</div>
+                                    <div style="color: var(--text-muted); font-size: 0.875rem;">
+                                        ${isReceived ? 'From: ' + tx.from : 'To: ' + tx.to}
+                                    </div>
+                                    <div style="color: var(--text-muted); font-size: 0.75rem;">${tx.note || ''}</div>
                                 </div>
-                                <div style="font-size: 1.5rem; font-weight: 700; color: ${isReceived ? 'var(--success)' : 'var(--danger)'};">
-                                    ${isReceived ? '+' : '-'}$${tx.amount.toFixed(2)}
+                                <div style="font-size: 1.25rem; font-weight: 700; color: ${isReceived ? 'var(--success)' : 'var(--danger)'};">
+                                    ${isReceived ? '+' : '-'}$${Number(tx.amount).toFixed(2)}
                                 </div>
                             </div>
                         `;
@@ -1417,7 +1869,8 @@
             }
         }
 
-        // All other functions continue here...
+        // ==================== STOCKS ====================
+
         async function loadStocks() {
             try {
                 const response = await fetch(`${SHEETS_URL}?action=getStocks`);
@@ -1430,11 +1883,11 @@
                         <div class="stock-card">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div>
-                                    <h3>${stock.symbol}</h3>
+                                    <h3 style="color: var(--gold);">${stock.symbol}</h3>
                                     <p style="color: var(--text-muted);">${stock.name}</p>
                                 </div>
                                 <div style="text-align: right;">
-                                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--gold);">$${stock.price.toFixed(2)}</div>
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--gold);">$${Number(stock.price).toFixed(2)}</div>
                                     <div style="color: var(--text-muted);">Available: ${stock.shares}</div>
                                 </div>
                             </div>
@@ -1554,16 +2007,16 @@
                         <div class="stock-card">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div>
-                                    <h3>${item.symbol}</h3>
+                                    <h3 style="color: var(--gold);">${item.symbol}</h3>
                                     <p style="color: var(--text-muted);">Shares: ${item.shares}</p>
-                                    <p style="color: var(--text-muted);">Avg Price: $${item.avgPrice.toFixed(2)}</p>
+                                    <p style="color: var(--text-muted);">Avg Price: $${Number(item.avgPrice).toFixed(2)}</p>
                                 </div>
                                 <div style="text-align: right;">
                                     <div style="font-size: 1.5rem; font-weight: 700; color: var(--gold);">
                                         Value: $${(item.shares * item.currentPrice).toFixed(2)}
                                     </div>
                                     <div style="color: ${item.profit >= 0 ? 'var(--success)' : 'var(--danger)'};">
-                                        ${item.profit >= 0 ? '+' : ''}$${item.profit.toFixed(2)}
+                                        ${item.profit >= 0 ? '+' : ''}$${Number(item.profit).toFixed(2)}
                                     </div>
                                 </div>
                             </div>
@@ -1583,12 +2036,6 @@
             const shares = parseInt(document.getElementById(`sell_${symbol}`).value);
             if (!shares || shares <= 0) {
                 showToast('Enter valid number of shares', 'error');
-                return;
-            }
-
-            const holding = portfolio.find(p => p.symbol === symbol);
-            if (!holding || shares > holding.shares) {
-                showToast('Invalid number of shares', 'error');
                 return;
             }
 
@@ -1619,6 +2066,62 @@
             }
         }
 
+        // ==================== INVENTORY ====================
+
+        async function loadInventory() {
+            try {
+                const response = await fetch(`${SHEETS_URL}?action=getInventory&email=${encodeURIComponent(currentUser.email)}`);
+                const result = await response.json();
+                
+                const inventoryList = document.getElementById('inventoryList');
+                if (result.inventory && result.inventory.length > 0) {
+                    document.getElementById('inventoryCount').textContent = `${result.inventory.length} items`;
+                    
+                    // Group items by type
+                    const grouped = {};
+                    result.inventory.forEach(item => {
+                        if (!grouped[item.type]) grouped[item.type] = [];
+                        grouped[item.type].push(item);
+                    });
+                    
+                    const typeLabels = {
+                        'passport': '🛂 Passport',
+                        'visa': '🌍 Visas',
+                        'flight_ticket': '✈️ Flight Tickets',
+                        'permit': '📋 Permits & Licenses',
+                        'subscription': '📡 Subscriptions',
+                        'transport_pass': '🚇 Transport Passes',
+                        'education': '🎓 Education',
+                        'property': '🏠 Properties',
+                        'marketplace_item': '🛒 Marketplace Items'
+                    };
+                    
+                    inventoryList.innerHTML = Object.keys(grouped).map(type => `
+                        <div style="margin-bottom: 2rem;">
+                            <h3 style="color: var(--gold); margin-bottom: 1rem;">${typeLabels[type] || type}</h3>
+                            ${grouped[type].map(item => `
+                                <div class="inventory-card">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <div style="font-weight: 700;">${item.name}</div>
+                                            ${item.expiresAt ? `<div style="color: var(--text-muted); font-size: 0.75rem;">Expires: ${new Date(item.expiresAt).toLocaleDateString()}</div>` : ''}
+                                        </div>
+                                        <span class="inventory-badge">${type.replace('_', ' ')}</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `).join('');
+                } else {
+                    inventoryList.innerHTML = '<div class="empty-state"><div class="empty-icon">🎒</div><p>Your inventory is empty</p></div>';
+                }
+            } catch (error) {
+                console.error('Inventory error:', error);
+            }
+        }
+
+        // ==================== MARKETPLACE ====================
+
         async function loadMarketplace() {
             try {
                 const response = await fetch(`${SHEETS_URL}?action=getMarketplace`);
@@ -1629,9 +2132,9 @@
                     marketplaceList.innerHTML = result.items.map(item => `
                         <div class="service-card">
                             <h3>${item.name}</h3>
-                            <p style="font-size: 2rem; color: var(--gold);">$${item.price.toFixed(2)}</p>
+                            <p style="font-size: 2rem; color: var(--gold);">$${Number(item.price).toFixed(2)}</p>
                             <p style="color: var(--text-muted);">Stock: ${item.stock}</p>
-                            <button class="btn" onclick="buyItem('${item.id}')" ${item.stock <= 0 ? 'disabled' : ''}>
+                            <button class="btn" onclick="buyItem('${item.id}')" ${item.stock <= 0 ? 'disabled' : ''} style="margin-top: 1rem;">
                                 ${item.stock <= 0 ? 'Out of Stock' : 'Purchase'}
                             </button>
                         </div>
@@ -1709,6 +2212,354 @@
             }
         }
 
+        // ==================== PASSPORT & TRAVEL ====================
+
+        async function loadPassport() {
+            const passportInfo = document.getElementById('passportInfo');
+            
+            if (currentUser.passport) {
+                passportInfo.innerHTML = `
+                    <div style="background: var(--gradient-blue-gold); padding: 2rem; border-radius: 16px; color: white;">
+                        <h3 style="margin-bottom: 1rem;">🛂 Lintoria Passport</h3>
+                        <p><strong>Number:</strong> ${currentUser.passport.number}</p>
+                        <p><strong>Issued:</strong> ${new Date(currentUser.passport.issued).toLocaleDateString()}</p>
+                        <p><strong>Expires:</strong> ${new Date(currentUser.passport.expires).toLocaleDateString()}</p>
+                    </div>
+                `;
+                document.getElementById('applyPassportBtn').classList.add('hidden');
+            } else {
+                passportInfo.innerHTML = '<p style="color: var(--text-muted);">You don\'t have a passport yet. Apply for one to travel!</p>';
+                document.getElementById('applyPassportBtn').classList.remove('hidden');
+            }
+
+            // Load visas
+            try {
+                const response = await fetch(`${SHEETS_URL}?action=getVisas&email=${encodeURIComponent(currentUser.email)}`);
+                const result = await response.json();
+                
+                const visasList = document.getElementById('visasList');
+                if (result.visas && result.visas.length > 0) {
+                    userVisas = result.visas;
+                    visasList.innerHTML = result.visas.map(visa => `
+                        <div class="inventory-card">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-weight: 700;">🌍 ${visa.cityName}</div>
+                                    <div style="color: var(--text-muted); font-size: 0.75rem;">Expires: ${new Date(visa.expiresAt).toLocaleDateString()}</div>
+                                </div>
+                                <span class="inventory-badge">VISA</span>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    visasList.innerHTML = '<p style="color: var(--text-muted); padding: 1rem;">No visas yet. Apply for visas in the Travel section.</p>';
+                }
+            } catch (error) {
+                console.error('Visas error:', error);
+            }
+        }
+
+        async function applyPassport() {
+            if (currentUser.passport) {
+                showToast('You already have a passport', 'error');
+                return;
+            }
+
+            if (currentUser.balance < 500) {
+                showToast('Insufficient balance. Passport costs $500', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'applyPassport',
+                        email: currentUser.email
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Passport issued successfully!', 'success');
+                    currentUser.passport = result.passport;
+                    loadDashboard();
+                    loadPassport();
+                } else {
+                    showToast(result.error || 'Application failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function loadTravel() {
+            // Load cities
+            try {
+                const citiesResponse = await fetch(`${SHEETS_URL}?action=getCities`);
+                const citiesResult = await citiesResponse.json();
+                
+                cities = citiesResult.cities || [];
+                
+                // Update city selects for admin
+                const fromSelect = document.getElementById('flightFromCity');
+                const toSelect = document.getElementById('flightToCity');
+                
+                if (fromSelect && toSelect) {
+                    const options = '<option value="">Select City</option>' + 
+                        cities.map(c => `<option value="${c.name}">${c.name}, ${c.country}</option>`).join('');
+                    fromSelect.innerHTML = options;
+                    toSelect.innerHTML = options;
+                }
+                
+                // Display cities
+                const citiesList = document.getElementById('citiesList');
+                if (cities.length > 0) {
+                    citiesList.innerHTML = cities.map(city => {
+                        const hasVisa = userVisas && userVisas.some(v => v.cityId === city.id || v.cityName === city.name);
+                        return `
+                            <div class="city-card">
+                                <h3 style="color: var(--gold);">${city.name}</h3>
+                                <p style="color: var(--text-muted);">${city.country}</p>
+                                ${city.description ? `<p style="margin-top: 0.5rem; font-size: 0.875rem;">${city.description}</p>` : ''}
+                                ${city.visaRequired ? `
+                                    <div style="margin-top: 1rem;">
+                                        ${hasVisa 
+                                            ? '<span style="color: var(--success);">✓ Visa Obtained</span>'
+                                            : `<p style="color: var(--warning);">Visa Required: $${city.visaPrice}</p>
+                                               <button class="btn btn-sm" onclick="applyVisa('${city.id}')" style="margin-top: 0.5rem;">Apply for Visa</button>`
+                                        }
+                                    </div>
+                                ` : '<p style="color: var(--success); margin-top: 0.5rem;">✓ No Visa Required</p>'}
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    citiesList.innerHTML = '<div class="empty-state"><div class="empty-icon">🌍</div><p>No cities available yet</p></div>';
+                }
+            } catch (error) {
+                console.error('Cities error:', error);
+            }
+
+            // Load flights
+            try {
+                const flightsResponse = await fetch(`${SHEETS_URL}?action=getFlights`);
+                const flightsResult = await flightsResponse.json();
+                
+                const flightsList = document.getElementById('flightsList');
+                if (flightsResult.flights && flightsResult.flights.length > 0) {
+                    flightsList.innerHTML = flightsResult.flights.map(flight => `
+                        <div class="flight-card">
+                            <div class="flight-route">
+                                <div class="flight-city">
+                                    <div class="flight-city-name">${flight.fromCity}</div>
+                                    <div class="flight-city-label">Departure</div>
+                                </div>
+                                <div class="flight-arrow">✈️ →</div>
+                                <div class="flight-city">
+                                    <div class="flight-city-name">${flight.toCity}</div>
+                                    <div class="flight-city-label">Arrival</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                                <div>
+                                    <p style="color: var(--text-muted); font-size: 0.875rem;">Flight ${flight.id}</p>
+                                    <p style="color: var(--text-muted); font-size: 0.875rem;">Seats Available: ${flight.seatsAvailable}</p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <p style="font-size: 1.5rem; color: var(--gold); font-weight: 700;">$${Number(flight.price).toFixed(2)}</p>
+                                    <button class="btn btn-sm" onclick="bookFlight('${flight.id}')" ${flight.seatsAvailable <= 0 ? 'disabled' : ''}>
+                                        ${flight.seatsAvailable <= 0 ? 'Sold Out' : 'Book Now'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    flightsList.innerHTML = '<div class="empty-state"><div class="empty-icon">✈️</div><p>No flights available yet</p></div>';
+                }
+            } catch (error) {
+                console.error('Flights error:', error);
+            }
+
+            // Load bookings
+            try {
+                const bookingsResponse = await fetch(`${SHEETS_URL}?action=getFlightBookings&email=${encodeURIComponent(currentUser.email)}`);
+                const bookingsResult = await bookingsResponse.json();
+                
+                const bookingsList = document.getElementById('bookingsList');
+                if (bookingsResult.bookings && bookingsResult.bookings.length > 0) {
+                    bookingsList.innerHTML = bookingsResult.bookings.map(booking => `
+                        <div class="inventory-card">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-weight: 700;">🎫 Booking ${booking.id}</div>
+                                    <div style="color: var(--text-muted); font-size: 0.875rem;">Flight: ${booking.flightId} | Seat: ${booking.seat}</div>
+                                </div>
+                                <span class="inventory-badge">${booking.status}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    bookingsList.innerHTML = '<div class="empty-state" style="padding: 2rem;"><p>No bookings yet</p></div>';
+                }
+            } catch (error) {
+                console.error('Bookings error:', error);
+            }
+        }
+
+        async function createCity() {
+            const name = document.getElementById('cityName').value.trim();
+            const country = document.getElementById('cityCountry').value.trim();
+            const description = document.getElementById('cityDescription').value.trim();
+            const visaPrice = parseFloat(document.getElementById('cityVisaPrice').value) || 100;
+            const visaRequired = document.getElementById('cityVisaRequired').checked;
+
+            if (!name || !country) {
+                showToast('Please enter city name and country', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'createCity',
+                        name: name,
+                        country: country,
+                        description: description,
+                        visaPrice: visaPrice,
+                        visaRequired: visaRequired,
+                        creator: currentUser.email
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('City created successfully!', 'success');
+                    document.getElementById('cityName').value = '';
+                    document.getElementById('cityCountry').value = '';
+                    document.getElementById('cityDescription').value = '';
+                    loadTravel();
+                } else {
+                    showToast(result.error || 'Failed to create city', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function applyVisa(cityId) {
+            if (!currentUser.passport) {
+                showToast('You need a passport to apply for a visa', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'applyVisa',
+                        email: currentUser.email,
+                        cityId: cityId
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`Visa for ${result.city} issued successfully!`, 'success');
+                    loadDashboard();
+                    loadTravel();
+                    loadPassport();
+                } else {
+                    showToast(result.error || 'Visa application failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function createFlight() {
+            const fromCity = document.getElementById('flightFromCity').value;
+            const toCity = document.getElementById('flightToCity').value;
+            const departure = document.getElementById('flightDeparture').value;
+            const arrival = document.getElementById('flightArrival').value;
+            const price = parseFloat(document.getElementById('flightPrice').value);
+            const seats = parseInt(document.getElementById('flightSeats').value);
+
+            if (!fromCity || !toCity || !departure || !arrival || !price || !seats) {
+                showToast('Please fill all fields', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'createFlight',
+                        fromCity: fromCity,
+                        toCity: toCity,
+                        departureTime: departure,
+                        arrivalTime: arrival,
+                        price: price,
+                        seats: seats,
+                        creator: currentUser.email
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Flight created successfully!', 'success');
+                    loadTravel();
+                } else {
+                    showToast(result.error || 'Failed to create flight', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function bookFlight(flightId) {
+            if (!currentUser.passport) {
+                showToast('You need a passport to book a flight', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'bookFlight',
+                        email: currentUser.email,
+                        flightId: flightId
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`Flight booked! Seat: ${result.booking.seat}`, 'success');
+                    loadDashboard();
+                    loadTravel();
+                } else {
+                    showToast(result.error || 'Booking failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        // ==================== NEWS ====================
+
         async function loadNews() {
             try {
                 const response = await fetch(`${SHEETS_URL}?action=getNews`);
@@ -1718,7 +2569,7 @@
                 if (result.articles && result.articles.length > 0) {
                     newsList.innerHTML = result.articles.map(article => `
                         <div class="service-card">
-                            <h3>${article.title}</h3>
+                            <h3 style="color: var(--gold);">${article.title}</h3>
                             <p style="color: var(--text-muted); font-size: 0.875rem;">By ${article.author} • ${new Date(article.date).toLocaleDateString()}</p>
                             <p style="margin-top: 1rem;">${article.content}</p>
                         </div>
@@ -1768,6 +2619,8 @@
             }
         }
 
+        // ==================== LEADERBOARD ====================
+
         async function loadLeaderboard() {
             try {
                 const response = await fetch(`${SHEETS_URL}?action=getLeaderboard`);
@@ -1787,7 +2640,7 @@
                                 </div>
                             </div>
                             <div style="font-size: 1.5rem; font-weight: 700; color: var(--gold);">
-                                $${user.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                $${Number(user.balance).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                             </div>
                         </div>
                     `).join('');
@@ -1798,6 +2651,8 @@
                 console.error('Leaderboard error:', error);
             }
         }
+
+        // ==================== ADMIN PANEL ====================
 
         async function loadAdminPanel() {
             if (currentUser.email !== MASTER_ADMIN) {
@@ -1812,27 +2667,42 @@
                 const adminUsersList = document.getElementById('adminUsersList');
                 if (result.users && result.users.length > 0) {
                     allUsers = result.users;
+                    document.getElementById('userCount').textContent = `${allUsers.length} users`;
+                    
                     adminUsersList.innerHTML = allUsers.map((user, index) => `
                         <div class="service-card">
-                            <h3>${user.name}</h3>
-                            <p style="color: var(--text-muted);">${user.email}</p>
-                            <p style="font-size: 1.5rem; color: var(--gold);">Balance: $${user.balance.toFixed(2)}</p>
+                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                <div>
+                                    <h3>${user.name}</h3>
+                                    <p style="color: var(--text-muted);">${user.email}</p>
+                                </div>
+                                <p style="font-size: 1.5rem; color: var(--gold); font-weight: 700;">$${Number(user.balance).toFixed(2)}</p>
+                            </div>
                             
                             <div style="margin-top: 1rem;">
-                                <h4 style="margin-bottom: 0.5rem;">Permissions:</h4>
-                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.5rem;">
-                                    <label><input type="checkbox" id="perm_stocks_${index}" ${user.permissions?.stocks ? 'checked' : ''}> Stocks Admin</label>
-                                    <label><input type="checkbox" id="perm_marketplace_${index}" ${user.permissions?.marketplace ? 'checked' : ''}> Market Admin</label>
-                                    <label><input type="checkbox" id="perm_news_${index}" ${user.permissions?.news ? 'checked' : ''}> News Admin</label>
+                                <h4 style="margin-bottom: 0.5rem; color: var(--text-secondary);">Permissions:</h4>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.5rem;">
+                                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                        <input type="checkbox" id="perm_stocks_${index}" ${user.permissions?.stocks ? 'checked' : ''}> Stocks
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                        <input type="checkbox" id="perm_marketplace_${index}" ${user.permissions?.marketplace ? 'checked' : ''}> Market
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                        <input type="checkbox" id="perm_news_${index}" ${user.permissions?.news ? 'checked' : ''}> News
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                        <input type="checkbox" id="perm_passport_${index}" ${user.permissions?.passport ? 'checked' : ''}> Passport
+                                    </label>
                                 </div>
                             </div>
                             
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
-                                <input type="number" id="adminAmount_${index}" class="form-input" placeholder="Amount" step="0.01">
-                                <button class="btn btn-success" onclick="adminUpdateBalance('${user.email}', ${index})">Update Balance</button>
+                                <input type="number" id="adminAmount_${index}" class="form-input" placeholder="Amount (+/-)" step="0.01">
+                                <button class="btn btn-success btn-sm" onclick="adminUpdateBalance('${user.email}', ${index})">Update Balance</button>
                             </div>
                             
-                            <button class="btn" onclick="adminUpdatePermissions('${user.email}', ${index})" style="width: 100%; margin-top: 0.5rem;">Update Permissions</button>
+                            <button class="btn btn-sm" onclick="adminUpdatePermissions('${user.email}', ${index})" style="width: 100%; margin-top: 0.5rem;">Update Permissions</button>
                         </div>
                     `).join('');
                 } else {
@@ -1840,6 +2710,7 @@
                 }
             } catch (error) {
                 console.error('Admin panel error:', error);
+                adminUsersList.innerHTML = '<div class="empty-state"><div class="empty-icon">❌</div><p>Error loading users</p></div>';
             }
         }
 
@@ -1866,6 +2737,7 @@
                 
                 if (result.success) {
                     showToast('Balance updated successfully!', 'success');
+                    document.getElementById(`adminAmount_${index}`).value = '';
                     loadAdminPanel();
                 } else {
                     showToast(result.error || 'Update failed', 'error');
@@ -1879,7 +2751,8 @@
             const permissions = {
                 stocks: document.getElementById(`perm_stocks_${index}`).checked,
                 marketplace: document.getElementById(`perm_marketplace_${index}`).checked,
-                news: document.getElementById(`perm_news_${index}`).checked
+                news: document.getElementById(`perm_news_${index}`).checked,
+                passport: document.getElementById(`perm_passport_${index}`).checked
             };
 
             try {
@@ -1907,58 +2780,7 @@
             }
         }
 
-        async function loadPassport() {
-            const passportInfo = document.getElementById('passportInfo');
-            if (currentUser.passport) {
-                passportInfo.innerHTML = `
-                    <div style="background: var(--gradient-blue-gold); padding: 2rem; border-radius: 16px; color: white;">
-                        <h3>Lintoria Passport</h3>
-                        <p>Number: ${currentUser.passport.number}</p>
-                        <p>Issued: ${new Date(currentUser.passport.issued).toLocaleDateString()}</p>
-                        <p>Expires: ${new Date(currentUser.passport.expires).toLocaleDateString()}</p>
-                    </div>
-                `;
-            } else {
-                passportInfo.innerHTML = '<p>You don\'t have a passport yet.</p>';
-            }
-        }
-
-        // All service functions...
-        async function applyPassport() {
-            if (currentUser.passport) {
-                showToast('You already have a passport', 'error');
-                return;
-            }
-
-            if (currentUser.balance < 500) {
-                showToast('Insufficient balance. Passport costs $500', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch(SHEETS_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' },
-                    body: JSON.stringify({
-                        action: 'applyPassport',
-                        email: currentUser.email
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showToast('Passport issued successfully!', 'success');
-                    currentUser.passport = result.passport;
-                    loadDashboard();
-                    loadPassport();
-                } else {
-                    showToast(result.error || 'Application failed', 'error');
-                }
-            } catch (error) {
-                showToast('Network error', 'error');
-            }
-        }
+        // ==================== CITY SERVICES ====================
 
         async function applyPermit(type, price) {
             if (currentUser.balance < price) {
@@ -2177,11 +2999,16 @@
             }
         }
 
-        // Casino functions
+        // ==================== CASINO GAMES ====================
+
         async function playRoulette(color) {
             const bet = parseFloat(document.getElementById('rouletteBet').value);
-            if (!bet || bet <= 0 || bet > currentUser.balance) {
-                showToast('Invalid bet amount', 'error');
+            if (!bet || bet <= 0) {
+                showToast('Enter a valid bet amount', 'error');
+                return;
+            }
+            if (bet > currentUser.balance) {
+                showToast('Insufficient balance', 'error');
                 return;
             }
 
@@ -2201,10 +3028,10 @@
                 
                 const resultDiv = document.getElementById('rouletteResult');
                 if (result.won) {
-                    resultDiv.innerHTML = `<span style="color: var(--success);">Won! Result: ${result.result}. You won $${result.winAmount.toFixed(2)}!</span>`;
+                    resultDiv.innerHTML = `<span style="color: var(--success);">🎉 Won! Result: ${result.result}. You won $${result.winAmount.toFixed(2)}!</span>`;
                     showToast(`Won $${result.winAmount.toFixed(2)}!`, 'success');
                 } else {
-                    resultDiv.innerHTML = `<span style="color: var(--danger);">Lost! Result: ${result.result}.</span>`;
+                    resultDiv.innerHTML = `<span style="color: var(--danger);">😢 Lost! Result: ${result.result}</span>`;
                     showToast(`Lost $${bet.toFixed(2)}`, 'error');
                 }
                 
@@ -2217,8 +3044,12 @@
 
         async function playDice() {
             const bet = parseFloat(document.getElementById('diceBet').value);
-            if (!bet || bet <= 0 || bet > currentUser.balance) {
-                showToast('Invalid bet amount', 'error');
+            if (!bet || bet <= 0) {
+                showToast('Enter a valid bet amount', 'error');
+                return;
+            }
+            if (bet > currentUser.balance) {
+                showToast('Insufficient balance', 'error');
                 return;
             }
 
@@ -2237,10 +3068,10 @@
                 
                 const resultDiv = document.getElementById('diceResult');
                 if (result.won) {
-                    resultDiv.innerHTML = `<span style="color: var(--success);">Won! Rolled: ${result.roll}. You won $${result.winAmount.toFixed(2)}!</span>`;
+                    resultDiv.innerHTML = `<span style="color: var(--success);">🎲 Rolled: ${result.roll}. You won $${result.winAmount.toFixed(2)}!</span>`;
                     showToast(`Won $${result.winAmount.toFixed(2)}!`, 'success');
                 } else {
-                    resultDiv.innerHTML = `<span style="color: var(--danger);">Lost! Rolled: ${result.roll}.</span>`;
+                    resultDiv.innerHTML = `<span style="color: var(--danger);">🎲 Rolled: ${result.roll}. Better luck next time!</span>`;
                     showToast(`Lost $${bet.toFixed(2)}`, 'error');
                 }
                 
@@ -2253,8 +3084,12 @@
 
         async function playCoin(choice) {
             const bet = parseFloat(document.getElementById('coinBet').value);
-            if (!bet || bet <= 0 || bet > currentUser.balance) {
-                showToast('Invalid bet amount', 'error');
+            if (!bet || bet <= 0) {
+                showToast('Enter a valid bet amount', 'error');
+                return;
+            }
+            if (bet > currentUser.balance) {
+                showToast('Insufficient balance', 'error');
                 return;
             }
 
@@ -2274,10 +3109,10 @@
                 
                 const resultDiv = document.getElementById('coinResult');
                 if (result.won) {
-                    resultDiv.innerHTML = `<span style="color: var(--success);">Won! Result: ${result.result}. You won $${result.winAmount.toFixed(2)}!</span>`;
+                    resultDiv.innerHTML = `<span style="color: var(--success);">🪙 ${result.result.toUpperCase()}! You won $${result.winAmount.toFixed(2)}!</span>`;
                     showToast(`Won $${result.winAmount.toFixed(2)}!`, 'success');
                 } else {
-                    resultDiv.innerHTML = `<span style="color: var(--danger);">Lost! Result: ${result.result}.</span>`;
+                    resultDiv.innerHTML = `<span style="color: var(--danger);">🪙 ${result.result.toUpperCase()}. You lose!</span>`;
                     showToast(`Lost $${bet.toFixed(2)}`, 'error');
                 }
                 
@@ -2290,8 +3125,12 @@
 
         async function playSlots() {
             const bet = parseFloat(document.getElementById('slotsBet').value);
-            if (!bet || bet <= 0 || bet > currentUser.balance) {
-                showToast('Invalid bet amount', 'error');
+            if (!bet || bet <= 0) {
+                showToast('Enter a valid bet amount', 'error');
+                return;
+            }
+            if (bet > currentUser.balance) {
+                showToast('Insufficient balance', 'error');
                 return;
             }
 
@@ -2303,8 +3142,8 @@
             const spinInterval = setInterval(() => {
                 slotsDisplay.textContent = `${symbols[Math.floor(Math.random() * symbols.length)]} ${symbols[Math.floor(Math.random() * symbols.length)]} ${symbols[Math.floor(Math.random() * symbols.length)]}`;
                 spins++;
-                if (spins >= 10) clearInterval(spinInterval);
-            }, 100);
+                if (spins >= 15) clearInterval(spinInterval);
+            }, 80);
 
             try {
                 const response = await fetch(SHEETS_URL, {
@@ -2320,23 +3159,28 @@
                 const result = await response.json();
                 
                 setTimeout(() => {
-                    slotsDisplay.textContent = result.symbols.join(' ');
+                    if (result.symbols && result.symbols.length === 3) {
+                        slotsDisplay.textContent = result.symbols.join(' ');
+                    }
+                    
                     const resultDiv = document.getElementById('slotsResult');
                     if (result.won) {
-                        resultDiv.innerHTML = `<span style="color: var(--success);">Won! You won $${result.winAmount.toFixed(2)}!</span>`;
+                        resultDiv.innerHTML = `<span style="color: var(--success);">🎰 JACKPOT! You won $${result.winAmount.toFixed(2)}!</span>`;
                         showToast(`Won $${result.winAmount.toFixed(2)}!`, 'success');
                     } else {
-                        resultDiv.innerHTML = `<span style="color: var(--danger);">Lost! Try again!</span>`;
+                        resultDiv.innerHTML = `<span style="color: var(--danger);">No match. Try again!</span>`;
                         showToast(`Lost $${bet.toFixed(2)}`, 'error');
                     }
                     
                     document.getElementById('slotsBet').value = '';
                     loadDashboard();
-                }, 1100);
+                }, 1300);
             } catch (error) {
                 showToast('Network error', 'error');
             }
         }
+
+        // ==================== UTILITIES ====================
 
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
