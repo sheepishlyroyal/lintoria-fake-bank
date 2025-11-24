@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lintoria Hub V3.00 Premium</title>
+    <title>Lintoria Hub V3.00 - Ultimate Edition</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
         
@@ -49,10 +49,6 @@
             --gradient-blue: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
             --gradient-gold: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #fcd34d 100%);
             --gradient-premium: linear-gradient(135deg, #1e40af 0%, #fbbf24 100%);
-            
-            --mouse-x: 50%;
-            --mouse-y: 50%;
-            --scroll-progress: 0;
         }
 
         body {
@@ -64,7 +60,7 @@
             position: relative;
         }
 
-        /* ULTRA INTERACTIVE BACKGROUND */
+        /* INTERACTIVE BACKGROUND */
         .interactive-bg {
             position: fixed;
             top: 0;
@@ -75,7 +71,7 @@
             z-index: 0;
         }
 
-        /* Animated Grid with Mouse Interaction */
+        /* Animated Grid */
         .grid-layer {
             position: absolute;
             top: 0;
@@ -88,114 +84,37 @@
                 linear-gradient(rgba(251, 191, 36, 0.02) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(251, 191, 36, 0.02) 1px, transparent 1px);
             background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
-            background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
             animation: gridFloat 20s linear infinite;
-            transform: perspective(1000px) rotateX(30deg) translateZ(0);
-            transform-origin: center center;
         }
 
         @keyframes gridFloat {
-            0% { transform: perspective(1000px) rotateX(30deg) translateZ(0) translateY(0); }
-            100% { transform: perspective(1000px) rotateX(30deg) translateZ(0) translateY(-100px); }
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100px); }
         }
 
-        /* Floating Particles */
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--gold);
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
-            animation: particleFloat 10s infinite;
-        }
-
-        @keyframes particleFloat {
-            0% {
-                opacity: 0;
-                transform: translateY(100vh) scale(0);
-            }
-            10% {
-                opacity: 1;
-                transform: translateY(90vh) scale(1);
-            }
-            90% {
-                opacity: 1;
-                transform: translateY(-10vh) scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-20vh) scale(0);
-            }
-        }
-
-        /* Dynamic Gradient Orbs */
+        /* Mouse-Reactive Gradient Orbs */
         .gradient-orb {
             position: absolute;
             border-radius: 50%;
             filter: blur(100px);
             opacity: 0.6;
-            animation: orbFloat 20s ease-in-out infinite;
             mix-blend-mode: screen;
+            transition: transform 0.3s ease-out;
+            pointer-events: none;
         }
 
         .orb-blue {
             width: 600px;
             height: 600px;
             background: radial-gradient(circle, #2563eb 0%, transparent 70%);
-            top: -200px;
-            left: -200px;
-            animation-duration: 25s;
+            transform: translate(-300px, -300px);
         }
 
         .orb-gold {
             width: 500px;
             height: 500px;
             background: radial-gradient(circle, #fbbf24 0%, transparent 70%);
-            bottom: -200px;
-            right: -200px;
-            animation-duration: 30s;
-            animation-delay: -5s;
-        }
-
-        .orb-accent {
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, #0ea5e9 0%, transparent 70%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation-duration: 35s;
-            animation-delay: -10s;
-        }
-
-        @keyframes orbFloat {
-            0%, 100% { 
-                transform: translate(0, 0) scale(1) rotate(0deg);
-                filter: blur(100px) hue-rotate(0deg);
-            }
-            33% { 
-                transform: translate(30px, -30px) scale(1.1) rotate(120deg);
-                filter: blur(120px) hue-rotate(20deg);
-            }
-            66% { 
-                transform: translate(-20px, 20px) scale(0.9) rotate(240deg);
-                filter: blur(80px) hue-rotate(-20deg);
-            }
-        }
-
-        /* Mouse Trail Effect */
-        .mouse-trail {
-            position: fixed;
-            width: 400px;
-            height: 400px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 50%);
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            transition: opacity 0.3s ease;
-            z-index: 1;
+            transform: translate(-250px, -250px);
         }
 
         /* Main Container */
@@ -208,17 +127,11 @@
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Premium Glass Cards */
+        /* Glass Cards */
         .glass-card {
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(251, 191, 36, 0.05) 100%);
             backdrop-filter: blur(20px) saturate(200%);
@@ -228,77 +141,26 @@
             padding: 2rem;
             box-shadow: 
                 0 20px 25px -5px rgba(0, 0, 0, 0.2),
-                0 10px 10px -5px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            animation: cardSlideIn 0.6s ease-out backwards;
-        }
-
-        @keyframes cardSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--gradient-blue-gold);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .glass-card:hover::before {
-            opacity: 1;
-            animation: shimmerLine 2s linear infinite;
-        }
-
-        @keyframes shimmerLine {
-            0% { background-position: -200% center; }
-            100% { background-position: 200% center; }
         }
 
         .glass-card:hover {
-            transform: translateY(-8px) scale(1.02);
+            transform: translateY(-4px);
             box-shadow: 
                 0 30px 40px -5px rgba(37, 99, 235, 0.3),
-                0 20px 20px -5px rgba(251, 191, 36, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                0 20px 20px -5px rgba(251, 191, 36, 0.2);
             border-color: rgba(251, 191, 36, 0.3);
         }
 
-        /* Animated Logo */
+        /* Logo - NO SPINNING */
         .logo-container {
             display: inline-flex;
             align-items: center;
             gap: 1.5rem;
             margin-bottom: 3rem;
-            animation: logoReveal 1s ease-out;
-        }
-
-        @keyframes logoReveal {
-            0% {
-                opacity: 0;
-                transform: translateX(-50px) rotate(-10deg);
-            }
-            50% {
-                transform: translateX(10px) rotate(5deg);
-            }
-            100% {
-                opacity: 1;
-                transform: translateX(0) rotate(0);
-            }
         }
 
         .logo-icon {
@@ -310,31 +172,12 @@
             align-items: center;
             justify-content: center;
             font-size: 35px;
-            position: relative;
-            animation: logoPulse 3s ease-in-out infinite;
-            box-shadow: 
-                0 10px 40px rgba(37, 99, 235, 0.4),
-                inset 0 2px 10px rgba(255, 255, 255, 0.3);
-            transform-style: preserve-3d;
+            box-shadow: 0 10px 40px rgba(37, 99, 235, 0.4);
+            transition: transform 0.3s ease;
         }
 
-        @keyframes logoPulse {
-            0%, 100% { 
-                transform: scale(1) rotateY(0deg);
-                box-shadow: 0 10px 40px rgba(37, 99, 235, 0.4);
-            }
-            25% { 
-                transform: scale(1.05) rotateY(90deg);
-                box-shadow: 0 15px 50px rgba(251, 191, 36, 0.5);
-            }
-            50% { 
-                transform: scale(1.1) rotateY(180deg);
-                box-shadow: 0 20px 60px rgba(37, 99, 235, 0.6);
-            }
-            75% { 
-                transform: scale(1.05) rotateY(270deg);
-                box-shadow: 0 15px 50px rgba(251, 191, 36, 0.5);
-            }
+        .logo-icon:hover {
+            transform: scale(1.1);
         }
 
         .logo-text {
@@ -345,17 +188,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: -1px;
-            animation: textGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes textGlow {
-            0%, 100% { 
-                filter: brightness(1) drop-shadow(0 0 20px rgba(37, 99, 235, 0.5));
-            }
-            50% { 
-                filter: brightness(1.2) drop-shadow(0 0 30px rgba(251, 191, 36, 0.7));
-            }
         }
 
         .logo-badge {
@@ -367,16 +199,10 @@
             font-weight: 800;
             border-radius: 20px;
             margin-left: 1rem;
-            animation: badgeBounce 2s ease-in-out infinite;
             box-shadow: 0 5px 20px rgba(251, 191, 36, 0.5);
         }
 
-        @keyframes badgeBounce {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-5px) scale(1.05); }
-        }
-
-        /* Premium Tab System */
+        /* Tab System */
         .tab-container {
             display: flex;
             gap: 0.75rem;
@@ -388,21 +214,7 @@
             margin-bottom: 2rem;
             overflow-x: auto;
             flex-wrap: wrap;
-            box-shadow: 
-                inset 0 2px 10px rgba(0, 0, 0, 0.1),
-                0 10px 30px rgba(37, 99, 235, 0.1);
-            animation: tabReveal 0.8s ease-out 0.3s backwards;
-        }
-
-        @keyframes tabReveal {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .tab-section {
@@ -412,7 +224,6 @@
             background: rgba(255, 255, 255, 0.03);
             border-radius: 16px;
             position: relative;
-            animation: sectionFadeIn 0.6s ease-out backwards;
         }
 
         .tab-section::before {
@@ -428,11 +239,9 @@
             border-radius: 10px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            box-shadow: 0 2px 10px rgba(251, 191, 36, 0.2);
         }
 
         .tab-btn {
-            flex: 0 0 auto;
             padding: 0.875rem 1.5rem;
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(251, 191, 36, 0.05) 100%);
             color: var(--text-secondary);
@@ -441,87 +250,31 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 0.875rem;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
+            transition: all 0.3s ease;
             white-space: nowrap;
-        }
-
-        .tab-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: var(--gradient-blue-gold);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s ease, height 0.6s ease;
-            opacity: 0.3;
-        }
-
-        .tab-btn:hover::before {
-            width: 100px;
-            height: 100px;
         }
 
         .tab-btn:hover {
             color: var(--text-primary);
-            transform: translateY(-3px) scale(1.05);
+            transform: translateY(-2px);
             border-color: rgba(251, 191, 36, 0.3);
-            box-shadow: 
-                0 10px 25px rgba(37, 99, 235, 0.2),
-                inset 0 2px 10px rgba(251, 191, 36, 0.1);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
         }
 
         .tab-btn.active {
             background: var(--gradient-blue-gold);
             color: white;
-            box-shadow: 
-                0 10px 30px rgba(37, 99, 235, 0.4),
-                0 5px 15px rgba(251, 191, 36, 0.3);
-            transform: scale(1.05);
-            animation: tabActive 0.4s ease-out;
-        }
-
-        @keyframes tabActive {
-            0% { transform: scale(0.95) rotate(-2deg); }
-            50% { transform: scale(1.1) rotate(2deg); }
-            100% { transform: scale(1.05) rotate(0deg); }
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
         }
 
         .tab-icon {
             margin-right: 0.5rem;
             font-size: 1.125rem;
-            display: inline-block;
-            animation: iconSpin 0.5s ease-out;
-        }
-
-        @keyframes iconSpin {
-            from { transform: rotate(-360deg) scale(0); }
-            to { transform: rotate(0deg) scale(1); }
         }
 
         /* Form Elements */
         .form-group {
             margin-bottom: 1.5rem;
-            animation: formSlide 0.6s ease-out backwards;
-        }
-
-        .form-group:nth-child(1) { animation-delay: 0.1s; }
-        .form-group:nth-child(2) { animation-delay: 0.2s; }
-        .form-group:nth-child(3) { animation-delay: 0.3s; }
-
-        @keyframes formSlide {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
         }
 
         .form-label {
@@ -534,7 +287,7 @@
             letter-spacing: 1px;
         }
 
-        .form-input {
+        .form-input, select {
             width: 100%;
             padding: 1rem 1.5rem;
             background: rgba(15, 23, 42, 0.6);
@@ -542,73 +295,43 @@
             border-radius: 14px;
             color: var(--text-primary);
             font-size: 1rem;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
         }
 
-        .form-input:focus {
+        select {
+            cursor: pointer;
+        }
+
+        .form-input:focus, select:focus {
             outline: none;
             border-color: var(--gold);
             background: rgba(15, 23, 42, 0.8);
-            box-shadow: 
-                0 0 0 4px rgba(251, 191, 36, 0.1),
-                0 10px 25px rgba(37, 99, 235, 0.2);
-            transform: translateY(-2px);
+            box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.1);
         }
 
-        .form-input:hover {
-            border-color: var(--primary-light);
-            transform: translateY(-1px);
-        }
-
-        /* Premium Buttons */
+        /* Buttons */
         .btn {
-            padding: 1.125rem 2.25rem;
+            padding: 1rem 2rem;
             border: none;
             border-radius: 14px;
             font-weight: 700;
             font-size: 0.875rem;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
+            transition: all 0.3s ease;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
             background: var(--gradient-blue);
             color: white;
-            box-shadow: 
-                0 10px 25px rgba(37, 99, 235, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            transform: translateZ(0);
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .btn:hover::before {
-            left: 100%;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
         }
 
         .btn:hover {
-            transform: translateY(-3px) scale(1.03);
-            box-shadow: 
-                0 15px 35px rgba(37, 99, 235, 0.5),
-                0 5px 15px rgba(251, 191, 36, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.5);
         }
 
         .btn:active {
-            transform: translateY(-1px) scale(0.98);
-            box-shadow: 
-                0 5px 15px rgba(37, 99, 235, 0.3),
-                inset 0 2px 5px rgba(0, 0, 0, 0.2);
+            transform: translateY(0);
         }
 
         .btn-success {
@@ -631,40 +354,7 @@
             position: relative;
             overflow: hidden;
             margin-bottom: 2rem;
-            box-shadow: 
-                0 30px 60px rgba(37, 99, 235, 0.4),
-                0 15px 30px rgba(251, 191, 36, 0.3),
-                inset 0 2px 10px rgba(255, 255, 255, 0.2);
-            animation: balanceReveal 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-style: preserve-3d;
-            transform: perspective(1000px) rotateX(5deg);
-        }
-
-        @keyframes balanceReveal {
-            from {
-                opacity: 0;
-                transform: perspective(1000px) rotateX(90deg) scale(0.5);
-            }
-            to {
-                opacity: 1;
-                transform: perspective(1000px) rotateX(5deg) scale(1);
-            }
-        }
-
-        .balance-card::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            animation: balanceShimmer 3s linear infinite;
-        }
-
-        @keyframes balanceShimmer {
-            0% { transform: rotate(0deg) translateX(-100%); }
-            100% { transform: rotate(360deg) translateX(100%); }
+            box-shadow: 0 30px 60px rgba(37, 99, 235, 0.4);
         }
 
         .balance-label {
@@ -674,76 +364,14 @@
             color: rgba(255, 255, 255, 0.9);
             font-weight: 700;
             margin-bottom: 1rem;
-            animation: labelGlow 2s ease-in-out infinite;
-        }
-
-        @keyframes labelGlow {
-            0%, 100% { opacity: 0.9; }
-            50% { opacity: 1; text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
         }
 
         .balance-amount {
-            font-size: 4.5rem;
+            font-size: 4rem;
             font-weight: 900;
             color: white;
-            text-shadow: 
-                0 10px 30px rgba(0, 0, 0, 0.3),
-                0 0 40px rgba(251, 191, 36, 0.5);
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             font-family: 'Space Grotesk', sans-serif;
-            letter-spacing: -2px;
-            position: relative;
-            z-index: 1;
-            animation: amountPulse 3s ease-in-out infinite;
-        }
-
-        @keyframes amountPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        /* Scroll Animations */
-        .scroll-reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .scroll-reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .scroll-reveal-left {
-            opacity: 0;
-            transform: translateX(-50px) rotate(-5deg);
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .scroll-reveal-left.active {
-            opacity: 1;
-            transform: translateX(0) rotate(0deg);
-        }
-
-        .scroll-reveal-right {
-            opacity: 0;
-            transform: translateX(50px) rotate(5deg);
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .scroll-reveal-right.active {
-            opacity: 1;
-            transform: translateX(0) rotate(0deg);
-        }
-
-        .scroll-reveal-scale {
-            opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .scroll-reveal-scale.active {
-            opacity: 1;
-            transform: scale(1);
         }
 
         /* Transaction Items */
@@ -756,104 +384,46 @@
             border: 1px solid var(--border);
             border-radius: 16px;
             margin-bottom: 1rem;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .transaction-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 4px;
-            background: var(--gradient-blue-gold);
-            transform: scaleY(0);
-            transition: transform 0.3s ease;
-        }
-
-        .transaction-item:hover::before {
-            transform: scaleY(1);
+            transition: all 0.3s ease;
         }
 
         .transaction-item:hover {
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
             transform: translateX(8px);
             box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
         }
 
-        /* Service Cards */
+        /* Stock Card */
+        .stock-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .stock-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
+            border-color: var(--gold);
+        }
+
+        /* Service Card */
         .service-card {
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(251, 191, 36, 0.08) 100%);
-            backdrop-filter: blur(20px);
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 2rem;
             margin-bottom: 1.5rem;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            animation: serviceCardFloat 0.6s ease-out backwards;
-        }
-
-        @keyframes serviceCardFloat {
-            from {
-                opacity: 0;
-                transform: translateY(20px) rotateX(-10deg);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) rotateX(0deg);
-            }
-        }
-
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-blue-gold);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.5s ease;
-        }
-
-        .service-card:hover::before {
-            transform: scaleX(1);
+            transition: all 0.3s ease;
         }
 
         .service-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 
-                0 20px 40px rgba(37, 99, 235, 0.2),
-                0 10px 20px rgba(251, 191, 36, 0.15);
-            border-color: rgba(251, 191, 36, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
         }
 
-        .service-icon {
-            width: 70px;
-            height: 70px;
-            background: var(--gradient-blue-gold);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            margin-bottom: 1rem;
-            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
-            animation: serviceIconBounce 3s ease-in-out infinite;
-        }
-
-        @keyframes serviceIconBounce {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-5px) rotate(-5deg); }
-            75% { transform: translateY(3px) rotate(5deg); }
-        }
-
-        /* Toast Notifications */
+        /* Toast */
         .toast {
             position: fixed;
             top: 2rem;
@@ -861,12 +431,9 @@
             padding: 1rem 1.5rem;
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(251, 191, 36, 0.95) 100%);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 14px;
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.3),
-                0 10px 20px rgba(37, 99, 235, 0.3);
-            transition: right 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transition: right 0.5s ease;
             z-index: 2000;
             color: white;
             font-weight: 600;
@@ -875,13 +442,6 @@
 
         .toast.show {
             right: 2rem;
-            animation: toastShake 0.5s ease-out;
-        }
-
-        @keyframes toastShake {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-2deg); }
-            75% { transform: rotate(2deg); }
         }
 
         .toast.success {
@@ -892,89 +452,17 @@
             background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         }
 
-        /* Loading States */
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(37, 99, 235, 0.1);
-            border-top: 4px solid var(--gold);
-            border-radius: 50%;
-            animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.1); }
-            100% { transform: rotate(360deg) scale(1); }
-        }
-
-        /* Page Transitions */
-        .tab-content {
-            animation: contentFade 0.5s ease-out;
-        }
-
-        @keyframes contentFade {
-            from {
-                opacity: 0;
-                transform: translateY(20px) scale(0.98);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 14px;
-            height: 14px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: linear-gradient(180deg, var(--bg-secondary), var(--bg-tertiary));
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--gradient-blue-gold);
-            border-radius: 10px;
-            border: 2px solid var(--bg-secondary);
-            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--gradient-gold-blue);
-        }
-
         /* Empty State */
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
             color: var(--text-muted);
-            animation: emptyStateReveal 0.8s ease-out;
-        }
-
-        @keyframes emptyStateReveal {
-            from {
-                opacity: 0;
-                transform: scale(0.9) rotate(-5deg);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) rotate(0deg);
-            }
         }
 
         .empty-icon {
-            font-size: 5rem;
-            opacity: 0.2;
+            font-size: 4rem;
+            opacity: 0.3;
             margin-bottom: 1rem;
-            animation: emptyIconFloat 3s ease-in-out infinite;
-        }
-
-        @keyframes emptyIconFloat {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-10px) scale(1.1); }
         }
 
         /* Hidden */
@@ -982,27 +470,29 @@
             display: none !important;
         }
 
-        /* Responsive */
+        /* Tab Content */
+        .tab-content {
+            animation: contentFade 0.5s ease-out;
+        }
+
+        @keyframes contentFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Service Grid */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
         @media (max-width: 768px) {
-            .app-container {
-                padding: 1rem;
-            }
-            
-            .balance-amount {
-                font-size: 3rem;
-            }
-            
-            .logo-text {
-                font-size: 2rem;
-            }
-            
-            .tab-container {
-                flex-direction: column;
-            }
-            
-            .tab-section {
-                width: 100%;
-            }
+            .logo-text { font-size: 2rem; }
+            .balance-amount { font-size: 3rem; }
+            .tab-container { flex-direction: column; }
+            .tab-section { width: 100%; }
         }
     </style>
 </head>
@@ -1010,12 +500,9 @@
     <!-- Interactive Background -->
     <div class="interactive-bg">
         <div class="grid-layer"></div>
-        <div class="gradient-orb orb-blue"></div>
-        <div class="gradient-orb orb-gold"></div>
-        <div class="gradient-orb orb-accent"></div>
-        <div id="particles"></div>
+        <div class="gradient-orb orb-blue" id="orbBlue"></div>
+        <div class="gradient-orb orb-gold" id="orbGold"></div>
     </div>
-    <div class="mouse-trail" id="mouseTrail"></div>
 
     <div class="app-container">
         <!-- Auth Screen -->
@@ -1071,7 +558,7 @@
         <!-- Main App -->
         <div id="appScreen" class="hidden">
             <!-- Header -->
-            <div class="glass-card scroll-reveal" style="margin-bottom: 2rem;">
+            <div class="glass-card" style="margin-bottom: 2rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
                     <div class="logo-container" style="margin-bottom: 0;">
                         <div class="logo-icon">🏛️</div>
@@ -1079,8 +566,10 @@
                             <div class="logo-text">Lintoria Hub</div>
                             <div style="color: var(--text-muted); font-size: 0.875rem;">
                                 Welcome, <span id="userName" style="color: var(--gold); font-weight: 700;"></span>
-                                <span id="masterBadge" class="hidden" style="margin-left: 0.5rem; color: var(--gold);">⚡ Master</span>
-                                <span id="adminBadge" class="hidden" style="margin-left: 0.5rem; color: var(--primary-light);">✦ Admin</span>
+                                <span id="masterBadge" class="hidden" style="margin-left: 0.5rem; color: var(--gold);">⚡ Master Admin</span>
+                                <span id="stockAdminBadge" class="hidden" style="margin-left: 0.5rem; color: var(--primary-light);">📈 Stock Admin</span>
+                                <span id="marketAdminBadge" class="hidden" style="margin-left: 0.5rem; color: var(--primary-light);">🛒 Market Admin</span>
+                                <span id="newsAdminBadge" class="hidden" style="margin-left: 0.5rem; color: var(--primary-light);">📰 News Admin</span>
                             </div>
                         </div>
                     </div>
@@ -1109,6 +598,9 @@
                     <button class="tab-btn" onclick="switchTab('passport')">
                         <span class="tab-icon">🛂</span>Passport
                     </button>
+                    <button class="tab-btn" onclick="switchTab('permits')">
+                        <span class="tab-icon">📋</span>Permits
+                    </button>
                     <button class="tab-btn" onclick="switchTab('telecom')">
                         <span class="tab-icon">📡</span>Telecom
                     </button>
@@ -1118,11 +610,14 @@
                     <button class="tab-btn" onclick="switchTab('transport')">
                         <span class="tab-icon">🚇</span>Transport
                     </button>
-                    <button class="tab-btn" onclick="switchTab('permits')">
-                        <span class="tab-icon">📋</span>Permits
+                    <button class="tab-btn" onclick="switchTab('healthcare')">
+                        <span class="tab-icon">🏥</span>Healthcare
                     </button>
-                    <button class="tab-btn" onclick="switchTab('flights')">
-                        <span class="tab-icon">✈️</span>Flights
+                    <button class="tab-btn" onclick="switchTab('education')">
+                        <span class="tab-icon">🎓</span>Education
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('housing')">
+                        <span class="tab-icon">🏠</span>Housing
                     </button>
                 </div>
 
@@ -1133,9 +628,6 @@
                     <button class="tab-btn" onclick="switchTab('casino')">
                         <span class="tab-icon">🎰</span>Casino
                     </button>
-                    <button class="tab-btn" onclick="switchTab('chat')">
-                        <span class="tab-icon">💬</span>Chat
-                    </button>
                     <button class="tab-btn" onclick="switchTab('news')">
                         <span class="tab-icon">📰</span>News
                     </button>
@@ -1144,22 +636,22 @@
                     </button>
                 </div>
 
-                <div class="tab-section hidden" id="adminSection" data-label="Admin">
+                <div class="tab-section hidden" id="adminSection" data-label="Administration">
                     <button class="tab-btn" onclick="switchTab('admin')">
-                        <span class="tab-icon">👑</span>Control
+                        <span class="tab-icon">👑</span>Control Panel
                     </button>
                 </div>
             </div>
 
-            <!-- Tab Contents -->
+            <!-- Dashboard -->
             <div id="dashboardContent" class="tab-content">
-                <div class="balance-card scroll-reveal">
+                <div class="balance-card">
                     <div class="balance-label">Total Balance</div>
                     <div class="balance-amount">$<span id="balanceAmount">0.00</span></div>
                 </div>
 
-                <div class="glass-card scroll-reveal">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; background: var(--gradient-blue-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Recent Transactions</h2>
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Recent Transactions</h2>
                     <div id="transactionList">
                         <div class="empty-state">
                             <div class="empty-icon">💰</div>
@@ -1169,26 +661,422 @@
                 </div>
             </div>
 
-            <!-- Other content divs -->
-            <div id="transferContent" class="tab-content hidden"></div>
-            <div id="stocksContent" class="tab-content hidden"></div>
-            <div id="portfolioContent" class="tab-content hidden"></div>
-            <div id="passportContent" class="tab-content hidden"></div>
-            <div id="telecomContent" class="tab-content hidden"></div>
-            <div id="utilitiesContent" class="tab-content hidden"></div>
-            <div id="transportContent" class="tab-content hidden"></div>
-            <div id="permitsContent" class="tab-content hidden"></div>
-            <div id="flightsContent" class="tab-content hidden"></div>
-            <div id="marketplaceContent" class="tab-content hidden"></div>
-            <div id="casinoContent" class="tab-content hidden"></div>
-            <div id="chatContent" class="tab-content hidden"></div>
-            <div id="newsContent" class="tab-content hidden"></div>
-            <div id="leaderboardContent" class="tab-content hidden"></div>
-            <div id="adminContent" class="tab-content hidden"></div>
+            <!-- Transfer -->
+            <div id="transferContent" class="tab-content hidden">
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Send Money</h2>
+                    <div class="form-group">
+                        <label class="form-label">Recipient Email</label>
+                        <input type="email" id="recipientEmail" class="form-input" placeholder="recipient@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Amount ($)</label>
+                        <input type="number" id="transferAmount" class="form-input" placeholder="0.00" step="0.01" min="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Note (Optional)</label>
+                        <input type="text" id="transferNote" class="form-input" placeholder="What's this for?">
+                    </div>
+                    <button class="btn btn-success" onclick="transferMoney()" style="width: 100%;">Send Money</button>
+                </div>
+            </div>
+
+            <!-- Stocks -->
+            <div id="stocksContent" class="tab-content hidden">
+                <div class="glass-card hidden" id="createStockCard">
+                    <h3 style="margin-bottom: 1rem; color: var(--gold);">Create New Stock (Stock Admin Only)</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <input type="text" id="stockSymbol" class="form-input" placeholder="Symbol (e.g., LINT)">
+                        <input type="text" id="stockName" class="form-input" placeholder="Company Name">
+                    </div>
+                    <input type="number" id="stockPrice" class="form-input" placeholder="Starting Price" step="0.01" style="margin-top: 1rem;">
+                    <input type="number" id="stockShares" class="form-input" placeholder="Total Shares" style="margin-top: 1rem;">
+                    <button class="btn btn-success" onclick="createStock()" style="width: 100%; margin-top: 1rem;">Create Stock</button>
+                </div>
+
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Stock Market</h2>
+                    <div id="stocksList">
+                        <div class="empty-state">
+                            <div class="empty-icon">📈</div>
+                            <p>No stocks available yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Portfolio -->
+            <div id="portfolioContent" class="tab-content hidden">
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Your Portfolio</h2>
+                    <div id="portfolioList">
+                        <div class="empty-state">
+                            <div class="empty-icon">💼</div>
+                            <p>You don't own any stocks yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Passport -->
+            <div id="passportContent" class="tab-content hidden">
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Immigration & Passport Services</h2>
+                    <div id="passportInfo"></div>
+                    <button class="btn" onclick="applyPassport()" style="margin-top: 1rem;">Apply for Passport ($500)</button>
+                </div>
+            </div>
+
+            <!-- Permits -->
+            <div id="permitsContent" class="tab-content hidden">
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Permits & Licenses</h2>
+                    <div class="service-grid">
+                        <div class="service-card">
+                            <h3>📄 Business License</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$250</p>
+                            <p style="color: var(--text-muted);">Valid for 1 year</p>
+                            <button class="btn" onclick="applyPermit('business', 250)">Apply</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>🏗️ Building Permit</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$500</p>
+                            <p style="color: var(--text-muted);">For construction projects</p>
+                            <button class="btn" onclick="applyPermit('building', 500)">Apply</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>🎪 Event Permit</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$100</p>
+                            <p style="color: var(--text-muted);">For public events</p>
+                            <button class="btn" onclick="applyPermit('event', 100)">Apply</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>🚗 Driving License</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$75</p>
+                            <p style="color: var(--text-muted);">Valid for 5 years</p>
+                            <button class="btn" onclick="applyPermit('driving', 75)">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Telecom -->
+            <div id="telecomContent" class="tab-content hidden">
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Telecommunications Services</h2>
+                    <div class="service-grid">
+                        <div class="service-card">
+                            <h3>📶 Basic Internet</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$49/mo</p>
+                            <p style="color: var(--text-muted);">100 Mbps • Unlimited data</p>
+                            <button class="btn" onclick="subscribeTelecom('basic', 49)">Subscribe</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>⚡ Pro Internet</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$79/mo</p>
+                            <p style="color: var(--text-muted);">500 Mbps • Priority support</p>
+                            <button class="btn" onclick="subscribeTelecom('pro', 79)">Subscribe</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>🚀 Ultra Internet</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$149/mo</p>
+                            <p style="color: var(--text-muted);">1 Gbps • Business features</p>
+                            <button class="btn" onclick="subscribeTelecom('ultra', 149)">Subscribe</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>📱 Mobile Plan</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$35/mo</p>
+                            <p style="color: var(--text-muted);">Unlimited calls & 50GB data</p>
+                            <button class="btn" onclick="subscribeTelecom('mobile', 35)">Subscribe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Utilities -->
+            <div id="utilitiesContent" class="tab-content hidden">
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Utility Services</h2>
+                    <div class="service-grid">
+                        <div class="service-card">
+                            <h3>⚡ Electricity</h3>
+                            <p>Current Bill: <span style="color: var(--gold);">$85.40</span></p>
+                            <button class="btn" onclick="payUtility('electricity', 85.40)">Pay Bill</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>💧 Water</h3>
+                            <p>Current Bill: <span style="color: var(--gold);">$42.15</span></p>
+                            <button class="btn" onclick="payUtility('water', 42.15)">Pay Bill</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>🔥 Gas</h3>
+                            <p>Current Bill: <span style="color: var(--gold);">$67.80</span></p>
+                            <button class="btn" onclick="payUtility('gas', 67.80)">Pay Bill</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>🗑️ Waste Management</h3>
+                            <p>Current Bill: <span style="color: var(--gold);">$25.00</span></p>
+                            <button class="btn" onclick="payUtility('waste', 25.00)">Pay Bill</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transport -->
+            <div id="transportContent" class="tab-content hidden">
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Public Transportation</h2>
+                    <div class="service-grid">
+                        <div class="service-card">
+                            <h3>🎫 Daily Pass</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$8</p>
+                            <p style="color: var(--text-muted);">24-hour unlimited travel</p>
+                            <button class="btn" onclick="buyTransportPass('daily', 8)">Purchase</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>🚇 Weekly Pass</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$35</p>
+                            <p style="color: var(--text-muted);">7-day unlimited travel</p>
+                            <button class="btn" onclick="buyTransportPass('weekly', 35)">Purchase</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>🚌 Monthly Pass</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$120</p>
+                            <p style="color: var(--text-muted);">30-day unlimited travel</p>
+                            <button class="btn" onclick="buyTransportPass('monthly', 120)">Purchase</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>✈️ Airport Express</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$25</p>
+                            <p style="color: var(--text-muted);">Direct to airport</p>
+                            <button class="btn" onclick="buyTransportPass('airport', 25)">Purchase</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Healthcare -->
+            <div id="healthcareContent" class="tab-content hidden">
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Healthcare Services</h2>
+                    <div class="service-grid">
+                        <div class="service-card">
+                            <h3>🏥 Basic Health Plan</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$199/mo</p>
+                            <p style="color: var(--text-muted);">Essential coverage</p>
+                            <button class="btn" onclick="subscribeHealthcare('basic', 199)">Subscribe</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>⭐ Premium Health Plan</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$399/mo</p>
+                            <p style="color: var(--text-muted);">Full coverage + dental</p>
+                            <button class="btn" onclick="subscribeHealthcare('premium', 399)">Subscribe</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>👨‍👩‍👧‍👦 Family Plan</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$699/mo</p>
+                            <p style="color: var(--text-muted);">Coverage for up to 5</p>
+                            <button class="btn" onclick="subscribeHealthcare('family', 699)">Subscribe</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>💊 Pharmacy Plan</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$49/mo</p>
+                            <p style="color: var(--text-muted);">Prescription coverage</p>
+                            <button class="btn" onclick="subscribeHealthcare('pharmacy', 49)">Subscribe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Education -->
+            <div id="educationContent" class="tab-content hidden">
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Education Services</h2>
+                    <div class="service-grid">
+                        <div class="service-card">
+                            <h3>💻 Online Courses</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$49/course</p>
+                            <p style="color: var(--text-muted);">Professional development</p>
+                            <button class="btn" onclick="enrollCourse('online', 49)">Enroll</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>🎓 Certification Programs</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$299/program</p>
+                            <p style="color: var(--text-muted);">Industry certifications</p>
+                            <button class="btn" onclick="enrollCourse('certification', 299)">Enroll</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>📚 University Degree</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$5,000/semester</p>
+                            <p style="color: var(--text-muted);">Bachelor's programs</p>
+                            <button class="btn" onclick="enrollCourse('degree', 5000)">Enroll</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>🏫 K-12 Education</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$200/mo</p>
+                            <p style="color: var(--text-muted);">Elementary to high school</p>
+                            <button class="btn" onclick="enrollCourse('k12', 200)">Enroll</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Housing -->
+            <div id="housingContent" class="tab-content hidden">
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Housing & Real Estate</h2>
+                    <div class="service-grid">
+                        <div class="service-card">
+                            <h3>🏢 Studio Apartment</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$800/mo</p>
+                            <p style="color: var(--text-muted);">Downtown location</p>
+                            <button class="btn" onclick="rentProperty('studio', 800)">Rent</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>🏠 2BR Apartment</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$1,500/mo</p>
+                            <p style="color: var(--text-muted);">Residential area</p>
+                            <button class="btn" onclick="rentProperty('2br', 1500)">Rent</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>🏡 Family House</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$2,500/mo</p>
+                            <p style="color: var(--text-muted);">3BR with garden</p>
+                            <button class="btn" onclick="rentProperty('house', 2500)">Rent</button>
+                        </div>
+                        <div class="service-card">
+                            <h3>🏰 Luxury Villa</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$5,000/mo</p>
+                            <p style="color: var(--text-muted);">5BR with pool</p>
+                            <button class="btn" onclick="rentProperty('villa', 5000)">Rent</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Marketplace -->
+            <div id="marketplaceContent" class="tab-content hidden">
+                <div class="glass-card hidden" id="createItemCard">
+                    <h3 style="margin-bottom: 1rem; color: var(--gold);">Create New Item (Market Admin Only)</h3>
+                    <input type="text" id="itemName" class="form-input" placeholder="Item Name">
+                    <input type="number" id="itemPrice" class="form-input" placeholder="Price" step="0.01" style="margin-top: 1rem;">
+                    <input type="number" id="itemStock" class="form-input" placeholder="Stock Quantity" style="margin-top: 1rem;">
+                    <button class="btn btn-success" onclick="createMarketItem()" style="width: 100%; margin-top: 1rem;">Create Item</button>
+                </div>
+
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Digital Marketplace</h2>
+                    <div id="marketplaceList">
+                        <div class="empty-state">
+                            <div class="empty-icon">🛒</div>
+                            <p>No items available yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Casino -->
+            <div id="casinoContent" class="tab-content hidden">
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Lintoria Casino</h2>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                        <!-- Roulette -->
+                        <div class="service-card">
+                            <h3>🎡 Roulette</h3>
+                            <p style="color: var(--text-muted); margin-bottom: 1rem;">Bet on Red (2x), Black (2x), or Green (14x)</p>
+                            <input type="number" id="rouletteBet" class="form-input" placeholder="Bet amount" min="1" style="margin-bottom: 1rem;">
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
+                                <button class="btn" onclick="playRoulette('red')" style="background: linear-gradient(135deg, #ef4444, #dc2626);">Red</button>
+                                <button class="btn" onclick="playRoulette('black')" style="background: linear-gradient(135deg, #1f2937, #111827);">Black</button>
+                                <button class="btn btn-success" onclick="playRoulette('green')">Green</button>
+                            </div>
+                            <div id="rouletteResult" style="margin-top: 1rem; font-weight: 700;"></div>
+                        </div>
+
+                        <!-- Dice -->
+                        <div class="service-card">
+                            <h3>🎲 Dice Game</h3>
+                            <p style="color: var(--text-muted); margin-bottom: 1rem;">Roll higher than 3 to win 2x</p>
+                            <input type="number" id="diceBet" class="form-input" placeholder="Bet amount" min="1" style="margin-bottom: 1rem;">
+                            <button class="btn" onclick="playDice()" style="width: 100%;">Roll Dice</button>
+                            <div id="diceResult" style="margin-top: 1rem; font-weight: 700;"></div>
+                        </div>
+
+                        <!-- Coin Flip -->
+                        <div class="service-card">
+                            <h3>🪙 Coin Flip</h3>
+                            <p style="color: var(--text-muted); margin-bottom: 1rem;">50/50 chance to double your bet</p>
+                            <input type="number" id="coinBet" class="form-input" placeholder="Bet amount" min="1" style="margin-bottom: 1rem;">
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+                                <button class="btn" onclick="playCoin('heads')">Heads</button>
+                                <button class="btn" onclick="playCoin('tails')">Tails</button>
+                            </div>
+                            <div id="coinResult" style="margin-top: 1rem; font-weight: 700;"></div>
+                        </div>
+
+                        <!-- Slots -->
+                        <div class="service-card">
+                            <h3>🎰 Slot Machine</h3>
+                            <p style="color: var(--text-muted); margin-bottom: 1rem;">Match 3 symbols to win!</p>
+                            <input type="number" id="slotsBet" class="form-input" placeholder="Bet amount" min="1" style="margin-bottom: 1rem;">
+                            <button class="btn btn-success" onclick="playSlots()" style="width: 100%;">Spin!</button>
+                            <div id="slotsDisplay" style="font-size: 3rem; text-align: center; margin: 1rem 0;">🎰 🎰 🎰</div>
+                            <div id="slotsResult" style="font-weight: 700;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- News -->
+            <div id="newsContent" class="tab-content hidden">
+                <div class="glass-card hidden" id="createNewsCard">
+                    <h3 style="margin-bottom: 1rem; color: var(--gold);">Create News Article (News Admin Only)</h3>
+                    <input type="text" id="newsTitle" class="form-input" placeholder="Article Title">
+                    <textarea id="newsContentText" class="form-input" placeholder="Article content..." style="margin-top: 1rem; min-height: 100px;"></textarea>
+                    <button class="btn btn-success" onclick="createNewsArticle()" style="width: 100%; margin-top: 1rem;">Publish Article</button>
+                </div>
+
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">Latest News</h2>
+                    <div id="newsList">
+                        <div class="empty-state">
+                            <div class="empty-icon">📰</div>
+                            <p>No news articles yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard -->
+            <div id="leaderboardContent" class="tab-content hidden">
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">🏆 Wealth Leaderboard</h2>
+                    <div id="leaderboardList">
+                        <div class="empty-state">
+                            <div class="empty-icon">🏆</div>
+                            <p>Loading leaderboard...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Panel -->
+            <div id="adminContent" class="tab-content hidden">
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">👑 Master Admin Control Panel</h2>
+                    <div id="adminUsersList">
+                        <div class="empty-state">
+                            <div class="empty-icon">👥</div>
+                            <p>Loading users...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
+    <!-- Toast -->
     <div id="toast" class="toast">
         <div id="toastMessage"></div>
     </div>
@@ -1200,110 +1088,44 @@
         
         let currentUser = null;
         let deviceFingerprint = '';
-        let simulatedIP = '';
+        let allUsers = [];
+        let stocks = [];
+        let portfolio = [];
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             initApp();
-            initAnimations();
-            initParticles();
-            initScrollAnimations();
         });
 
         function initApp() {
-            // Check version
+            // Clear old version data
             const storedVersion = localStorage.getItem('lintoria_version');
             if (storedVersion !== APP_VERSION) {
                 localStorage.clear();
                 localStorage.setItem('lintoria_version', APP_VERSION);
-                showToast('Welcome to Lintoria V3.00 Premium! ✨', 'success');
             }
 
-            // Generate unique identifiers
+            // Generate device fingerprint
             deviceFingerprint = generateDeviceFingerprint();
-            simulatedIP = generateSimulatedIP();
-        }
 
-        function initAnimations() {
-            // Mouse tracking for gradient and trail
+            // Mouse tracking for background orbs
             document.addEventListener('mousemove', (e) => {
-                const x = (e.clientX / window.innerWidth) * 100;
-                const y = (e.clientY / window.innerHeight) * 100;
-                document.documentElement.style.setProperty('--mouse-x', `${x}%`);
-                document.documentElement.style.setProperty('--mouse-y', `${y}%`);
+                const x = e.clientX;
+                const y = e.clientY;
                 
-                // Mouse trail
-                const trail = document.getElementById('mouseTrail');
-                if (trail) {
-                    trail.style.left = e.clientX + 'px';
-                    trail.style.top = e.clientY + 'px';
-                    trail.style.opacity = '1';
+                // Move blue orb towards mouse
+                const blueOrb = document.getElementById('orbBlue');
+                if (blueOrb) {
+                    blueOrb.style.left = (x - 300) + 'px';
+                    blueOrb.style.top = (y - 300) + 'px';
                 }
-
-                // Interactive orbs follow mouse slightly
-                const orbs = document.querySelectorAll('.gradient-orb');
-                orbs.forEach((orb, index) => {
-                    const speed = 0.02 * (index + 1);
-                    const currentTransform = orb.style.transform || '';
-                    const xOffset = (e.clientX - window.innerWidth / 2) * speed;
-                    const yOffset = (e.clientY - window.innerHeight / 2) * speed;
-                    orb.style.transform = `${currentTransform.split('translate')[0]} translate(${xOffset}px, ${yOffset}px)`;
-                });
-            });
-
-            document.addEventListener('mouseleave', () => {
-                const trail = document.getElementById('mouseTrail');
-                if (trail) trail.style.opacity = '0';
-            });
-
-            // Parallax on scroll
-            window.addEventListener('scroll', () => {
-                const scrolled = window.pageYOffset;
-                const parallaxElements = document.querySelectorAll('.gradient-orb, .grid-layer');
                 
-                document.documentElement.style.setProperty('--scroll-progress', scrolled);
-                
-                parallaxElements.forEach((el, index) => {
-                    const speed = 0.5 + (index * 0.2);
-                    el.style.transform = `translateY(${scrolled * speed * 0.1}px)`;
-                });
-            });
-        }
-
-        function initParticles() {
-            const particlesContainer = document.getElementById('particles');
-            if (!particlesContainer) return;
-
-            // Create floating particles
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 10 + 's';
-                particle.style.animationDuration = (10 + Math.random() * 20) + 's';
-                particlesContainer.appendChild(particle);
-            }
-        }
-
-        function initScrollAnimations() {
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry, index) => {
-                    if (entry.isIntersecting) {
-                        setTimeout(() => {
-                            entry.target.classList.add('active');
-                        }, index * 100);
-                    }
-                });
-            }, observerOptions);
-
-            // Observe all scroll-reveal elements
-            document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale').forEach(el => {
-                observer.observe(el);
+                // Move gold orb opposite to mouse
+                const goldOrb = document.getElementById('orbGold');
+                if (goldOrb) {
+                    goldOrb.style.left = (window.innerWidth - x - 250) + 'px';
+                    goldOrb.style.top = (window.innerHeight - y - 250) + 'px';
+                }
             });
         }
 
@@ -1312,31 +1134,38 @@
             const ctx = canvas.getContext('2d');
             ctx.textBaseline = 'top';
             ctx.font = '14px Arial';
-            ctx.fillText('Lintoria V3', 2, 2);
+            ctx.textBaseline = 'alphabetic';
+            ctx.fillStyle = '#f60';
+            ctx.fillRect(125, 1, 62, 20);
+            ctx.fillStyle = '#069';
+            ctx.fillText('Device Fingerprint', 2, 15);
+            ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
+            ctx.fillText('Device Fingerprint', 4, 17);
+            
             const canvasData = canvas.toDataURL();
+            const nav = window.navigator;
+            const screen = window.screen;
             
-            const fingerprint = {
-                userAgent: navigator.userAgent,
-                language: navigator.language,
-                colorDepth: screen.colorDepth,
-                screenResolution: `${screen.width}x${screen.height}`,
-                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                platform: navigator.platform,
-                canvasFingerprint: canvasData.slice(0, 50),
-                timestamp: Date.now(),
-                random: Math.random().toString(36).substr(2, 9)
-            };
+            const fingerprint = [
+                canvasData.substring(0, 50),
+                nav.userAgent,
+                nav.language,
+                screen.colorDepth,
+                screen.width + 'x' + screen.height,
+                new Date().getTimezoneOffset(),
+                nav.hardwareConcurrency || 'unknown',
+                nav.platform
+            ].join('|');
             
-            return btoa(JSON.stringify(fingerprint)).substring(0, 32);
-        }
-
-        function generateSimulatedIP() {
-            const stored = localStorage.getItem('simulatedIP');
-            if (stored) return stored;
+            // Create a hash
+            let hash = 0;
+            for (let i = 0; i < fingerprint.length; i++) {
+                const char = fingerprint.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
             
-            const ip = `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
-            localStorage.setItem('simulatedIP', ip);
-            return ip;
+            return 'DEV_' + Math.abs(hash).toString(36).substring(0, 12).toUpperCase();
         }
 
         function switchAuthTab(tab) {
@@ -1355,7 +1184,7 @@
         }
 
         function switchTab(tab) {
-            // Hide all content with fade out
+            // Hide all content
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.add('hidden');
             });
@@ -1365,26 +1194,24 @@
                 btn.classList.remove('active');
             });
 
-            // Show selected content with animation
-            setTimeout(() => {
-                const content = document.getElementById(tab + 'Content');
-                if (content) {
-                    content.classList.remove('hidden');
-                }
-            }, 100);
+            // Show selected content
+            const content = document.getElementById(tab + 'Content');
+            if (content) {
+                content.classList.remove('hidden');
+            }
 
             // Set active tab
             event.target.closest('.tab-btn').classList.add('active');
 
-            // Reinitialize scroll animations for new content
-            setTimeout(initScrollAnimations, 200);
-
-            // Load content for tab
-            loadTabContent(tab);
-        }
-
-        function loadTabContent(tab) {
-            // Load specific content based on tab
+            // Load content
+            if (tab === 'dashboard') loadDashboard();
+            else if (tab === 'stocks') loadStocks();
+            else if (tab === 'portfolio') loadPortfolio();
+            else if (tab === 'marketplace') loadMarketplace();
+            else if (tab === 'news') loadNews();
+            else if (tab === 'leaderboard') loadLeaderboard();
+            else if (tab === 'admin') loadAdminPanel();
+            else if (tab === 'passport') loadPassport();
         }
 
         async function register() {
@@ -1397,23 +1224,34 @@
                 return;
             }
 
-            const result = await callAPI('register', {
-                email: email,
-                name: name,
-                password: password,
-                deviceId: deviceFingerprint,
-                ip: simulatedIP
-            });
-
-            if (result.success) {
-                showToast('✨ Account created successfully! Starting balance: $100,000', 'success');
-                setTimeout(() => {
-                    switchAuthTab('login');
-                    document.getElementById('loginEmail').value = email;
-                    document.getElementById('loginPassword').value = password;
-                }, 1500);
-            } else {
-                showToast(result.error || 'Registration failed', 'error');
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'register',
+                        email: email,
+                        name: name,
+                        password: password,
+                        deviceId: deviceFingerprint
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('✨ Account created successfully! Starting balance: $100,000', 'success');
+                    setTimeout(() => {
+                        switchAuthTab('login');
+                        document.getElementById('loginEmail').value = email;
+                        document.getElementById('loginPassword').value = password;
+                    }, 1500);
+                } else {
+                    showToast(result.error || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                console.error('Register error:', error);
+                showToast('Network error. Please try again.', 'error');
             }
         }
 
@@ -1426,14 +1264,20 @@
                 return;
             }
 
-            const result = await callAPI('login', { email, password });
-
-            if (result.success) {
-                currentUser = result.user;
-                showApp();
-                showToast('Welcome back to Lintoria! 🎉', 'success');
-            } else {
-                showToast(result.error || 'Invalid credentials', 'error');
+            try {
+                const response = await fetch(`${SHEETS_URL}?action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentUser = result.user;
+                    showApp();
+                    showToast('Welcome back! 🎉', 'success');
+                } else {
+                    showToast(result.error || 'Invalid credentials', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showToast('Network error. Please try again.', 'error');
             }
         }
 
@@ -1444,64 +1288,1053 @@
             // Update user info
             document.getElementById('userName').textContent = currentUser.name;
             
-            // Show badges
+            // Show badges and admin controls based on permissions
             if (currentUser.email === MASTER_ADMIN) {
                 document.getElementById('masterBadge').classList.remove('hidden');
                 document.getElementById('adminSection').classList.remove('hidden');
-            } else if (currentUser.permissions && Object.values(currentUser.permissions).some(p => p)) {
-                document.getElementById('adminBadge').classList.remove('hidden');
+                // Show all admin controls for master admin
+                document.getElementById('createStockCard').classList.remove('hidden');
+                document.getElementById('createItemCard').classList.remove('hidden');
+                document.getElementById('createNewsCard').classList.remove('hidden');
+            } else if (currentUser.permissions) {
+                // Show specific admin controls based on permissions
+                if (currentUser.permissions.stocks) {
+                    document.getElementById('stockAdminBadge').classList.remove('hidden');
+                    document.getElementById('createStockCard').classList.remove('hidden');
+                }
+                if (currentUser.permissions.marketplace) {
+                    document.getElementById('marketAdminBadge').classList.remove('hidden');
+                    document.getElementById('createItemCard').classList.remove('hidden');
+                }
+                if (currentUser.permissions.news) {
+                    document.getElementById('newsAdminBadge').classList.remove('hidden');
+                    document.getElementById('createNewsCard').classList.remove('hidden');
+                }
+                // Show admin tab if any permission exists
+                if (currentUser.permissions.stocks || currentUser.permissions.marketplace || currentUser.permissions.news) {
+                    document.getElementById('adminSection').classList.remove('hidden');
+                }
             }
 
             // Load dashboard
             loadDashboard();
-            
-            // Reinitialize animations
-            setTimeout(() => {
-                initScrollAnimations();
-                initParticles();
-            }, 100);
         }
 
         function logout() {
             currentUser = null;
             document.getElementById('authScreen').classList.remove('hidden');
             document.getElementById('appScreen').classList.add('hidden');
+            // Clear form fields
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
             showToast('Logged out successfully', 'success');
         }
 
         async function loadDashboard() {
             if (!currentUser) return;
 
-            // Get user data
-            const userData = await callAPI('getUser', { email: currentUser.email });
-            if (userData.success && userData.user) {
-                currentUser.balance = userData.user.balance;
-                document.getElementById('balanceAmount').textContent = 
-                    userData.user.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            }
+            try {
+                // Get updated user data
+                const response = await fetch(`${SHEETS_URL}?action=getUser&email=${encodeURIComponent(currentUser.email)}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentUser = result.user;
+                    document.getElementById('balanceAmount').textContent = 
+                        (currentUser.balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                }
 
-            // Add more dashboard loading logic here
+                // Load transactions
+                const txResponse = await fetch(`${SHEETS_URL}?action=getTransactions&email=${encodeURIComponent(currentUser.email)}`);
+                const txResult = await txResponse.json();
+                
+                const txList = document.getElementById('transactionList');
+                if (txResult.transactions && txResult.transactions.length > 0) {
+                    txList.innerHTML = txResult.transactions.slice(-10).reverse().map(tx => {
+                        const isReceived = tx.to === currentUser.email;
+                        return `
+                            <div class="transaction-item">
+                                <div>
+                                    <div style="font-weight: 700;">${isReceived ? 'From' : 'To'}: ${isReceived ? tx.from : tx.to}</div>
+                                    <div style="color: var(--text-muted); font-size: 0.875rem;">${tx.note || 'Transfer'}</div>
+                                </div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: ${isReceived ? 'var(--success)' : 'var(--danger)'};">
+                                    ${isReceived ? '+' : '-'}$${tx.amount.toFixed(2)}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    txList.innerHTML = '<div class="empty-state"><div class="empty-icon">💰</div><p>No transactions yet</p></div>';
+                }
+            } catch (error) {
+                console.error('Dashboard error:', error);
+            }
         }
 
-        async function callAPI(action, data) {
-            try {
-                const url = action === 'register' || action.startsWith('update') || action.startsWith('create') 
-                    ? SHEETS_URL 
-                    : `${SHEETS_URL}?action=${action}${Object.keys(data || {}).map(k => `&${k}=${encodeURIComponent(data[k])}`).join('')}`;
-                
-                const options = action === 'register' || action.startsWith('update') || action.startsWith('create')
-                    ? {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'text/plain' },
-                        body: JSON.stringify({ action, ...data })
-                    }
-                    : { method: 'GET' };
+        async function transferMoney() {
+            const recipient = document.getElementById('recipientEmail').value.trim();
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+            const note = document.getElementById('transferNote').value.trim();
 
-                const response = await fetch(url, options);
-                return await response.json();
+            if (!recipient || !amount || amount <= 0) {
+                showToast('Please enter valid recipient and amount', 'error');
+                return;
+            }
+
+            if (amount > currentUser.balance) {
+                showToast('Insufficient balance', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'transfer',
+                        from: currentUser.email,
+                        to: recipient,
+                        amount: amount,
+                        note: note
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`✨ Sent $${amount.toFixed(2)} successfully!`, 'success');
+                    document.getElementById('recipientEmail').value = '';
+                    document.getElementById('transferAmount').value = '';
+                    document.getElementById('transferNote').value = '';
+                    loadDashboard();
+                } else {
+                    showToast(result.error || 'Transfer failed', 'error');
+                }
             } catch (error) {
-                console.error('API Error:', error);
-                return { success: false, error: 'Network error' };
+                console.error('Transfer error:', error);
+                showToast('Network error', 'error');
+            }
+        }
+
+        // All other functions continue here...
+        async function loadStocks() {
+            try {
+                const response = await fetch(`${SHEETS_URL}?action=getStocks`);
+                const result = await response.json();
+                
+                const stocksList = document.getElementById('stocksList');
+                if (result.stocks && result.stocks.length > 0) {
+                    stocks = result.stocks;
+                    stocksList.innerHTML = stocks.map(stock => `
+                        <div class="stock-card">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h3>${stock.symbol}</h3>
+                                    <p style="color: var(--text-muted);">${stock.name}</p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--gold);">$${stock.price.toFixed(2)}</div>
+                                    <div style="color: var(--text-muted);">Available: ${stock.shares}</div>
+                                </div>
+                            </div>
+                            <input type="number" id="buy_${stock.symbol}" placeholder="Shares to buy" min="1" class="form-input" style="margin-top: 1rem;">
+                            <button class="btn" onclick="buyStock('${stock.symbol}')" style="width: 100%; margin-top: 0.5rem;">Buy Shares</button>
+                        </div>
+                    `).join('');
+                } else {
+                    stocksList.innerHTML = '<div class="empty-state"><div class="empty-icon">📈</div><p>No stocks available yet</p></div>';
+                }
+            } catch (error) {
+                console.error('Stocks error:', error);
+            }
+        }
+
+        async function createStock() {
+            const symbol = document.getElementById('stockSymbol').value.trim().toUpperCase();
+            const name = document.getElementById('stockName').value.trim();
+            const price = parseFloat(document.getElementById('stockPrice').value);
+            const shares = parseInt(document.getElementById('stockShares').value);
+
+            if (!symbol || !name || !price || !shares) {
+                showToast('Please fill all fields', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'createStock',
+                        symbol: symbol,
+                        name: name,
+                        price: price,
+                        shares: shares,
+                        creator: currentUser.email
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Stock created successfully!', 'success');
+                    document.getElementById('stockSymbol').value = '';
+                    document.getElementById('stockName').value = '';
+                    document.getElementById('stockPrice').value = '';
+                    document.getElementById('stockShares').value = '';
+                    loadStocks();
+                } else {
+                    showToast(result.error || 'Failed to create stock', 'error');
+                }
+            } catch (error) {
+                console.error('Create stock error:', error);
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function buyStock(symbol) {
+            const shares = parseInt(document.getElementById(`buy_${symbol}`).value);
+            if (!shares || shares <= 0) {
+                showToast('Enter valid number of shares', 'error');
+                return;
+            }
+
+            const stock = stocks.find(s => s.symbol === symbol);
+            if (!stock) return;
+
+            const totalCost = shares * stock.price;
+            if (totalCost > currentUser.balance) {
+                showToast('Insufficient balance', 'error');
+                return;
+            }
+
+            if (shares > stock.shares) {
+                showToast('Not enough shares available', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'buyStock',
+                        email: currentUser.email,
+                        symbol: symbol,
+                        shares: shares,
+                        price: stock.price
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`Bought ${shares} shares of ${symbol}!`, 'success');
+                    document.getElementById(`buy_${symbol}`).value = '';
+                    loadDashboard();
+                    loadStocks();
+                } else {
+                    showToast(result.error || 'Purchase failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function loadPortfolio() {
+            try {
+                const response = await fetch(`${SHEETS_URL}?action=getPortfolio&email=${encodeURIComponent(currentUser.email)}`);
+                const result = await response.json();
+                
+                const portfolioList = document.getElementById('portfolioList');
+                if (result.portfolio && result.portfolio.length > 0) {
+                    portfolio = result.portfolio;
+                    portfolioList.innerHTML = portfolio.map(item => `
+                        <div class="stock-card">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h3>${item.symbol}</h3>
+                                    <p style="color: var(--text-muted);">Shares: ${item.shares}</p>
+                                    <p style="color: var(--text-muted);">Avg Price: $${item.avgPrice.toFixed(2)}</p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--gold);">
+                                        Value: $${(item.shares * item.currentPrice).toFixed(2)}
+                                    </div>
+                                    <div style="color: ${item.profit >= 0 ? 'var(--success)' : 'var(--danger)'};">
+                                        ${item.profit >= 0 ? '+' : ''}$${item.profit.toFixed(2)}
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="number" id="sell_${item.symbol}" placeholder="Shares to sell" min="1" max="${item.shares}" class="form-input" style="margin-top: 1rem;">
+                            <button class="btn btn-danger" onclick="sellStock('${item.symbol}')" style="width: 100%; margin-top: 0.5rem;">Sell Shares</button>
+                        </div>
+                    `).join('');
+                } else {
+                    portfolioList.innerHTML = '<div class="empty-state"><div class="empty-icon">💼</div><p>You don\'t own any stocks yet</p></div>';
+                }
+            } catch (error) {
+                console.error('Portfolio error:', error);
+            }
+        }
+
+        async function sellStock(symbol) {
+            const shares = parseInt(document.getElementById(`sell_${symbol}`).value);
+            if (!shares || shares <= 0) {
+                showToast('Enter valid number of shares', 'error');
+                return;
+            }
+
+            const holding = portfolio.find(p => p.symbol === symbol);
+            if (!holding || shares > holding.shares) {
+                showToast('Invalid number of shares', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'sellStock',
+                        email: currentUser.email,
+                        symbol: symbol,
+                        shares: shares
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`Sold ${shares} shares of ${symbol}!`, 'success');
+                    document.getElementById(`sell_${symbol}`).value = '';
+                    loadDashboard();
+                    loadPortfolio();
+                } else {
+                    showToast(result.error || 'Sale failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function loadMarketplace() {
+            try {
+                const response = await fetch(`${SHEETS_URL}?action=getMarketplace`);
+                const result = await response.json();
+                
+                const marketplaceList = document.getElementById('marketplaceList');
+                if (result.items && result.items.length > 0) {
+                    marketplaceList.innerHTML = result.items.map(item => `
+                        <div class="service-card">
+                            <h3>${item.name}</h3>
+                            <p style="font-size: 2rem; color: var(--gold);">$${item.price.toFixed(2)}</p>
+                            <p style="color: var(--text-muted);">Stock: ${item.stock}</p>
+                            <button class="btn" onclick="buyItem('${item.id}')" ${item.stock <= 0 ? 'disabled' : ''}>
+                                ${item.stock <= 0 ? 'Out of Stock' : 'Purchase'}
+                            </button>
+                        </div>
+                    `).join('');
+                } else {
+                    marketplaceList.innerHTML = '<div class="empty-state"><div class="empty-icon">🛒</div><p>No items available yet</p></div>';
+                }
+            } catch (error) {
+                console.error('Marketplace error:', error);
+            }
+        }
+
+        async function createMarketItem() {
+            const name = document.getElementById('itemName').value.trim();
+            const price = parseFloat(document.getElementById('itemPrice').value);
+            const stock = parseInt(document.getElementById('itemStock').value);
+
+            if (!name || !price || !stock) {
+                showToast('Please fill all fields', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'createItem',
+                        name: name,
+                        price: price,
+                        stock: stock,
+                        creator: currentUser.email
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Item created successfully!', 'success');
+                    document.getElementById('itemName').value = '';
+                    document.getElementById('itemPrice').value = '';
+                    document.getElementById('itemStock').value = '';
+                    loadMarketplace();
+                } else {
+                    showToast(result.error || 'Failed to create item', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function buyItem(itemId) {
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'buyItem',
+                        email: currentUser.email,
+                        itemId: itemId
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Item purchased successfully!', 'success');
+                    loadDashboard();
+                    loadMarketplace();
+                } else {
+                    showToast(result.error || 'Purchase failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function loadNews() {
+            try {
+                const response = await fetch(`${SHEETS_URL}?action=getNews`);
+                const result = await response.json();
+                
+                const newsList = document.getElementById('newsList');
+                if (result.articles && result.articles.length > 0) {
+                    newsList.innerHTML = result.articles.map(article => `
+                        <div class="service-card">
+                            <h3>${article.title}</h3>
+                            <p style="color: var(--text-muted); font-size: 0.875rem;">By ${article.author} • ${new Date(article.date).toLocaleDateString()}</p>
+                            <p style="margin-top: 1rem;">${article.content}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    newsList.innerHTML = '<div class="empty-state"><div class="empty-icon">📰</div><p>No news articles yet</p></div>';
+                }
+            } catch (error) {
+                console.error('News error:', error);
+            }
+        }
+
+        async function createNewsArticle() {
+            const title = document.getElementById('newsTitle').value.trim();
+            const content = document.getElementById('newsContentText').value.trim();
+
+            if (!title || !content) {
+                showToast('Please fill all fields', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'createNews',
+                        title: title,
+                        content: content,
+                        author: currentUser.name,
+                        email: currentUser.email
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Article published successfully!', 'success');
+                    document.getElementById('newsTitle').value = '';
+                    document.getElementById('newsContentText').value = '';
+                    loadNews();
+                } else {
+                    showToast(result.error || 'Failed to publish article', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function loadLeaderboard() {
+            try {
+                const response = await fetch(`${SHEETS_URL}?action=getLeaderboard`);
+                const result = await response.json();
+                
+                const leaderboardList = document.getElementById('leaderboardList');
+                if (result.users && result.users.length > 0) {
+                    leaderboardList.innerHTML = result.users.slice(0, 10).map((user, index) => `
+                        <div class="transaction-item">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div style="font-size: 2rem; font-weight: 700; color: ${index === 0 ? 'var(--gold)' : index === 1 ? 'var(--text-secondary)' : index === 2 ? '#cd7f32' : 'var(--text-muted)'};">
+                                    ${index === 0 ? '👑' : index === 1 ? '🥈' : index === 2 ? '🥉' : '#' + (index + 1)}
+                                </div>
+                                <div>
+                                    <div style="font-weight: 700;">${user.name}</div>
+                                    <div style="color: var(--text-muted); font-size: 0.875rem;">${user.email}</div>
+                                </div>
+                            </div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--gold);">
+                                $${user.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    leaderboardList.innerHTML = '<div class="empty-state"><div class="empty-icon">🏆</div><p>No users yet</p></div>';
+                }
+            } catch (error) {
+                console.error('Leaderboard error:', error);
+            }
+        }
+
+        async function loadAdminPanel() {
+            if (currentUser.email !== MASTER_ADMIN) {
+                showToast('Access denied', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${SHEETS_URL}?action=getAllUsers`);
+                const result = await response.json();
+                
+                const adminUsersList = document.getElementById('adminUsersList');
+                if (result.users && result.users.length > 0) {
+                    allUsers = result.users;
+                    adminUsersList.innerHTML = allUsers.map((user, index) => `
+                        <div class="service-card">
+                            <h3>${user.name}</h3>
+                            <p style="color: var(--text-muted);">${user.email}</p>
+                            <p style="font-size: 1.5rem; color: var(--gold);">Balance: $${user.balance.toFixed(2)}</p>
+                            
+                            <div style="margin-top: 1rem;">
+                                <h4 style="margin-bottom: 0.5rem;">Permissions:</h4>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.5rem;">
+                                    <label><input type="checkbox" id="perm_stocks_${index}" ${user.permissions?.stocks ? 'checked' : ''}> Stocks Admin</label>
+                                    <label><input type="checkbox" id="perm_marketplace_${index}" ${user.permissions?.marketplace ? 'checked' : ''}> Market Admin</label>
+                                    <label><input type="checkbox" id="perm_news_${index}" ${user.permissions?.news ? 'checked' : ''}> News Admin</label>
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                                <input type="number" id="adminAmount_${index}" class="form-input" placeholder="Amount" step="0.01">
+                                <button class="btn btn-success" onclick="adminUpdateBalance('${user.email}', ${index})">Update Balance</button>
+                            </div>
+                            
+                            <button class="btn" onclick="adminUpdatePermissions('${user.email}', ${index})" style="width: 100%; margin-top: 0.5rem;">Update Permissions</button>
+                        </div>
+                    `).join('');
+                } else {
+                    adminUsersList.innerHTML = '<div class="empty-state"><div class="empty-icon">👥</div><p>No users found</p></div>';
+                }
+            } catch (error) {
+                console.error('Admin panel error:', error);
+            }
+        }
+
+        async function adminUpdateBalance(email, index) {
+            const amount = parseFloat(document.getElementById(`adminAmount_${index}`).value);
+            if (isNaN(amount)) {
+                showToast('Enter valid amount', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'adminUpdateBalance',
+                        adminEmail: currentUser.email,
+                        targetEmail: email,
+                        amount: amount
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Balance updated successfully!', 'success');
+                    loadAdminPanel();
+                } else {
+                    showToast(result.error || 'Update failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function adminUpdatePermissions(email, index) {
+            const permissions = {
+                stocks: document.getElementById(`perm_stocks_${index}`).checked,
+                marketplace: document.getElementById(`perm_marketplace_${index}`).checked,
+                news: document.getElementById(`perm_news_${index}`).checked
+            };
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'adminUpdatePermissions',
+                        adminEmail: currentUser.email,
+                        targetEmail: email,
+                        permissions: permissions
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Permissions updated successfully!', 'success');
+                    loadAdminPanel();
+                } else {
+                    showToast(result.error || 'Update failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function loadPassport() {
+            const passportInfo = document.getElementById('passportInfo');
+            if (currentUser.passport) {
+                passportInfo.innerHTML = `
+                    <div style="background: var(--gradient-blue-gold); padding: 2rem; border-radius: 16px; color: white;">
+                        <h3>Lintoria Passport</h3>
+                        <p>Number: ${currentUser.passport.number}</p>
+                        <p>Issued: ${new Date(currentUser.passport.issued).toLocaleDateString()}</p>
+                        <p>Expires: ${new Date(currentUser.passport.expires).toLocaleDateString()}</p>
+                    </div>
+                `;
+            } else {
+                passportInfo.innerHTML = '<p>You don\'t have a passport yet.</p>';
+            }
+        }
+
+        // All service functions...
+        async function applyPassport() {
+            if (currentUser.passport) {
+                showToast('You already have a passport', 'error');
+                return;
+            }
+
+            if (currentUser.balance < 500) {
+                showToast('Insufficient balance. Passport costs $500', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'applyPassport',
+                        email: currentUser.email
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Passport issued successfully!', 'success');
+                    currentUser.passport = result.passport;
+                    loadDashboard();
+                    loadPassport();
+                } else {
+                    showToast(result.error || 'Application failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function applyPermit(type, price) {
+            if (currentUser.balance < price) {
+                showToast('Insufficient balance', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'applyPermit',
+                        email: currentUser.email,
+                        type: type,
+                        price: price
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`${type} permit issued successfully!`, 'success');
+                    loadDashboard();
+                } else {
+                    showToast(result.error || 'Application failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function subscribeTelecom(plan, price) {
+            if (currentUser.balance < price) {
+                showToast('Insufficient balance', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'subscribeTelecom',
+                        email: currentUser.email,
+                        plan: plan,
+                        price: price
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`Subscribed to ${plan} plan!`, 'success');
+                    loadDashboard();
+                } else {
+                    showToast(result.error || 'Subscription failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function payUtility(type, amount) {
+            if (currentUser.balance < amount) {
+                showToast('Insufficient balance', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'payUtility',
+                        email: currentUser.email,
+                        type: type,
+                        amount: amount
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`${type} bill paid!`, 'success');
+                    loadDashboard();
+                } else {
+                    showToast(result.error || 'Payment failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function buyTransportPass(type, price) {
+            if (currentUser.balance < price) {
+                showToast('Insufficient balance', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'buyTransportPass',
+                        email: currentUser.email,
+                        type: type,
+                        price: price
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`${type} pass purchased!`, 'success');
+                    loadDashboard();
+                } else {
+                    showToast(result.error || 'Purchase failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function subscribeHealthcare(plan, price) {
+            if (currentUser.balance < price) {
+                showToast('Insufficient balance', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'subscribeHealthcare',
+                        email: currentUser.email,
+                        plan: plan,
+                        price: price
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`Subscribed to ${plan} health plan!`, 'success');
+                    loadDashboard();
+                } else {
+                    showToast(result.error || 'Subscription failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function enrollCourse(type, price) {
+            if (currentUser.balance < price) {
+                showToast('Insufficient balance', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'enrollCourse',
+                        email: currentUser.email,
+                        type: type,
+                        price: price
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`Enrolled in ${type} course!`, 'success');
+                    loadDashboard();
+                } else {
+                    showToast(result.error || 'Enrollment failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function rentProperty(type, price) {
+            if (currentUser.balance < price) {
+                showToast('Insufficient balance', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'rentProperty',
+                        email: currentUser.email,
+                        type: type,
+                        price: price
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`Property rented successfully!`, 'success');
+                    loadDashboard();
+                } else {
+                    showToast(result.error || 'Rental failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        // Casino functions
+        async function playRoulette(color) {
+            const bet = parseFloat(document.getElementById('rouletteBet').value);
+            if (!bet || bet <= 0 || bet > currentUser.balance) {
+                showToast('Invalid bet amount', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'playRoulette',
+                        email: currentUser.email,
+                        bet: bet,
+                        color: color
+                    })
+                });
+                
+                const result = await response.json();
+                
+                const resultDiv = document.getElementById('rouletteResult');
+                if (result.won) {
+                    resultDiv.innerHTML = `<span style="color: var(--success);">Won! Result: ${result.result}. You won $${result.winAmount.toFixed(2)}!</span>`;
+                    showToast(`Won $${result.winAmount.toFixed(2)}!`, 'success');
+                } else {
+                    resultDiv.innerHTML = `<span style="color: var(--danger);">Lost! Result: ${result.result}.</span>`;
+                    showToast(`Lost $${bet.toFixed(2)}`, 'error');
+                }
+                
+                document.getElementById('rouletteBet').value = '';
+                loadDashboard();
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function playDice() {
+            const bet = parseFloat(document.getElementById('diceBet').value);
+            if (!bet || bet <= 0 || bet > currentUser.balance) {
+                showToast('Invalid bet amount', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'playDice',
+                        email: currentUser.email,
+                        bet: bet
+                    })
+                });
+                
+                const result = await response.json();
+                
+                const resultDiv = document.getElementById('diceResult');
+                if (result.won) {
+                    resultDiv.innerHTML = `<span style="color: var(--success);">Won! Rolled: ${result.roll}. You won $${result.winAmount.toFixed(2)}!</span>`;
+                    showToast(`Won $${result.winAmount.toFixed(2)}!`, 'success');
+                } else {
+                    resultDiv.innerHTML = `<span style="color: var(--danger);">Lost! Rolled: ${result.roll}.</span>`;
+                    showToast(`Lost $${bet.toFixed(2)}`, 'error');
+                }
+                
+                document.getElementById('diceBet').value = '';
+                loadDashboard();
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function playCoin(choice) {
+            const bet = parseFloat(document.getElementById('coinBet').value);
+            if (!bet || bet <= 0 || bet > currentUser.balance) {
+                showToast('Invalid bet amount', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'playCoin',
+                        email: currentUser.email,
+                        bet: bet,
+                        choice: choice
+                    })
+                });
+                
+                const result = await response.json();
+                
+                const resultDiv = document.getElementById('coinResult');
+                if (result.won) {
+                    resultDiv.innerHTML = `<span style="color: var(--success);">Won! Result: ${result.result}. You won $${result.winAmount.toFixed(2)}!</span>`;
+                    showToast(`Won $${result.winAmount.toFixed(2)}!`, 'success');
+                } else {
+                    resultDiv.innerHTML = `<span style="color: var(--danger);">Lost! Result: ${result.result}.</span>`;
+                    showToast(`Lost $${bet.toFixed(2)}`, 'error');
+                }
+                
+                document.getElementById('coinBet').value = '';
+                loadDashboard();
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function playSlots() {
+            const bet = parseFloat(document.getElementById('slotsBet').value);
+            if (!bet || bet <= 0 || bet > currentUser.balance) {
+                showToast('Invalid bet amount', 'error');
+                return;
+            }
+
+            const symbols = ['🍒', '🍋', '🍊', '🍇', '💎', '🎰', '💰'];
+            const slotsDisplay = document.getElementById('slotsDisplay');
+            
+            // Spin animation
+            let spins = 0;
+            const spinInterval = setInterval(() => {
+                slotsDisplay.textContent = `${symbols[Math.floor(Math.random() * symbols.length)]} ${symbols[Math.floor(Math.random() * symbols.length)]} ${symbols[Math.floor(Math.random() * symbols.length)]}`;
+                spins++;
+                if (spins >= 10) clearInterval(spinInterval);
+            }, 100);
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'playSlots',
+                        email: currentUser.email,
+                        bet: bet
+                    })
+                });
+                
+                const result = await response.json();
+                
+                setTimeout(() => {
+                    slotsDisplay.textContent = result.symbols.join(' ');
+                    const resultDiv = document.getElementById('slotsResult');
+                    if (result.won) {
+                        resultDiv.innerHTML = `<span style="color: var(--success);">Won! You won $${result.winAmount.toFixed(2)}!</span>`;
+                        showToast(`Won $${result.winAmount.toFixed(2)}!`, 'success');
+                    } else {
+                        resultDiv.innerHTML = `<span style="color: var(--danger);">Lost! Try again!</span>`;
+                        showToast(`Lost $${bet.toFixed(2)}`, 'error');
+                    }
+                    
+                    document.getElementById('slotsBet').value = '';
+                    loadDashboard();
+                }, 1100);
+            } catch (error) {
+                showToast('Network error', 'error');
             }
         }
 
