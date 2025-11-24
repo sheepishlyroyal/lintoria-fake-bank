@@ -1731,7 +1731,7 @@
 
     <script>
         const APP_VERSION = '3.00';
-        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwOxQgQck9bZQCMssSgNM9TMN5DmYwoc9mz7fpB8sDt-VXCLuCNVjLaDYGJmNODhLPkqw/exec';
+        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzqSEpZIr8mRzhOSEL0uawFBkasjYROkmz_DCur-ULGWMgx_xmHe_bxVEF7uaJ7etP-pQ/exec';
         const MASTER_ADMIN = 'sheepishlyroyal@gmail.com';
         
         let currentUser = null;
@@ -2355,12 +2355,38 @@
                 stockChart.destroy();
             }
             
+            // Handle no data case
+            if (!data.history || data.history.length === 0) {
+                // Show "no data" message
+                stockChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['No Data'],
+                        datasets: [{
+                            label: data.symbol,
+                            data: [data.stock ? data.stock.price : 0],
+                            borderColor: '#64748b',
+                            backgroundColor: 'rgba(100, 116, 139, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            pointRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } }
+                    }
+                });
+                return;
+            }
+            
             const labels = data.history.map(h => {
                 const date = new Date(h.timestamp);
                 if (currentPeriod === '1d') {
                     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 } else if (['1w', '2w'].includes(currentPeriod)) {
-                    return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+                    return date.toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
                 } else {
                     return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
                 }
@@ -2370,6 +2396,12 @@
             const isPositive = data.stats.change >= 0;
             const lineColor = isPositive ? '#10b981' : '#ef4444';
             const bgColor = isPositive ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+            
+            // Calculate Y axis range with padding
+            const minPrice = Math.min(...prices);
+            const maxPrice = Math.max(...prices);
+            const priceRange = maxPrice - minPrice;
+            const padding = priceRange * 0.1 || maxPrice * 0.1 || 1;
             
             stockChart = new Chart(ctx, {
                 type: 'line',
@@ -2383,8 +2415,9 @@
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
-                        pointRadius: 0,
+                        pointRadius: prices.length <= 10 ? 4 : 0,
                         pointHoverRadius: 6,
+                        pointBackgroundColor: lineColor,
                         pointHoverBackgroundColor: lineColor,
                         pointHoverBorderColor: '#fff',
                         pointHoverBorderWidth: 2
@@ -2427,6 +2460,8 @@
                             }
                         },
                         y: {
+                            min: minPrice - padding,
+                            max: maxPrice + padding,
                             grid: {
                                 color: 'rgba(148, 163, 184, 0.1)'
                             },
@@ -2495,10 +2530,15 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    showToast(`Bought ${shares} shares of ${currentStockSymbol}!`, 'success');
+                    const priceChange = result.newPrice - result.oldPrice;
+                    const priceChangePercent = ((priceChange / result.oldPrice) * 100).toFixed(2);
+                    showToast(`Bought ${shares} shares! Price: $${result.oldPrice.toFixed(2)} → $${result.newPrice.toFixed(2)} (+${priceChangePercent}%)`, 'success');
                     document.getElementById('modalBuyShares').value = '';
+                    document.getElementById('modalStockPrice').textContent = '$' + result.newPrice.toFixed(2);
                     loadDashboard();
                     loadStocks();
+                    // Reload chart to show new price
+                    setTimeout(() => loadChartPeriod(currentPeriod), 500);
                 } else {
                     showToast(result.error || 'Purchase failed', 'error');
                 }
@@ -2529,11 +2569,16 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    showToast(`Sold ${shares} shares of ${currentStockSymbol}!`, 'success');
+                    const priceChange = result.newPrice - result.oldPrice;
+                    const priceChangePercent = ((priceChange / result.oldPrice) * 100).toFixed(2);
+                    showToast(`Sold ${shares} shares for $${result.amount.toFixed(2)}! Price: $${result.oldPrice.toFixed(2)} → $${result.newPrice.toFixed(2)} (${priceChangePercent}%)`, 'success');
                     document.getElementById('modalBuyShares').value = '';
+                    document.getElementById('modalStockPrice').textContent = '$' + result.newPrice.toFixed(2);
                     loadDashboard();
                     loadStocks();
                     loadPortfolio();
+                    // Reload chart to show new price
+                    setTimeout(() => loadChartPeriod(currentPeriod), 500);
                 } else {
                     showToast(result.error || 'Sale failed', 'error');
                 }
