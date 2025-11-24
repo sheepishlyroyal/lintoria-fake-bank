@@ -1451,7 +1451,6 @@
     <script>
         const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyjun63vdZayX8Xu2X0l30MLh6vIbOFnO_kf99MaqYiRz2iNxQRzHdlmkLAJeS2L9RTFg/exec';
         const MASTER_ADMIN = 'sheepishlyroyal@gmail.com';
-        
         let currentUser = null;
         let deviceFingerprint = '';
         let simulatedIP = '';
@@ -1741,8 +1740,14 @@
                 return;
             }
 
-            // Call backend register endpoint
-            const result = await getSheetsData('register', `&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}&password=${encodeURIComponent(password)}&deviceId=${encodeURIComponent(deviceFingerprint)}&ip=${encodeURIComponent(simulatedIP)}`);
+            // Use POST so server and mock fallback both record the new user reliably
+            const result = await callSheetsAPI('register', {
+                email: email,
+                name: name,
+                password: password,
+                deviceId: deviceFingerprint,
+                ip: simulatedIP
+            });
 
             if (!result.success) {
                 showAlert(errorDiv, result.error || 'Registration failed', 'error');
@@ -2036,11 +2041,11 @@
                 alert('Insufficient balance to purchase this ticket');
                 return;
             }
-
+            
             if (!confirm(`Purchase ticket for $${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}?\n\nFlight: ${flightData.flightNumber}\n${flightData.departureCity} → ${flightData.arrivalCity}`)) {
                 return;
             }
-
+            
             const ticket = {
                 userEmail: currentUser.email,
                 flightData: JSON.stringify(flightData),
@@ -2404,12 +2409,42 @@
                             <input type="text" id="stockSymbol" placeholder="Symbol (e.g. TECH)" style="text-transform:uppercase">
                             <input type="text" id="stockName" placeholder="Company Name">
                         </div>
-                        <textarea id="stockDesc" placeholder="Company description..." style="margin-top:16px;min-height:80px"></textarea>
-                        <div style="display:grid;gap:16px;grid-template-columns:1fr 1fr;margin-top:16px">
-                            <input type="number" id="stockPrice" placeholder="Starting Price" min="0.01" step="0.01">
-                            <input type="number" id="stockShares" placeholder="Total Shares" min="100" step="100">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                            <div class="form-group">
+                                <label>Departure City</label>
+                                <input type="text" id="flightDepartureCity" placeholder="New York">
+                            </div>
+                            <div class="form-group">
+                                <label>Departure Airport Code</label>
+                                <input type="text" id="flightDepartureCode" placeholder="JFK">
+                            </div>
                         </div>
-                        <button onclick="createStockCompany()" style="width:100%;margin-top:16px">Create Company</button>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                            <div class="form-group">
+                                <label>Arrival City</label>
+                                <input type="text" id="flightArrivalCity" placeholder="London">
+                            </div>
+                            <div class="form-group">
+                                <label>Arrival Airport Code</label>
+                                <input type="text" id="flightArrivalCode" placeholder="LHR">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
+                            <div class="form-group">
+                                <label>Flight Number</label>
+                                <input type="text" id="flightNumber" placeholder="LT123">
+                            </div>
+                            <div class="form-group">
+                                <label>Departure Time</label>
+                                <input type="text" id="flightDepartureTime" placeholder="14:30">
+                            </div>
+                            <div class="form-group">
+                                <label>Price ($)</label>
+                                <input type="number" id="flightPrice" placeholder="499.00" step="0.01">
+                            </div>
+                        </div>
+                        <button onclick="publishFlight()" class="btn-success">Publish Flight</button>
+                        <button onclick="hideFlightForm()" class="btn-secondary">Cancel</button>
                     </div>
                 `;
             }
@@ -2633,15 +2668,15 @@
                             </div>
                             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding-top:16px;border-top:1px solid var(--border);margin-bottom:16px">
                                 <div>
-                                    <div style="color:var(--text-muted);font-size:12px">Current Price</div>
+                                    <div style="color:var(--text-muted);font-size:12px;margin-bottom:4px">Current Price</div>
                                     <div style="font-weight:700;color:var(--text-primary)">$${currentPrice.toFixed(2)}</div>
                                 </div>
                                 <div>
-                                    <div style="color:var(--text-muted);font-size:12px">Your Avg Cost</div>
+                                    <div style="color:var(--text-muted);font-size:12px;margin-bottom:4px">Your Avg Cost</div>
                                     <div style="font-weight:700;color:var(--text-primary)">$${avgPrice.toFixed(2)}</div>
                                 </div>
                                 <div>
-                                    <div style="color:var(--text-muted);font-size:12px">Cost Basis</div>
+                                    <div style="color:var(--text-muted);font-size:12px;margin-bottom:4px">Cost Basis</div>
                                     <div style="font-weight:700;color:var(--text-primary)">$${costBasis.toFixed(2)}</div>
                                 </div>
                             </div>
