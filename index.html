@@ -739,6 +739,7 @@
         .plinko-slot.x1 { background: linear-gradient(180deg, #3b82f6, #2563eb); }
         .plinko-slot.x05 { background: linear-gradient(180deg, #8b5cf6, #7c3aed); }
         .plinko-slot.x03 { background: linear-gradient(180deg, #a855f7, #9333ea); }
+        .plinko-slot.x01 { background: linear-gradient(180deg, #6b7280, #4b5563); }
 
         .plinko-slot.active {
             transform: scale(1.1);
@@ -922,6 +923,7 @@
             justify-content: center;
             font-size: 2.5rem;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+            color: #000000;
         }
 
         .dice-face.front { transform: translateZ(50px); }
@@ -1944,18 +1946,22 @@
                         <!-- BLACKJACK -->
                         <div class="casino-game">
                             <h3 style="color: var(--gold); margin-bottom: 0.5rem;">🃏 Blackjack</h3>
-                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">Auto-play blackjack! Get 21!</p>
+                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">Hit or Stand! Get 21!</p>
                             
                             <div class="blackjack-table">
-                                <div style="text-align: center; color: rgba(255,255,255,0.7); font-size: 0.8rem;">DEALER</div>
+                                <div style="text-align: center; color: rgba(255,255,255,0.7); font-size: 0.8rem;">DEALER <span id="dealerTotal"></span></div>
                                 <div class="card-hand" id="dealerHand"></div>
                                 <div style="border-top: 2px dashed rgba(255,255,255,0.3); margin: 1rem 0;"></div>
                                 <div class="card-hand" id="playerHand"></div>
-                                <div style="text-align: center; color: rgba(255,255,255,0.7); font-size: 0.8rem;">YOU</div>
+                                <div style="text-align: center; color: rgba(255,255,255,0.7); font-size: 0.8rem;">YOU <span id="playerTotal"></span></div>
                             </div>
                             
                             <input type="number" id="blackjackBet" class="form-input" placeholder="Bet amount" min="1" style="margin: 1rem 0;">
-                            <button class="btn" onclick="playBlackjack()" id="blackjackBtn" style="width: 100%;">Deal Cards</button>
+                            <button class="btn" onclick="startBlackjack()" id="blackjackDealBtn" style="width: 100%;">Deal Cards</button>
+                            <div id="blackjackActions" class="hidden" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 1rem;">
+                                <button class="btn btn-success" onclick="blackjackHit()" id="hitBtn">👆 Hit</button>
+                                <button class="btn btn-danger" onclick="blackjackStand()" id="standBtn">✋ Stand</button>
+                            </div>
                             <div id="blackjackResult" style="margin-top: 1rem; font-weight: 700; text-align: center; min-height: 30px;"></div>
                         </div>
                     </div>
@@ -2304,11 +2310,11 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    pendingVerification = { email, name, password, code: data.code };
-                    document.getElementById('verifyEmailDisplay').textContent = email;
-                    document.getElementById('authTabs').classList.add('hidden');
-                    document.getElementById('verificationScreen').classList.remove('hidden');
-                    showToast('Verification code sent!', 'success');
+                    // Auto-login after registration
+                    currentUser = data.user;
+                    localStorage.setItem('lintoriaUser', JSON.stringify(currentUser));
+                    showToast('Account created! Welcome to Lintoria!', 'success');
+                    showApp();
                 } else {
                     showToast(data.message || 'Registration failed', 'error');
                 }
@@ -3101,41 +3107,170 @@
         }
 
         // ============ EMOJI PACKS ============
-        const EMOJI_POOL = {
-            common: ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','😚','😙','🥲','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','🤥','😌','😔','😪','🤤','😴','😷'],
-            uncommon: ['🤒','🤕','🤢','🤮','🤧','🥵','🥶','🥴','😵','🤯','🤠','🥳','🥸','😎','🤓','🧐','😕','😟','🙁','☹️','😮','😯','😲','😳','🥺','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','💩'],
-            rare: ['🤡','👹','👺','👻','👽','👾','🤖','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🙈','🙉','🙊','💋','💌','💘','💝','💖','💗','💓','💞','💕','💟','❣️','💔','❤️‍🔥','❤️‍🩹','❤️','🧡','💛','💚','💙','💜','🤎','🖤','🤍','💯','💢','💥','💫','💦','💨'],
-            epic: ['🕳️','💣','💬','👁️‍🗨️','🗨️','🗯️','💭','💤','👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦾','🦿'],
-            legendary: ['👀','👁️','👅','👄','🫦','👶','🧒','👦','👧','🧑','👱','👨','🧔','👩','🧓','👴','👵','🙍','🙎','🙅','🙆','💁','🙋','🧏','🙇','🤦','🤷','👮','🕵️','💂','🥷','👷','🤴','👸','👳','👲','🧕','🤵','👰','🤰','🤱','👼','🎅','🤶','🦸','🦹'],
-            mythic: ['🧙','🧚','🧛','🧜','🧝','🧞','🧟','💆','💇','🚶','🧍','🧎','🏃','💃','🕺','🕴️','👯','🧖','🧗','🤺','🏇','⛷️','🏂','🏌️','🏄','🚣','🏊','⛹️','🏋️','🚴','🚵','🤸','🤼','🤽','🤾','🤹','🧘','🛀','🛌','👭','👫','👬','💏','💑','👪','👨‍👩‍👦'],
-            divine: ['🌈','⭐','🌟','✨','⚡','☄️','💥','🔥','🌪️','🌊','💎','👑','🏆','🎖️','🥇','🔮','🧿','🪬','💫','🌙','☀️','🦋','🦄','🐉','🔱','⚜️','💠','🎭','🪷']
+        const THEMED_PACKS = {
+            nature: {
+                name: '🌿 Nature Pack',
+                emojis: {
+                    common: ['🌱','🌿','🍀','🌾','🌵','🌴','🌳','🌲','🍃','🍂','🍁','🪴','🌻','🌼','🌸','🌺','🌷','🌹','💐','🪻'],
+                    uncommon: ['🍄','🪸','🪵','🪨','🌊','💧','🔥','🌬️','☀️','🌤️','⛅','🌥️','☁️','🌦️','🌧️','⛈️','🌩️','🌨️','❄️','☃️'],
+                    rare: ['🌈','🌅','🌄','🌇','🌆','🏞️','🏔️','⛰️','🌋','🗻','🏝️','🏖️','🌌','🪷','🪹','🪺'],
+                    epic: ['🦋','🐝','🐞','🦗','🪲','🪳','🦟','🪰','🐛','🐌','🐚','🕷️','🕸️','🦂','🦎','🐍'],
+                    legendary: ['🐉','🦕','🦖','🦤','🦩','🦚','🦜','🦢','🦅','🦆','🐦‍🔥'],
+                    mythic: ['🌍','🌎','🌏','🪐','🌙','⭐','🌟','✨'],
+                    divine: ['🔮','💎','👑']
+                }
+            },
+            space: {
+                name: '🚀 Space Pack',
+                emojis: {
+                    common: ['⭐','✨','💫','🌟','✴️','🔸','🔹','🔶','🔷','⚪','⚫','🟤','🔴','🟠','🟡','🟢','🔵','🟣','🟥','🟧'],
+                    uncommon: ['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘','🌙','🌚','🌛','🌜','🌝','🌞','☀️','🌤️','⛅','🌥️','☁️','🌦️'],
+                    rare: ['🪐','☄️','💥','🌊','🌈','⚡','🔥','💧','🌬️','🌀','🌪️','🌫️','🌁','🌃','🌉','🎆'],
+                    epic: ['🛸','🚀','🛰️','🔭','📡','🛩️','✈️','🚁','🛶','⛵','🚤','🛥️','🛳️','⛴️','🚢','🚂'],
+                    legendary: ['👽','👾','🤖','🛸','🌌','🌠','☄️','🪐'],
+                    mythic: ['🌍','🌎','🌏','🌐','🗺️','🧭'],
+                    divine: ['🔱','⚜️','💠']
+                }
+            },
+            diamonds: {
+                name: '💎 Diamonds Pack',
+                emojis: {
+                    common: ['💠','🔷','🔹','🔵','🟦','🔶','🔸','🟠','🟧','🔴','🟥','🟡','🟨','🟢','🟩','🟣','🟪','⚪','⬜','🔘'],
+                    uncommon: ['💍','📿','👑','👒','🎩','🧢','⛑️','🪖','💄','💋','👛','👜','👝','🎒','🧳','👓','🕶️','🥽','🌂','☂️'],
+                    rare: ['💎','💍','👑','🏆','🥇','🥈','🥉','🏅','🎖️','🎗️','🎫','🎟️','🎪','🎠','🎡','🎢'],
+                    epic: ['🪙','💰','💵','💴','💶','💷','💸','💳','🧾','💹','📈','📉','📊','🏦','🏧','💱'],
+                    legendary: ['💎','👑','🏆','🥇','💍','📿','🔮','🪬'],
+                    mythic: ['🌟','⭐','✨','💫','☄️','🔥'],
+                    divine: ['👑','💎','🔱']
+                }
+            },
+            animals: {
+                name: '🐾 Animals Pack',
+                emojis: {
+                    common: ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🙈','🙉','🙊','🐒','🐔'],
+                    uncommon: ['🐧','🐦','🐤','🐣','🐥','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐝','🐛','🦋','🐌','🐞','🐜','🦟'],
+                    rare: ['🦗','🪲','🪳','🦂','🐢','🐍','🦎','🦖','🦕','🐙','🦑','🦐','🦞','🦀','🐡','🐠'],
+                    epic: ['🐟','🐬','🐳','🐋','🦈','🐊','🐅','🐆','🦓','🦍','🦧','🐘','🦛','🦏','🐪','🐫'],
+                    legendary: ['🦒','🦘','🦬','🐃','🐂','🐄','🐎','🐖','🐏','🐑','🦙','🐐','🦌','🐕','🐩'],
+                    mythic: ['🦮','🐕‍🦺','🐈','🐈‍⬛','🪶','🐓','🦃','🦤','🦚','🦜','🦢','🦩','🕊️','🐇','🦝'],
+                    divine: ['🐉','🦄','🐦‍🔥']
+                }
+            },
+            food: {
+                name: '🍕 Food Pack',
+                emojis: {
+                    common: ['🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🥦'],
+                    uncommon: ['🥬','🥒','🌶️','🫑','🌽','🥕','🫒','🧄','🧅','🥔','🍠','🥐','🥯','🍞','🥖','🥨','🧀','🥚','🍳','🧈'],
+                    rare: ['🥞','🧇','🥓','🥩','🍗','🍖','🦴','🌭','🍔','🍟','🍕','🫓','🥪','🥙','🧆','🌮','🌯','🫔','🥗','🥘'],
+                    epic: ['🫕','🍝','🍜','🍲','🍛','🍣','🍱','🥟','🦪','🍤','🍙','🍚','🍘','🍥','🥠','🥮','🍢','🍡','🍧','🍨'],
+                    legendary: ['🍦','🥧','🧁','🍰','🎂','🍮','🍭','🍬','🍫','🍿','🍩','🍪','🌰','🥜','🍯','🥛','🍼','🫖','☕','🍵'],
+                    mythic: ['🧃','🥤','🧋','🍶','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🧉','🍾','🧊'],
+                    divine: ['🍾','🥂','🏆']
+                }
+            },
+            sports: {
+                name: '⚽ Sports Pack',
+                emojis: {
+                    common: ['⚽','🏀','🏈','⚾','🥎','🎾','🏐','🏉','🥏','🎱','🪀','🏓','🏸','🏒','🏑','🥍','🏏','🪃','🥅','⛳'],
+                    uncommon: ['🪁','🏹','🎣','🤿','🥊','🥋','🎽','🛹','🛼','🛷','⛸️','🥌','🎿','⛷️','🏂','🪂','🏋️','🤼','🤸','🤺'],
+                    rare: ['⛹️','🤾','🏌️','🏇','🧘','🏄','🏊','🤽','🚣','🧗','🚵','🚴','🏆','🥇','🥈','🥉'],
+                    epic: ['🏅','🎖️','🏵️','🎗️','🎫','🎟️','🎪','🎠','🎡','🎢','🎯','🎳','🎮','🕹️','🎰','🎲'],
+                    legendary: ['🏆','🥇','🏅','🎖️','🎗️','🏵️','⚜️','🔱'],
+                    mythic: ['👑','💎','🌟','⭐','✨','💫'],
+                    divine: ['🏆','👑','🔱']
+                }
+            },
+            fantasy: {
+                name: '🧙 Fantasy Pack',
+                emojis: {
+                    common: ['🗡️','🛡️','⚔️','🏹','🪓','🔨','⛏️','🪚','🔧','🪛','🔩','⚙️','🗜️','⚖️','🦯','🔗','⛓️','🪝','🧰','🧲'],
+                    uncommon: ['🧪','🧫','🧬','🔬','🔭','📡','💉','🩸','💊','🩹','🩺','🚪','🛗','🪞','🪟','🛏️','🛋️','🪑','🚽','🪠'],
+                    rare: ['🏰','🏯','🗼','🗽','⛪','🕌','🛕','🕍','⛩️','🕋','⛲','⛺','🌁','🌃','🏙️','🌄'],
+                    epic: ['🧙','🧙‍♂️','🧙‍♀️','🧚','🧚‍♂️','🧚‍♀️','🧛','🧛‍♂️','🧛‍♀️','🧜','🧜‍♂️','🧜‍♀️','🧝','🧝‍♂️','🧝‍♀️','🧞'],
+                    legendary: ['🧞‍♂️','🧞‍♀️','🧟','🧟‍♂️','🧟‍♀️','👻','💀','☠️','👽','👾','🤖','🎃'],
+                    mythic: ['🔮','🪄','📜','📿','🧿','🪬','💎','👑'],
+                    divine: ['🐉','⚜️','🔱']
+                }
+            },
+            tech: {
+                name: '💻 Tech Pack',
+                emojis: {
+                    common: ['💻','🖥️','🖨️','⌨️','🖱️','🖲️','💽','💾','💿','📀','🧮','📱','📲','☎️','📞','📟','📠','📺','📻','🎙️'],
+                    uncommon: ['🎚️','🎛️','🧭','⏱️','⏲️','⏰','🕰️','⌛','⏳','📡','🔋','🔌','💡','🔦','🕯️','🧯','🛢️','💸','💵','💴'],
+                    rare: ['💶','💷','💰','💳','💎','⚖️','🪜','🧰','🪛','🔧','🔨','⚒️','🛠️','⛏️','🪚','🔩','⚙️','🗜️','⛓️','🔗'],
+                    epic: ['🪝','🧲','🔬','🔭','📡','💉','🩸','💊','🩹','🩼','🩺','🩻','🚪','🛗','🪞','🪟'],
+                    legendary: ['🤖','👾','🛸','🚀','🛰️','📱','💻','🖥️'],
+                    mythic: ['🔮','💎','⚡','🔥','💫','✨'],
+                    divine: ['🤖','🔱','💠']
+                }
+            },
+            ocean: {
+                name: '🌊 Ocean Pack',
+                emojis: {
+                    common: ['🌊','💧','💦','🫧','🧊','❄️','☃️','⛄','🌬️','💨','🌀','🌪️','🌫️','🌁','🌃','🏙️','🌆','🌇','🌉','🌌'],
+                    uncommon: ['🐚','🦪','🐠','🐟','🐡','🦐','🦞','🦀','🐙','🦑','🐳','🐋','🐬','🦭','🦈','🐊','🐢','🦎','🐍','🐉'],
+                    rare: ['⛵','🛶','🚤','🛥️','🛳️','⛴️','🚢','⚓','🪝','⛽','🚧','🛟','🏝️','🏖️','🐚','🦪'],
+                    epic: ['🧜','🧜‍♂️','🧜‍♀️','🌊','🏄','🏄‍♂️','🏄‍♀️','🏊','🏊‍♂️','🏊‍♀️','🤽','🤽‍♂️','🤽‍♀️','🚣','🚣‍♂️','🚣‍♀️'],
+                    legendary: ['🐳','🐋','🦈','🐙','🦑','🐬','🦭','🐊'],
+                    mythic: ['🧜','🌊','🔱','⚓','🏝️','🪸'],
+                    divine: ['🔱','🧜‍♀️','🐉']
+                }
+            },
+            mystery: {
+                name: '🎭 Mystery Pack',
+                emojis: {
+                    common: ['❓','❔','❕','❗','‼️','⁉️','🔅','🔆','⚜️','🔱','📛','🔰','⭕','✅','☑️','✔️','❌','❎','➕','➖'],
+                    uncommon: ['➗','✖️','♾️','💲','💱','™️','©️','®️','👁️‍🗨️','🔚','🔙','🔛','🔜','🔝','🔃','🔄','🔀','🔁','🔂','▶️'],
+                    rare: ['⏩','⏭️','⏯️','◀️','⏪','⏮️','🔼','⏫','🔽','⏬','⏸️','⏹️','⏺️','⏏️','🎦','🔅','🔆','📶','📳','📴'],
+                    epic: ['🎭','🎪','🎨','🎬','🎤','🎧','🎼','🎹','🥁','🪘','🎷','🎺','🎸','🪕','🎻','🪗'],
+                    legendary: ['👻','💀','☠️','👽','👾','🤖','🎃','🔮','🧿','🪬'],
+                    mythic: ['🔮','🪄','📜','🗝️','🔐','🔒','🔓','🔏'],
+                    divine: ['🎭','🔮','👑']
+                }
+            }
         };
 
         const RARITY_CHANCES = { common: 50, uncommon: 30, rare: 12, epic: 5, legendary: 2, mythic: 0.8, divine: 0.2 };
         const RARITY_POINTS = { common: 10, uncommon: 25, rare: 100, epic: 500, legendary: 2500, mythic: 10000, divine: 50000 };
         const RARITY_SELL = { common: 500, uncommon: 2000, rare: 10000, epic: 25000, legendary: 75000, mythic: 200000, divine: 500000 };
         const PACK_PRICE = 7500;
+        
+        let selectedPack = null;
 
         function loadPacks() {
             const container = document.getElementById('packsList');
             
-            container.innerHTML = `
-                <div class="pack-card" onclick="buyPack()">
-                    <h3 style="color: var(--gold); margin-bottom: 0.5rem;">🎁 Mystery Pack</h3>
+            container.innerHTML = Object.entries(THEMED_PACKS).map(([key, pack]) => `
+                <div class="pack-card ${selectedPack === key ? 'selected' : ''}" onclick="selectPack('${key}')">
+                    <h3 style="color: var(--gold); margin-bottom: 0.5rem;">${pack.name}</h3>
                     <div class="pack-emojis">
-                        ❓❓❓
+                        ${pack.emojis.common.slice(0,2).join('')}${pack.emojis.rare[0]}${pack.emojis.legendary[0]}${pack.emojis.divine[0]}
                     </div>
                     <p style="font-size: 1.25rem; font-weight: 700; color: var(--gold);">$${formatNumber(PACK_PRICE)}</p>
-                    <p style="font-size: 0.75rem; color: var(--text-muted);">Click to open!</p>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">Click to select</p>
                 </div>
-            `;
+            `).join('');
+        }
+        
+        function selectPack(packKey) {
+            selectedPack = packKey;
+            loadPacks();
+            document.getElementById('buyPackBtn').disabled = false;
+            showToast(`Selected: ${THEMED_PACKS[packKey].name}`, 'success');
         }
 
         async function buyPack() {
+            if (!selectedPack) {
+                showToast('Select a pack first!', 'error');
+                return;
+            }
+            
             if (currentUser.balance < PACK_PRICE) {
                 showToast('Insufficient balance!', 'error');
                 return;
             }
+            
+            const pack = THEMED_PACKS[selectedPack];
             
             // Determine rarity
             const roll = Math.random() * 100;
@@ -3150,18 +3285,18 @@
                 }
             }
             
-            // Pick emoji
-            const pool = EMOJI_POOL[rarity];
+            // Pick emoji from this pack's rarity pool
+            const pool = pack.emojis[rarity];
             const emoji = pool[Math.floor(Math.random() * pool.length)];
             
             try {
-                const response = await fetch(`${SHEETS_URL}?action=buyPack&email=${encodeURIComponent(currentUser.email)}&emoji=${encodeURIComponent(emoji)}&rarity=${rarity}&price=${PACK_PRICE}&points=${RARITY_POINTS[rarity]}`);
+                const response = await fetch(`${SHEETS_URL}?action=buyPack&email=${encodeURIComponent(currentUser.email)}&emoji=${encodeURIComponent(emoji)}&rarity=${rarity}&price=${PACK_PRICE}&points=${RARITY_POINTS[rarity]}&pack=${selectedPack}`);
                 const data = await response.json();
                 
                 if (data.success) {
                     currentUser.balance = data.newBalance;
                     document.getElementById('balanceAmount').textContent = formatNumber(data.newBalance);
-                    showPackOpening(emoji, rarity, data.isDuplicate);
+                    showPackOpening(emoji, rarity, data.isDuplicate, pack.name);
                 } else {
                     showToast(data.message || 'Failed to open pack', 'error');
                 }
@@ -3170,7 +3305,7 @@
             }
         }
 
-        function showPackOpening(emoji, rarity, isDuplicate) {
+        function showPackOpening(emoji, rarity, isDuplicate, packName) {
             const modal = document.getElementById('packOpeningModal');
             modal.className = 'pack-opening';
             
@@ -3419,17 +3554,19 @@
         // ============ CASINO - PLINKO ============
         const PLINKO_SLOTS = [
             { mult: 100, class: 'x100' },
-            { mult: 25, class: 'x25' },
             { mult: 5, class: 'x5' },
             { mult: 1, class: 'x1' },
-            { mult: 0.3, class: 'x03' },
             { mult: 0.5, class: 'x05' },
-            { mult: 0.3, class: 'x03' },
+            { mult: 0.1, class: 'x01' },
+            { mult: 0.1, class: 'x01' },
+            { mult: 0.1, class: 'x01' },
+            { mult: 0.5, class: 'x05' },
             { mult: 1, class: 'x1' },
             { mult: 5, class: 'x5' },
-            { mult: 25, class: 'x25' },
             { mult: 100, class: 'x100' }
         ];
+        
+        let plinkoBallId = 0;
 
         function initPlinko() {
             const board = document.getElementById('plinkoBoard');
@@ -3473,24 +3610,26 @@
                 return;
             }
             
-            const btn = document.getElementById('plinkoBtn');
-            btn.disabled = true;
+            // Don't disable button - allow multiple balls
             
             // Determine outcome (house edge)
             const roll = Math.random() * 100;
             let slotIndex;
             
-            if (roll < 40) {
-                // 40% - middle slots (0.3x, 0.5x, 1x)
-                slotIndex = [3, 4, 5, 6, 7][Math.floor(Math.random() * 5)];
-            } else if (roll < 75) {
-                // 35% - medium slots (5x)
+            if (roll < 45) {
+                // 45% - center slots (0.1x)
+                slotIndex = [4, 5, 6][Math.floor(Math.random() * 3)];
+            } else if (roll < 70) {
+                // 25% - medium-low slots (0.5x)
+                slotIndex = Math.random() > 0.5 ? 3 : 7;
+            } else if (roll < 85) {
+                // 15% - medium slots (1x)
                 slotIndex = Math.random() > 0.5 ? 2 : 8;
-            } else if (roll < 92) {
-                // 17% - good slots (25x)
+            } else if (roll < 95) {
+                // 10% - good slots (5x)
                 slotIndex = Math.random() > 0.5 ? 1 : 9;
             } else {
-                // 8% - jackpot (100x)
+                // 5% - jackpot (100x)
                 slotIndex = Math.random() > 0.5 ? 0 : 10;
             }
             
@@ -3498,12 +3637,18 @@
             const winnings = bet * multiplier;
             const profit = winnings - bet;
             
-            // Animate ball
-            const ball = document.getElementById('plinkoBall');
+            // Create new ball with unique ID
+            const ballId = 'plinkoBall_' + (++plinkoBallId);
             const board = document.getElementById('plinkoBoard');
-            ball.style.display = 'block';
+            
+            const ball = document.createElement('div');
+            ball.className = 'plinko-ball';
+            ball.id = ballId;
+            ball.style.position = 'absolute';
             ball.style.left = (board.offsetWidth / 2 - 8) + 'px';
             ball.style.top = '0px';
+            ball.style.display = 'block';
+            board.appendChild(ball);
             
             // Simple animation
             let currentY = 0;
@@ -3519,7 +3664,7 @@
                 
                 if (currentY >= 260) {
                     clearInterval(animateInterval);
-                    ball.style.display = 'none';
+                    ball.remove();
                     
                     // Highlight slot
                     const slots = document.querySelectorAll('.plinko-slot');
@@ -3527,7 +3672,7 @@
                     setTimeout(() => slots[slotIndex].classList.remove('active'), 2000);
                     
                     // Process result
-                    processGambleResult('plinko', bet, winnings, profit, 'plinkoResult', 'plinkoBtn');
+                    processGambleResult('plinko', bet, winnings, profit, 'plinkoResult', null);
                 }
             }, 30);
         }
@@ -3866,7 +4011,15 @@
             return `<div class="playing-card ${card.isRed ? 'red' : 'black'}">${card.value}${card.suit}</div>`;
         }
 
-        async function playBlackjack() {
+        // Interactive Blackjack State
+        let blackjackState = {
+            bet: 0,
+            playerHand: [],
+            dealerHand: [],
+            gameOver: false
+        };
+
+        async function startBlackjack() {
             const bet = parseFloat(document.getElementById('blackjackBet').value);
             
             if (!bet || bet <= 0) {
@@ -3879,73 +4032,146 @@
                 return;
             }
             
-            const btn = document.getElementById('blackjackBtn');
-            btn.disabled = true;
+            blackjackState = {
+                bet: bet,
+                playerHand: [],
+                dealerHand: [],
+                gameOver: false
+            };
             
+            const dealBtn = document.getElementById('blackjackDealBtn');
+            const actionsDiv = document.getElementById('blackjackActions');
             const playerHand = document.getElementById('playerHand');
             const dealerHand = document.getElementById('dealerHand');
             const result = document.getElementById('blackjackResult');
             
+            dealBtn.disabled = true;
+            actionsDiv.classList.remove('hidden');
+            actionsDiv.style.display = 'grid';
             playerHand.innerHTML = '';
             dealerHand.innerHTML = '';
-            result.textContent = 'Dealing...';
+            result.textContent = '';
             
-            // Deal cards
-            const player = [createCard(), createCard()];
-            const dealer = [createCard(), createCard()];
+            // Deal initial cards
+            blackjackState.playerHand = [createCard(), createCard()];
+            blackjackState.dealerHand = [createCard(), createCard()];
             
             // Animate dealing
             await delay(300);
-            playerHand.innerHTML += renderCard(player[0]);
+            playerHand.innerHTML += renderCard(blackjackState.playerHand[0]);
             await delay(300);
-            dealerHand.innerHTML += renderCard(dealer[0]);
+            dealerHand.innerHTML += renderCard(blackjackState.dealerHand[0]);
             await delay(300);
-            playerHand.innerHTML += renderCard(player[1]);
+            playerHand.innerHTML += renderCard(blackjackState.playerHand[1]);
             await delay(300);
-            dealerHand.innerHTML += `<div class="playing-card" style="background: linear-gradient(135deg, #1e40af, #3b82f6);">?</div>`;
+            dealerHand.innerHTML += `<div class="playing-card" style="background: linear-gradient(135deg, #1e40af, #3b82f6); color: white;">?</div>`;
             
-            let playerTotal = calculateHand(player);
-            let dealerTotal = calculateHand(dealer);
+            updateBlackjackTotals();
             
-            // Auto-play player (hit until 17+)
-            while (playerTotal < 17) {
-                await delay(500);
-                const card = createCard();
-                player.push(card);
-                playerHand.innerHTML += renderCard(card);
-                playerTotal = calculateHand(player);
+            // Check for natural blackjack
+            const playerTotal = calculateHand(blackjackState.playerHand);
+            if (playerTotal === 21) {
+                blackjackStand();
             }
+        }
+
+        function updateBlackjackTotals() {
+            const playerTotal = calculateHand(blackjackState.playerHand);
+            document.getElementById('playerTotal').textContent = `(${playerTotal})`;
             
-            // Reveal dealer
-            await delay(500);
-            dealerHand.innerHTML = dealer.map(c => renderCard(c)).join('');
+            if (blackjackState.gameOver) {
+                const dealerTotal = calculateHand(blackjackState.dealerHand);
+                document.getElementById('dealerTotal').textContent = `(${dealerTotal})`;
+            } else {
+                document.getElementById('dealerTotal').textContent = '';
+            }
+        }
+
+        async function blackjackHit() {
+            if (blackjackState.gameOver) return;
+            
+            const card = createCard();
+            blackjackState.playerHand.push(card);
+            
+            const playerHand = document.getElementById('playerHand');
+            playerHand.innerHTML += renderCard(card);
+            
+            updateBlackjackTotals();
+            
+            const playerTotal = calculateHand(blackjackState.playerHand);
+            if (playerTotal > 21) {
+                endBlackjack('bust');
+            } else if (playerTotal === 21) {
+                blackjackStand();
+            }
+        }
+
+        async function blackjackStand() {
+            if (blackjackState.gameOver) return;
+            
+            document.getElementById('hitBtn').disabled = true;
+            document.getElementById('standBtn').disabled = true;
+            
+            // Reveal dealer card
+            const dealerHand = document.getElementById('dealerHand');
+            dealerHand.innerHTML = blackjackState.dealerHand.map(c => renderCard(c)).join('');
             
             // Dealer hits until 17+
+            let dealerTotal = calculateHand(blackjackState.dealerHand);
+            
             while (dealerTotal < 17) {
-                await delay(500);
+                await delay(600);
                 const card = createCard();
-                dealer.push(card);
+                blackjackState.dealerHand.push(card);
                 dealerHand.innerHTML += renderCard(card);
-                dealerTotal = calculateHand(dealer);
+                dealerTotal = calculateHand(blackjackState.dealerHand);
             }
             
             // Determine winner
+            const playerTotal = calculateHand(blackjackState.playerHand);
+            
+            if (dealerTotal > 21) {
+                endBlackjack('dealer_bust');
+            } else if (playerTotal > dealerTotal) {
+                endBlackjack('win');
+            } else if (playerTotal < dealerTotal) {
+                endBlackjack('lose');
+            } else {
+                endBlackjack('push');
+            }
+        }
+
+        async function endBlackjack(outcome) {
+            blackjackState.gameOver = true;
+            updateBlackjackTotals();
+            
+            const bet = blackjackState.bet;
+            const playerTotal = calculateHand(blackjackState.playerHand);
+            const dealerTotal = calculateHand(blackjackState.dealerHand);
+            const result = document.getElementById('blackjackResult');
+            
             let multiplier = 0;
             let resultText = '';
             
-            if (playerTotal > 21) {
-                resultText = `BUST! (${playerTotal}) -$${formatNumber(bet)}`;
-            } else if (dealerTotal > 21) {
-                multiplier = 2;
-                resultText = `Dealer BUST! (${dealerTotal}) +$${formatNumber(bet)}`;
-            } else if (playerTotal > dealerTotal) {
-                multiplier = playerTotal === 21 && player.length === 2 ? 2.5 : 2;
-                resultText = `WIN! (${playerTotal} vs ${dealerTotal}) +$${formatNumber(bet * (multiplier - 1))}`;
-            } else if (playerTotal < dealerTotal) {
-                resultText = `LOSE (${playerTotal} vs ${dealerTotal}) -$${formatNumber(bet)}`;
-            } else {
-                multiplier = 1;
-                resultText = `PUSH (${playerTotal}) - Bet returned`;
+            switch (outcome) {
+                case 'bust':
+                    resultText = `BUST! (${playerTotal}) -$${formatNumber(bet)}`;
+                    break;
+                case 'dealer_bust':
+                    multiplier = 2;
+                    resultText = `Dealer BUST! (${dealerTotal}) +$${formatNumber(bet)}`;
+                    break;
+                case 'win':
+                    multiplier = playerTotal === 21 && blackjackState.playerHand.length === 2 ? 2.5 : 2;
+                    resultText = `WIN! (${playerTotal} vs ${dealerTotal}) +$${formatNumber(bet * (multiplier - 1))}`;
+                    break;
+                case 'lose':
+                    resultText = `LOSE (${playerTotal} vs ${dealerTotal}) -$${formatNumber(bet)}`;
+                    break;
+                case 'push':
+                    multiplier = 1;
+                    resultText = `PUSH (${playerTotal}) - Bet returned`;
+                    break;
             }
             
             const winnings = bet * multiplier;
@@ -3953,7 +4179,13 @@
             
             result.innerHTML = `<span style="color: ${profit >= 0 ? 'var(--success)' : 'var(--danger)'};">${resultText}</span>`;
             
-            processGambleResult('blackjack', bet, winnings, profit, null, 'blackjackBtn');
+            // Reset buttons
+            document.getElementById('blackjackDealBtn').disabled = false;
+            document.getElementById('blackjackActions').style.display = 'none';
+            document.getElementById('hitBtn').disabled = false;
+            document.getElementById('standBtn').disabled = false;
+            
+            processGambleResult('blackjack', bet, winnings, profit, null, null);
         }
 
         function delay(ms) {
