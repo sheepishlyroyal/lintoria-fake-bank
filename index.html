@@ -3,1991 +3,418 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lintoria Hub V4.02 - Ultimate Edition</title>
+    <title>Lintoria Hub V4.03</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --primary-light: #60a5fa;
-            --primary-glow: #3b82f6;
-            
-            --gold: #fbbf24;
-            --gold-dark: #f59e0b;
-            --gold-light: #fcd34d;
-            --gold-glow: #facc15;
-            
-            --accent: #0ea5e9;
-            --accent-dark: #0284c7;
-            --accent-light: #38bdf8;
-            
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            
-            --bg-primary: #050817;
-            --bg-secondary: #0f172a;
-            --bg-tertiary: #1e293b;
-            --bg-card: rgba(15, 23, 42, 0.8);
-            
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --text-muted: #64748b;
-            
-            --border: rgba(148, 163, 184, 0.1);
-            --border-light: rgba(148, 163, 184, 0.2);
-            
-            --rarity-common: #ffffff;
-            --rarity-uncommon: #22c55e;
-            --rarity-rare: #3b82f6;
-            --rarity-epic: #a855f7;
-            --rarity-legendary: #fbbf24;
-            --rarity-mythic: #ec4899;
-            --rarity-divine: #06b6d4;
-            
-            --gradient-blue-gold: linear-gradient(135deg, #2563eb 0%, #fbbf24 100%);
-            --gradient-gold-blue: linear-gradient(135deg, #fbbf24 0%, #2563eb 100%);
-            --gradient-blue: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
-            --gradient-gold: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #fcd34d 100%);
-            --gradient-premium: linear-gradient(135deg, #1e40af 0%, #fbbf24 100%);
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        .interactive-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .grid-layer {
-            position: absolute;
-            top: 0;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background-image: 
-                linear-gradient(rgba(37, 99, 235, 0.08) 2px, transparent 2px),
-                linear-gradient(90deg, rgba(37, 99, 235, 0.08) 2px, transparent 2px);
-            background-size: 80px 80px;
-            transform: perspective(500px) rotateX(60deg) translateY(-50%);
-            transform-origin: center center;
-            animation: gridScroll 20s linear infinite;
-        }
-
-        @keyframes gridScroll {
-            0% { transform: perspective(500px) rotateX(60deg) translateY(-50%); }
-            100% { transform: perspective(500px) rotateX(60deg) translateY(calc(-50% + 80px)); }
-        }
-
-        .particle-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .particle {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: radial-gradient(circle, #fbbf24 0%, rgba(251, 191, 36, 0.6) 40%, transparent 70%);
-            border-radius: 50%;
-            animation: floatUp linear infinite;
-            opacity: 0;
-            box-shadow: 0 0 10px 3px rgba(251, 191, 36, 0.6);
-        }
-
-        .particle.blue {
-            background: radial-gradient(circle, #3b82f6 0%, rgba(59, 130, 246, 0.6) 40%, transparent 70%);
-            box-shadow: 0 0 10px 3px rgba(59, 130, 246, 0.6);
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-20vh) scale(1); opacity: 0; }
-        }
-
-        .glow-system {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .glow-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(60px);
-            mix-blend-mode: screen;
-            pointer-events: none;
-        }
-
-        .orb-primary {
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.5) 0%, transparent 70%);
-        }
-
-        .orb-secondary {
-            width: 250px;
-            height: 250px;
-            background: radial-gradient(circle, rgba(251, 191, 36, 0.4) 0%, transparent 70%);
-        }
-
-        .app-container {
-            position: relative;
-            z-index: 10;
-            min-height: 100vh;
-            padding: 2rem;
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .glass-card {
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(251, 191, 36, 0.05) 100%);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 2rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .glass-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 30px 40px -5px rgba(37, 99, 235, 0.3);
-        }
-
-        .logo-container {
-            display: inline-flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .logo-icon {
-            width: 70px;
-            height: 70px;
-            background: var(--gradient-blue-gold);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 35px;
-            box-shadow: 0 10px 40px rgba(37, 99, 235, 0.4);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .logo-text {
-            font-family: 'Poppins', sans-serif;
-            font-size: 3rem;
-            font-weight: 800;
-            background: var(--gradient-blue-gold);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .logo-badge {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background: var(--gradient-gold);
-            color: var(--bg-primary);
-            font-size: 0.75rem;
-            font-weight: 800;
-            border-radius: 20px;
-            margin-left: 1rem;
-        }
-
-        .disclaimer-banner {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(251, 191, 36, 0.2) 100%);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            margin-bottom: 1.5rem;
-            font-size: 0.875rem;
-        }
-
-        .disclaimer-banner strong {
-            color: var(--danger);
-        }
-
-        .tab-container {
-            display: flex;
-            gap: 0.75rem;
-            padding: 0.75rem;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            margin-bottom: 2rem;
-            overflow-x: auto;
-            flex-wrap: wrap;
-        }
-
-        .tab-section {
-            display: flex;
-            gap: 0.5rem;
-            padding: 0.5rem;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            position: relative;
-        }
-
-        .tab-section::before {
-            content: attr(data-label);
-            position: absolute;
-            top: -10px;
-            left: 16px;
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--gold);
-            background: var(--bg-secondary);
-            padding: 0 10px;
-            border-radius: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        .tab-btn {
-            padding: 0.875rem 1.5rem;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(251, 191, 36, 0.05) 100%);
-            color: var(--text-secondary);
-            border: 1px solid transparent;
-            border-radius: 16px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.875rem;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .tab-btn:hover {
-            color: var(--text-primary);
-            transform: translateY(-2px);
-            border-color: rgba(251, 191, 36, 0.3);
-        }
-
-        .tab-btn.active {
-            background: var(--gradient-blue-gold);
-            color: white;
-            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
-        }
-
-        .tab-icon {
-            margin-right: 0.5rem;
-            font-size: 1.125rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-            font-size: 0.875rem;
-            color: var(--gold);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .form-input, select, textarea {
-            width: 100%;
-            padding: 1rem 1.5rem;
-            background: rgba(15, 23, 42, 0.6);
-            border: 2px solid var(--border);
-            border-radius: 14px;
-            color: var(--text-primary);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            font-family: inherit;
-        }
-
-        .form-input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--gold);
-            background: rgba(15, 23, 42, 0.8);
-            box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.1);
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            background: var(--gradient-blue);
-            color: white;
-            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.5);
-        }
-
-        .btn:active { transform: translateY(0); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-        .btn-success {
-            background: var(--gradient-gold);
-            color: var(--bg-primary);
-            box-shadow: 0 10px 25px rgba(251, 191, 36, 0.4);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
-        }
-
-        .btn-sm {
-            padding: 0.5rem 1rem;
-            font-size: 0.75rem;
-        }
-
-        .balance-card {
-            background: var(--gradient-premium);
-            padding: 3rem;
-            border-radius: 28px;
-            text-align: center;
-            margin-bottom: 2rem;
-            box-shadow: 0 30px 60px rgba(37, 99, 235, 0.4);
-        }
-
-        .balance-label {
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .balance-amount {
-            font-size: 4rem;
-            font-weight: 900;
-            color: white;
-            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(251, 191, 36, 0.05) 100%);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .transaction-item:hover {
-            transform: translateX(8px);
-            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
-        }
-
-        .stock-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .stock-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
-            border-color: var(--gold);
-        }
-
-        .service-card {
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(251, 191, 36, 0.08) 100%);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
-        }
-
-        .service-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .toast {
-            position: fixed;
-            top: 2rem;
-            right: -400px;
-            padding: 1rem 1.5rem;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(251, 191, 36, 0.95) 100%);
-            border-radius: 14px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            transition: right 0.5s ease;
-            z-index: 2000;
-            color: white;
-            font-weight: 600;
-            min-width: 300px;
-        }
-
-        .toast.show { right: 2rem; }
-        .toast.success { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        .toast.error { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
-
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--text-muted);
-        }
-
-        .empty-icon {
-            font-size: 4rem;
-            opacity: 0.3;
-            margin-bottom: 1rem;
-        }
-
-        .hidden { display: none !important; }
-
-        .tab-content {
-            animation: contentFade 0.5s ease-out;
-        }
-
-        @keyframes contentFade {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .section-header h2 {
-            font-weight: 700;
-            color: var(--gold);
-        }
-
-        .section-header .badge {
-            padding: 0.25rem 0.75rem;
-            background: rgba(251, 191, 36, 0.2);
-            border-radius: 20px;
-            font-size: 0.75rem;
-            color: var(--gold);
-        }
-
-        /* Chat Styles */
-        .chat-container {
-            height: 400px;
-            overflow-y: auto;
-            background: rgba(15, 23, 42, 0.6);
-            border-radius: 16px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .chat-message {
-            margin-bottom: 0.75rem;
-            padding: 0.75rem 1rem;
-            background: rgba(37, 99, 235, 0.1);
-            border-radius: 12px;
-            animation: messageSlide 0.3s ease-out;
-        }
-
-        @keyframes messageSlide {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .chat-username {
-            font-weight: 700;
-            color: var(--gold);
-            font-size: 0.875rem;
-        }
-
-        .chat-text {
-            color: var(--text-primary);
-            margin-top: 0.25rem;
-        }
-
-        .chat-time {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-
-        .chat-input-container {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        /* Emoji/Pack Styles */
-        .pack-card {
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
-            border: 2px solid var(--border);
-            border-radius: 20px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .pack-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            border-color: var(--gold);
-            box-shadow: 0 20px 40px rgba(251, 191, 36, 0.3);
-        }
-
-        .pack-card.selected {
-            border-color: var(--gold);
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(37, 99, 235, 0.2) 100%);
-            box-shadow: 0 0 30px rgba(251, 191, 36, 0.4);
-        }
-
-        .pack-emojis {
-            font-size: 1.5rem;
-            margin: 1rem 0;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.25rem;
-        }
-
-        .emoji-card {
-            display: inline-flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 1rem;
-            border-radius: 12px;
-            min-width: 80px;
-            margin: 0.25rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .emoji-card:hover {
-            transform: scale(1.1);
-        }
-
-        .emoji-card .emoji {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .emoji-card.common { background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%); border: 1px solid var(--rarity-common); }
-        .emoji-card.uncommon { background: linear-gradient(135deg, rgba(34,197,94,0.2) 0%, rgba(34,197,94,0.1) 100%); border: 1px solid var(--rarity-uncommon); }
-        .emoji-card.rare { background: linear-gradient(135deg, rgba(59,130,246,0.2) 0%, rgba(59,130,246,0.1) 100%); border: 1px solid var(--rarity-rare); }
-        .emoji-card.epic { background: linear-gradient(135deg, rgba(168,85,247,0.2) 0%, rgba(168,85,247,0.1) 100%); border: 1px solid var(--rarity-epic); }
-        .emoji-card.legendary { background: linear-gradient(135deg, rgba(251,191,36,0.2) 0%, rgba(251,191,36,0.1) 100%); border: 1px solid var(--rarity-legendary); animation: legendaryGlow 2s ease-in-out infinite; }
-        .emoji-card.mythic { background: linear-gradient(135deg, rgba(236,72,153,0.2) 0%, rgba(236,72,153,0.1) 100%); border: 1px solid var(--rarity-mythic); animation: mythicGlow 1.5s ease-in-out infinite; }
-        .emoji-card.divine { background: linear-gradient(135deg, rgba(6,182,212,0.3) 0%, rgba(6,182,212,0.1) 100%); border: 2px solid var(--rarity-divine); animation: divineGlow 1s ease-in-out infinite; }
-
-        @keyframes legendaryGlow {
-            0%, 100% { box-shadow: 0 0 10px rgba(251,191,36,0.3); }
-            50% { box-shadow: 0 0 20px rgba(251,191,36,0.6); }
-        }
-
-        @keyframes mythicGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(236,72,153,0.4); }
-            50% { box-shadow: 0 0 30px rgba(236,72,153,0.7); }
-        }
-
-        @keyframes divineGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(6,182,212,0.5), 0 0 40px rgba(6,182,212,0.3); }
-            50% { box-shadow: 0 0 40px rgba(6,182,212,0.8), 0 0 60px rgba(6,182,212,0.5); }
-        }
-
-        .rarity-badge {
-            display: inline-block;
-            padding: 0.2rem 0.5rem;
-            border-radius: 8px;
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .rarity-badge.common { background: var(--rarity-common); color: #000; }
-        .rarity-badge.uncommon { background: var(--rarity-uncommon); color: #000; }
-        .rarity-badge.rare { background: var(--rarity-rare); color: #fff; }
-        .rarity-badge.epic { background: var(--rarity-epic); color: #fff; }
-        .rarity-badge.legendary { background: var(--rarity-legendary); color: #000; }
-        .rarity-badge.mythic { background: var(--rarity-mythic); color: #fff; }
-        .rarity-badge.divine { background: var(--rarity-divine); color: #000; }
-
-        /* Casino Games */
-        .casino-game {
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(251, 191, 36, 0.08) 100%);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--primary:#2563eb;--gold:#fbbf24;--success:#10b981;--danger:#ef4444;--bg-primary:#050817;--bg-secondary:#0f172a;--text-primary:#f8fafc;--text-secondary:#cbd5e1;--text-muted:#64748b;--border:rgba(148,163,184,0.1);--rarity-common:#9ca3af;--rarity-uncommon:#22c55e;--rarity-rare:#3b82f6;--rarity-epic:#a855f7;--rarity-legendary:#fbbf24;--rarity-mythic:#ec4899;--rarity-divine:#06b6d4}
+        body{font-family:'Inter',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100vh}
+        .hidden{display:none!important}
+        .app-container{position:relative;z-index:10;min-height:100vh;padding:2rem;max-width:1400px;margin:0 auto}
+        .glass-card{background:linear-gradient(135deg,rgba(37,99,235,0.05),rgba(251,191,36,0.05));backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:24px;padding:2rem;margin-bottom:1.5rem}
+        .logo-container{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}
+        .logo-icon{width:60px;height:60px;background:linear-gradient(135deg,#2563eb,#fbbf24);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px}
+        .logo-text{font-size:2.5rem;font-weight:800;background:linear-gradient(135deg,#2563eb,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .disclaimer{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:1rem;margin-bottom:1.5rem;font-size:0.875rem}
+        .tab-container{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;padding:1rem;background:rgba(15,23,42,0.5);border-radius:16px}
+        .tab-btn{padding:0.75rem 1.25rem;background:rgba(37,99,235,0.1);color:var(--text-secondary);border:none;border-radius:12px;cursor:pointer;font-weight:600;transition:all 0.3s}
+        .tab-btn:hover{color:var(--text-primary);background:rgba(251,191,36,0.2)}
+        .tab-btn.active{background:linear-gradient(135deg,#2563eb,#fbbf24);color:white}
+        .form-group{margin-bottom:1.25rem}
+        .form-label{display:block;margin-bottom:0.5rem;font-weight:600;color:var(--gold);font-size:0.875rem;text-transform:uppercase}
+        .form-input,select{width:100%;padding:1rem;background:rgba(15,23,42,0.6);border:2px solid var(--border);border-radius:12px;color:var(--text-primary);font-size:1rem}
+        .form-input:focus,select:focus{outline:none;border-color:var(--gold)}
+        .btn{padding:1rem 2rem;border:none;border-radius:12px;font-weight:700;cursor:pointer;transition:all 0.3s;background:linear-gradient(135deg,#2563eb,#3b82f6);color:white}
+        .btn:hover{transform:translateY(-2px)}
+        .btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+        .btn-success{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#000}
+        .btn-danger{background:linear-gradient(135deg,#ef4444,#dc2626)}
+        .btn-sm{padding:0.5rem 1rem;font-size:0.8rem}
+        .balance-card{background:linear-gradient(135deg,#1e40af,#fbbf24);padding:2.5rem;border-radius:24px;text-align:center;margin-bottom:1.5rem}
+        .balance-label{font-size:0.875rem;text-transform:uppercase;letter-spacing:2px;opacity:0.9}
+        .balance-amount{font-size:3.5rem;font-weight:900;font-family:'Space Grotesk',sans-serif}
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1rem;margin-bottom:1.5rem}
+        .stat-card{background:rgba(15,23,42,0.6);border:1px solid var(--border);border-radius:16px;padding:1.25rem;text-align:center}
+        .stat-value{font-size:1.5rem;font-weight:800;color:var(--gold)}
+        .stat-label{font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;margin-top:0.25rem}
+        .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border)}
+        .section-header h2{font-size:1.25rem;color:var(--gold)}
+        .service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem}
+        .pack-card{background:rgba(37,99,235,0.1);border:2px solid var(--border);border-radius:16px;padding:1.25rem;text-align:center;cursor:pointer;transition:all 0.3s}
+        .pack-card:hover{border-color:var(--gold);transform:translateY(-3px)}
+        .pack-card.selected{border-color:var(--gold);background:rgba(251,191,36,0.15)}
+        .pack-name{font-weight:700;color:var(--gold);margin-bottom:0.5rem}
+        .pack-emojis{font-size:1.2rem;margin:0.5rem 0}
+        .emoji-card{display:inline-flex;flex-direction:column;align-items:center;padding:0.75rem;border-radius:10px;margin:0.25rem;cursor:pointer;transition:transform 0.2s}
+        .emoji-card:hover{transform:scale(1.1)}
+        .emoji-card .emoji{font-size:2rem}
+        .emoji-card.common{background:rgba(156,163,175,0.15);border:1px solid var(--rarity-common)}
+        .emoji-card.uncommon{background:rgba(34,197,94,0.15);border:1px solid var(--rarity-uncommon)}
+        .emoji-card.rare{background:rgba(59,130,246,0.15);border:1px solid var(--rarity-rare)}
+        .emoji-card.epic{background:rgba(168,85,247,0.15);border:1px solid var(--rarity-epic)}
+        .emoji-card.legendary{background:rgba(251,191,36,0.15);border:1px solid var(--rarity-legendary);animation:glow 2s infinite}
+        .emoji-card.mythic{background:rgba(236,72,153,0.15);border:1px solid var(--rarity-mythic);animation:glow 1.5s infinite}
+        .emoji-card.divine{background:rgba(6,182,212,0.2);border:2px solid var(--rarity-divine);animation:glow 1s infinite}
+        @keyframes glow{0%,100%{box-shadow:0 0 5px currentColor}50%{box-shadow:0 0 20px currentColor}}
+        .rarity-badge{display:inline-block;padding:0.15rem 0.4rem;border-radius:6px;font-size:0.6rem;font-weight:700;text-transform:uppercase}
+        .rarity-badge.common{background:var(--rarity-common);color:#000}
+        .rarity-badge.uncommon{background:var(--rarity-uncommon);color:#000}
+        .rarity-badge.rare{background:var(--rarity-rare);color:#fff}
+        .rarity-badge.epic{background:var(--rarity-epic);color:#fff}
+        .rarity-badge.legendary{background:var(--rarity-legendary);color:#000}
+        .rarity-badge.mythic{background:var(--rarity-mythic);color:#fff}
+        .rarity-badge.divine{background:var(--rarity-divine);color:#000}
+        .casino-game{background:rgba(37,99,235,0.08);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem}
+        .casino-game h3{color:var(--gold);margin-bottom:0.5rem}
         /* PLINKO */
-        .plinko-container {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            margin: 1rem auto;
-            background: linear-gradient(180deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%);
-            border-radius: 16px;
-            padding: 1rem;
-            overflow: hidden;
-        }
-
-        .plinko-board {
-            position: relative;
-            width: 100%;
-            height: 350px;
-        }
-
-        .plinko-peg {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: var(--gold);
-            border-radius: 50%;
-            box-shadow: 0 0 6px var(--gold);
-        }
-
-        .plinko-ball {
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            background: radial-gradient(circle at 30% 30%, #ff6b6b, #ee5a5a);
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(255, 107, 107, 0.8), inset 0 -2px 4px rgba(0,0,0,0.3);
-            z-index: 10;
-            display: none;
-        }
-
-        .plinko-slots {
-            display: flex;
-            justify-content: space-between;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 40px;
-        }
-
-        .plinko-slot {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.6rem;
-            font-weight: 700;
-            border-radius: 4px 4px 0 0;
-            margin: 0 1px;
-            transition: all 0.3s ease;
-        }
-
-        .plinko-slot.x100 { background: linear-gradient(180deg, #ef4444, #dc2626); }
-        .plinko-slot.x50 { background: linear-gradient(180deg, #f97316, #ea580c); }
-        .plinko-slot.x25 { background: linear-gradient(180deg, #eab308, #ca8a04); }
-        .plinko-slot.x10 { background: linear-gradient(180deg, #84cc16, #65a30d); }
-        .plinko-slot.x5 { background: linear-gradient(180deg, #22c55e, #16a34a); }
-        .plinko-slot.x2 { background: linear-gradient(180deg, #06b6d4, #0891b2); }
-        .plinko-slot.x1 { background: linear-gradient(180deg, #3b82f6, #2563eb); }
-        .plinko-slot.x05 { background: linear-gradient(180deg, #8b5cf6, #7c3aed); }
-        .plinko-slot.x03 { background: linear-gradient(180deg, #a855f7, #9333ea); }
-        .plinko-slot.x01 { background: linear-gradient(180deg, #6b7280, #4b5563); }
-
-        .plinko-slot.active {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px currentColor;
-        }
-
+        .plinko-container{position:relative;width:100%;max-width:380px;margin:1rem auto;background:linear-gradient(180deg,#0a0a1a,#151530);border-radius:12px;padding:8px;border:2px solid var(--gold)}
+        .plinko-board{position:relative;width:360px;height:400px;margin:0 auto;overflow:hidden}
+        .plinko-peg{position:absolute;width:8px;height:8px;background:radial-gradient(circle at 30% 30%,#ffd700,#b8860b);border-radius:50%;box-shadow:0 0 6px rgba(255,215,0,0.6);transform:translate(-50%,-50%)}
+        .plinko-ball{position:absolute;width:16px;height:16px;background:radial-gradient(circle at 30% 30%,#ff6b6b,#cc0000);border-radius:50%;box-shadow:0 0 12px rgba(255,107,107,0.8);z-index:100;transform:translate(-50%,-50%)}
+        .plinko-slots{display:flex;justify-content:center;position:absolute;bottom:0;left:50%;transform:translateX(-50%);gap:2px}
+        .plinko-slot{width:32px;height:40px;display:flex;align-items:center;justify-content:center;font-size:0.5rem;font-weight:800;border-radius:4px 4px 0 0;color:white}
+        .plinko-slot[data-mult="0.2"]{background:#6b7280}
+        .plinko-slot[data-mult="0.5"]{background:#8b5cf6}
+        .plinko-slot[data-mult="1"]{background:#3b82f6}
+        .plinko-slot[data-mult="2"]{background:#06b6d4}
+        .plinko-slot[data-mult="5"]{background:#22c55e}
+        .plinko-slot[data-mult="10"]{background:#84cc16}
+        .plinko-slot[data-mult="25"]{background:#eab308}
+        .plinko-slot[data-mult="50"]{background:#f97316}
+        .plinko-slot[data-mult="100"]{background:#ef4444}
+        .plinko-slot.active{transform:scaleY(1.15);box-shadow:0 0 15px currentColor}
         /* ROULETTE */
-        .roulette-container {
-            position: relative;
-            width: 280px;
-            height: 280px;
-            margin: 1rem auto;
-        }
-
-        .roulette-wheel {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            position: relative;
-            border: 6px solid var(--gold);
-            box-shadow: 0 0 30px rgba(251, 191, 36, 0.5), inset 0 0 30px rgba(0,0,0,0.5);
-            transition: transform 0s;
-        }
-
-        .roulette-wheel.spinning {
-            transition: transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99);
-        }
-
-        .roulette-number {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: 700;
-            border-radius: 50%;
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-
-        .roulette-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
-            background: var(--gradient-gold);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.8);
-        }
-
-        .roulette-pointer {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 25px solid var(--gold);
-            z-index: 10;
-            filter: drop-shadow(0 0 10px var(--gold));
-        }
-
-        /* FORTUNE WHEEL */
-        .wheel-container {
-            position: relative;
-            width: 300px;
-            height: 300px;
-            margin: 1rem auto;
-        }
-
-        .fortune-wheel {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            position: relative;
-            border: 8px solid var(--gold);
-            box-shadow: 0 0 40px rgba(251, 191, 36, 0.6);
-            overflow: hidden;
-            transition: transform 0s;
-        }
-
-        .fortune-wheel.spinning {
-            transition: transform 6s cubic-bezier(0.17, 0.67, 0.05, 0.99);
-        }
-
-        .wheel-segment {
-            position: absolute;
-            width: 50%;
-            height: 50%;
-            left: 50%;
-            top: 50%;
-            transform-origin: 0 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.8rem;
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-
-        .wheel-segment span {
-            transform: rotate(70deg) translateY(-60px);
-            display: block;
-        }
-
-        .wheel-pointer-top {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 20px solid transparent;
-            border-right: 20px solid transparent;
-            border-top: 35px solid var(--gold);
-            z-index: 10;
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
-        }
-
-        .wheel-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
-            background: var(--gradient-gold);
-            border-radius: 50%;
-            z-index: 5;
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.8);
-        }
-
+        .roulette-container{position:relative;width:260px;height:260px;margin:1rem auto}
+        .roulette-wheel{width:100%;height:100%;border-radius:50%;border:6px solid var(--gold);box-shadow:0 0 30px rgba(251,191,36,0.4);overflow:hidden;position:relative;background:#1a1a2e}
+        .roulette-segment{position:absolute;width:50%;height:50%;left:50%;top:50%;transform-origin:0 0;clip-path:polygon(0 0,100% 0,100% 100%)}
+        .roulette-segment span{position:absolute;font-size:0.65rem;font-weight:700;color:white;left:35%;top:20%;transform:rotate(5deg)}
+        .roulette-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:50px;height:50px;background:linear-gradient(135deg,#f59e0b,#fbbf24);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.25rem;z-index:10}
+        .roulette-pointer{position:absolute;top:-15px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:24px solid var(--gold);z-index:20}
+        .roulette-bet-options{display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin:1rem 0}
+        .roulette-bet-btn{padding:0.6rem;border:2px solid var(--border);border-radius:8px;background:rgba(15,23,42,0.6);color:var(--text-primary);font-weight:600;cursor:pointer;font-size:0.8rem}
+        .roulette-bet-btn:hover{border-color:var(--gold)}
+        .roulette-bet-btn.selected{border-color:var(--gold);background:rgba(251,191,36,0.2)}
+        .roulette-bet-btn.red{border-color:#dc2626}
+        .roulette-bet-btn.black{border-color:#374151}
+        .roulette-bet-btn.green{border-color:#16a34a}
         /* DICE */
-        .dice-container {
-            perspective: 600px;
-            width: 100px;
-            height: 100px;
-            margin: 1rem auto;
-        }
-
-        .dice {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 1s ease-out;
-        }
-
-        .dice.rolling {
-            animation: rollDice 1s ease-out;
-        }
-
-        @keyframes rollDice {
-            0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
-            25% { transform: rotateX(180deg) rotateY(90deg) rotateZ(45deg); }
-            50% { transform: rotateX(360deg) rotateY(180deg) rotateZ(90deg); }
-            75% { transform: rotateX(540deg) rotateY(270deg) rotateZ(135deg); }
-            100% { transform: rotateX(720deg) rotateY(360deg) rotateZ(180deg); }
-        }
-
-        .dice-face {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, #ffffff, #e0e0e0);
-            border: 3px solid #333;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
-            color: #000000;
-        }
-
-        .dice-face.front { transform: translateZ(50px); }
-        .dice-face.back { transform: rotateY(180deg) translateZ(50px); }
-        .dice-face.right { transform: rotateY(90deg) translateZ(50px); }
-        .dice-face.left { transform: rotateY(-90deg) translateZ(50px); }
-        .dice-face.top { transform: rotateX(90deg) translateZ(50px); }
-        .dice-face.bottom { transform: rotateX(-90deg) translateZ(50px); }
-
+        .dice-container{perspective:600px;width:80px;height:80px;margin:1rem auto}
+        .dice{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 1s}
+        .dice.rolling{animation:rollDice 1s}
+        @keyframes rollDice{0%{transform:rotateX(0) rotateY(0)}50%{transform:rotateX(360deg) rotateY(180deg)}100%{transform:rotateX(720deg) rotateY(360deg)}}
+        .dice-face{position:absolute;width:80px;height:80px;background:linear-gradient(135deg,#fff,#e0e0e0);border:3px solid #333;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#000}
+        .dice-face.front{transform:translateZ(40px)}
+        .dice-face.back{transform:rotateY(180deg) translateZ(40px)}
+        .dice-face.right{transform:rotateY(90deg) translateZ(40px)}
+        .dice-face.left{transform:rotateY(-90deg) translateZ(40px)}
+        .dice-face.top{transform:rotateX(90deg) translateZ(40px)}
+        .dice-face.bottom{transform:rotateX(-90deg) translateZ(40px)}
         /* SLOTS */
-        .slots-machine {
-            background: linear-gradient(180deg, #1a1a2e, #16213e);
-            border-radius: 20px;
-            padding: 2rem;
-            max-width: 350px;
-            margin: 1rem auto;
-            border: 4px solid var(--gold);
-            box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
-        }
-
-        .slots-display {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            background: #0a0a0a;
-            padding: 1rem;
-            border-radius: 12px;
-            border: 3px solid #333;
-        }
-
-        .slot-reel {
-            width: 70px;
-            height: 80px;
-            background: linear-gradient(180deg, #1a1a1a, #2a2a2a);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            overflow: hidden;
-            position: relative;
-            border: 2px solid #444;
-        }
-
-        .slot-reel.spinning .slot-symbol {
-            animation: slotSpin 0.1s linear infinite;
-        }
-
-        @keyframes slotSpin {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100%); }
-        }
-
-        .slot-reel .slot-symbol {
-            transition: transform 0.3s ease-out;
-        }
-
-        /* BLACKJACK */
-        .blackjack-table {
-            background: linear-gradient(135deg, #0f5132, #198754);
-            border-radius: 100px 100px 20px 20px;
-            padding: 2rem;
-            max-width: 400px;
-            margin: 1rem auto;
-            border: 8px solid #5c4033;
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.3);
-        }
-
-        .card-hand {
-            display: flex;
-            justify-content: center;
-            gap: -20px;
-            min-height: 100px;
-            margin: 1rem 0;
-        }
-
-        .playing-card {
-            width: 60px;
-            height: 84px;
-            background: white;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            margin-left: -15px;
-            transition: all 0.3s ease;
-            animation: dealCard 0.3s ease-out;
-        }
-
-        .playing-card:first-child {
-            margin-left: 0;
-        }
-
-        .playing-card.red { color: #dc2626; }
-        .playing-card.black { color: #1f2937; }
-
-        @keyframes dealCard {
-            from { transform: translateY(-50px) rotate(-10deg); opacity: 0; }
-            to { transform: translateY(0) rotate(0); opacity: 1; }
-        }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(5, 8, 23, 0.9);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-
-        .modal-content {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 2rem;
-            width: 90%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-
-        .modal-overlay.active .modal-content { transform: scale(1); }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .modal-close:hover { color: var(--danger); }
-
-        .tax-info {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            font-size: 0.875rem;
-        }
-
-        /* Pack Opening Animation */
-        .pack-opening {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(5, 8, 23, 0.95);
-            z-index: 3000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            animation: packFadeIn 0.5s ease-out;
-        }
-
-        @keyframes packFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .pack-reveal {
-            font-size: 8rem;
-            animation: packReveal 1s ease-out;
-        }
-
-        @keyframes packReveal {
-            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
-            50% { transform: scale(1.2) rotate(10deg); }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-
-        .pack-rarity-text {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-top: 1rem;
-            animation: rarityPop 0.5s ease-out 0.5s both;
-        }
-
-        @keyframes rarityPop {
-            from { transform: scale(0); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        /* Chances Table */
-        .chances-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-
-        .chances-table th, .chances-table td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .chances-table th {
-            color: var(--gold);
-            font-weight: 700;
-        }
-
-        /* Credit Score Display */
-        .credit-score-container {
-            text-align: center;
-            padding: 2rem;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
-            border-radius: 20px;
-            margin-bottom: 2rem;
-        }
-
-        .credit-gauge {
-            position: relative;
-            width: 200px;
-            height: 100px;
-            margin: 0 auto 1rem;
-            overflow: hidden;
-        }
-
-        .credit-gauge-bg {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: conic-gradient(
-                #ef4444 0deg 60deg,
-                #f97316 60deg 90deg,
-                #fbbf24 90deg 120deg,
-                #84cc16 120deg 150deg,
-                #22c55e 150deg 180deg,
-                transparent 180deg 360deg
-            );
-            clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
-        }
-
-        .credit-gauge-needle {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 4px;
-            height: 80px;
-            background: white;
-            transform-origin: bottom center;
-            transition: transform 1s ease-out;
-            border-radius: 2px;
-            box-shadow: 0 0 10px rgba(255,255,255,0.5);
-        }
-
-        .credit-gauge-center {
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 20px;
-            background: var(--gold);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--gold);
-        }
-
-        .credit-score-value {
-            font-size: 3rem;
-            font-weight: 900;
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        .credit-score-label {
-            font-size: 1rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .credit-excellent { color: #22c55e; }
-        .credit-good { color: #84cc16; }
-        .credit-fair { color: #fbbf24; }
-        .credit-poor { color: #f97316; }
-        .credit-bad { color: #ef4444; }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--gold);
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 0.5rem;
-        }
-
-        /* Loan styles */
-        .loan-type-card {
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(251, 191, 36, 0.05) 100%);
-            border: 2px solid var(--border);
-            border-radius: 20px;
-            padding: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .loan-type-card:hover {
-            border-color: var(--gold);
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(251, 191, 36, 0.2);
-        }
-
-        .loan-type-card.selected {
-            border-color: var(--gold);
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(37, 99, 235, 0.1) 100%);
-        }
-
-        .loan-type-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .loan-active-card {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .loan-progress {
-            height: 8px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 1rem 0;
-        }
-
-        .loan-progress-bar {
-            height: 100%;
-            background: var(--gradient-gold);
-            transition: width 0.5s ease;
-        }
-
-        .loan-status {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        .loan-status.active { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
-        .loan-status.overdue { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-        .loan-status.paid { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
-        .loan-status.defaulted { background: rgba(239, 68, 68, 0.3); color: #ef4444; }
-
-        /* Reset styles */
-        .reset-warning {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(251, 191, 36, 0.1) 100%);
-            border: 2px solid rgba(239, 68, 68, 0.5);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin: 1rem 0;
-        }
-
-        .reset-calculation {
-            background: rgba(15, 23, 42, 0.6);
-            border-radius: 12px;
-            padding: 1rem;
-            margin: 1rem 0;
-            font-family: 'Space Grotesk', monospace;
-        }
-
-        .reset-calculation-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .reset-calculation-row:last-child {
-            border-bottom: none;
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: var(--gold);
-        }
-
-        @media (max-width: 768px) {
-            .logo-text { font-size: 2rem; }
-            .balance-amount { font-size: 3rem; }
-            .tab-container { flex-direction: column; }
-            .tab-section { width: 100%; }
-            .plinko-container { max-width: 100%; }
-            .roulette-container, .wheel-container { width: 250px; height: 250px; }
-            .credit-score-value { font-size: 2rem; }
-        }
-
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
-        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+        .slots-machine{background:#1a1a2e;border-radius:16px;padding:1.5rem;max-width:300px;margin:1rem auto;border:3px solid var(--gold)}
+        .slots-display{display:flex;justify-content:center;gap:0.4rem;background:#0a0a0a;padding:0.75rem;border-radius:10px}
+        .slot-reel{width:60px;height:70px;background:#1a1a1a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;border:2px solid #444}
+        .slot-reel.spinning .slot-symbol{animation:slotSpin 0.1s linear infinite}
+        @keyframes slotSpin{0%{transform:translateY(-100%)}100%{transform:translateY(100%)}}
+        /* COIN */
+        .coin{width:80px;height:80px;margin:1rem auto;position:relative;transform-style:preserve-3d}
+        .coin.flipping{animation:coinFlip 1.5s}
+        @keyframes coinFlip{0%{transform:rotateY(0) translateY(0)}50%{transform:rotateY(1800deg) translateY(-80px)}100%{transform:rotateY(3600deg) translateY(0)}}
+        .coin-face{position:absolute;width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;backface-visibility:hidden}
+        .coin-heads{background:linear-gradient(135deg,#ffd700,#ffed4a);border:3px solid #b8860b}
+        .coin-tails{background:linear-gradient(135deg,#c0c0c0,#e8e8e8);border:3px solid #808080;transform:rotateY(180deg)}
+        /* RESULTS */
+        .result{margin-top:1rem;text-align:center;font-weight:700;min-height:40px}
+        .win-animation{animation:winPulse 0.5s 3}
+        .lose-animation{animation:losePulse 0.5s 2}
+        @keyframes winPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+        @keyframes losePulse{0%,100%{opacity:1}50%{opacity:0.5}}
+        /* MODAL */
+        .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,8,23,0.9);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all 0.3s}
+        .modal-overlay.active{opacity:1;visibility:visible}
+        .modal-content{background:var(--bg-secondary);border:1px solid var(--border);border-radius:20px;padding:1.5rem;width:90%;max-width:500px;max-height:85vh;overflow-y:auto}
+        .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border)}
+        .modal-close{background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer}
+        .toast{position:fixed;top:1.5rem;right:-350px;padding:1rem 1.5rem;background:linear-gradient(135deg,#2563eb,#fbbf24);border-radius:12px;transition:right 0.4s;z-index:2000;color:white;font-weight:600;min-width:250px}
+        .toast.show{right:1.5rem}
+        .toast.success{background:linear-gradient(135deg,#10b981,#059669)}
+        .toast.error{background:linear-gradient(135deg,#ef4444,#dc2626)}
+        .pack-opening{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,8,23,0.95);z-index:3000;display:flex;flex-direction:column;align-items:center;justify-content:center}
+        .pack-reveal{font-size:7rem;animation:packReveal 1s}
+        @keyframes packReveal{0%{transform:scale(0) rotate(-180deg);opacity:0}50%{transform:scale(1.2) rotate(10deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+        .pack-rarity-text{font-size:1.75rem;font-weight:800;margin-top:1rem}
+        .empty-state{text-align:center;padding:3rem;color:var(--text-muted)}
+        .empty-icon{font-size:3rem;opacity:0.3;margin-bottom:0.5rem}
+        .transaction-item{display:flex;justify-content:space-between;align-items:center;padding:1rem;background:rgba(37,99,235,0.05);border:1px solid var(--border);border-radius:12px;margin-bottom:0.75rem}
+        .chances-table{width:100%;border-collapse:collapse;margin-top:1rem}
+        .chances-table th,.chances-table td{padding:0.6rem;text-align:left;border-bottom:1px solid var(--border)}
+        .chances-table th{color:var(--gold)}
+        .rarity-section{margin-bottom:1rem}
+        .rarity-section-header{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;padding-bottom:0.25rem;border-bottom:1px solid var(--border)}
+        .pack-contents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(50px,1fr));gap:0.4rem;padding:0.5rem;background:rgba(15,23,42,0.5);border-radius:8px}
+        .pack-emoji-item{text-align:center;padding:0.4rem;border-radius:6px;font-size:1.3rem}
+        @media(max-width:768px){.logo-text{font-size:1.75rem}.balance-amount{font-size:2.5rem}.plinko-board{width:300px;height:340px}.roulette-container{width:220px;height:220px}}
     </style>
 </head>
 <body>
-    <div class="interactive-bg">
-        <div class="grid-layer"></div>
-        <div class="particle-container" id="particleContainer"></div>
-    </div>
-
-    <div class="glow-system" id="glowSystem">
-        <div class="glow-orb orb-primary" id="glowOrb1"></div>
-        <div class="glow-orb orb-secondary" id="glowOrb2"></div>
-    </div>
-
     <div class="app-container">
-        <!-- Auth Screen -->
+        <!-- AUTH -->
         <div id="authScreen">
-            <div style="max-width: 500px; margin: 0 auto;">
-                <div class="logo-container">
-                    <div class="logo-icon">🏛️</div>
-                    <span class="logo-text">Lintoria</span>
-                    <span class="logo-badge">V4.02</span>
-                </div>
-
-                <div class="disclaimer-banner">
-                    <strong>⚠️ DISCLAIMER:</strong> Lintoria Hub is a <strong>virtual economy simulation game</strong> using fictional currency only. 
-                    No real money is involved. This application holds <strong>no responsibility</strong> for any misuse, including but not limited to 
-                    playing during school, work, or other inappropriate times. By using this application, you acknowledge that this is purely for 
-                    entertainment purposes. <strong>Gamble responsibly - even with fake money!</strong>
-                </div>
-
+            <div style="max-width:450px;margin:0 auto">
+                <div class="logo-container"><div class="logo-icon">🏛️</div><span class="logo-text">Lintoria Hub</span></div>
+                <div class="disclaimer"><strong>⚠️ DISCLAIMER:</strong> Virtual economy simulation. No real money. For entertainment only!</div>
                 <div class="glass-card">
-                    <div id="authTabs">
-                        <div class="tab-container" style="margin-bottom: 2rem;">
-                            <button class="tab-btn active" onclick="switchAuthTab('login')">
-                                <span class="tab-icon">🔐</span>Login
-                            </button>
-                            <button class="tab-btn" onclick="switchAuthTab('register')">
-                                <span class="tab-icon">✨</span>Register
-                            </button>
-                        </div>
-
-                        <div id="loginTab">
-                            <div class="form-group">
-                                <label class="form-label">Email Address</label>
-                                <input type="email" id="loginEmail" class="form-input" placeholder="Enter your email">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Password</label>
-                                <input type="password" id="loginPassword" class="form-input" placeholder="Enter your password">
-                            </div>
-                            <button class="btn" onclick="login()" style="width: 100%;">Sign In</button>
-                        </div>
-
-                        <div id="registerTab" class="hidden">
-                            <div class="form-group">
-                                <label class="form-label">Email Address</label>
-                                <input type="email" id="registerEmail" class="form-input" placeholder="Your email">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" id="registerName" class="form-input" placeholder="Your full name">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Password</label>
-                                <input type="password" id="registerPassword" class="form-input" placeholder="Choose a password">
-                            </div>
-                            <button class="btn btn-success" onclick="register()" style="width: 100%;">Create Account</button>
-                        </div>
+                    <div class="tab-container" style="margin-bottom:1.5rem">
+                        <button class="tab-btn active" onclick="switchAuthTab('login')">🔐 Login</button>
+                        <button class="tab-btn" onclick="switchAuthTab('register')">✨ Register</button>
+                    </div>
+                    <div id="loginTab">
+                        <div class="form-group"><label class="form-label">Email</label><input type="email" id="loginEmail" class="form-input" placeholder="email@example.com"></div>
+                        <div class="form-group"><label class="form-label">Password</label><input type="password" id="loginPassword" class="form-input" placeholder="Password"></div>
+                        <button class="btn" onclick="login()" style="width:100%">Sign In</button>
+                    </div>
+                    <div id="registerTab" class="hidden">
+                        <div class="form-group"><label class="form-label">Email</label><input type="email" id="registerEmail" class="form-input"></div>
+                        <div class="form-group"><label class="form-label">Name</label><input type="text" id="registerName" class="form-input"></div>
+                        <div class="form-group"><label class="form-label">Password</label><input type="password" id="registerPassword" class="form-input"></div>
+                        <button class="btn btn-success" onclick="register()" style="width:100%">Create Account</button>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Main App -->
+        <!-- MAIN APP -->
         <div id="appScreen" class="hidden">
-            <div class="disclaimer-banner">
-                <strong>⚠️ REMINDER:</strong> This is a <strong>virtual simulation</strong> with <strong>no real money</strong>. 
-                For entertainment only. Play responsibly!
+            <div class="disclaimer"><strong>⚠️</strong> Virtual simulation - No real money!</div>
+            <div class="glass-card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+                <div class="logo-container" style="margin:0"><div class="logo-icon">🏛️</div><div><div class="logo-text" style="font-size:1.75rem">Lintoria</div><div style="color:var(--text-muted);font-size:0.8rem">Welcome, <span id="userName" style="color:var(--gold);font-weight:700"></span></div></div></div>
+                <div style="display:flex;gap:0.5rem"><button class="btn btn-sm" onclick="showSettingsModal()">⚙️</button><button class="btn btn-danger btn-sm" onclick="logout()">Logout</button></div>
             </div>
-
-            <!-- Header -->
-            <div class="glass-card" style="margin-bottom: 2rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                    <div class="logo-container" style="margin-bottom: 0;">
-                        <div class="logo-icon">🏛️</div>
-                        <div>
-                            <div class="logo-text">Lintoria Hub</div>
-                            <div style="color: var(--text-muted); font-size: 0.875rem;">
-                                Welcome, <span id="userName" style="color: var(--gold); font-weight: 700;"></span>
-                                <span id="masterBadge" class="hidden" style="margin-left: 0.5rem; color: var(--gold);">⚡ Admin</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button class="btn btn-sm" onclick="showSettingsModal()">⚙️ Settings</button>
-                        <button class="btn btn-danger btn-sm" onclick="logout()">Logout</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navigation -->
             <div class="tab-container">
-                <div class="tab-section" data-label="Core">
-                    <button class="tab-btn active" onclick="switchTab('dashboard')"><span class="tab-icon">🏦</span>Bank</button>
-                    <button class="tab-btn" onclick="switchTab('transfer')"><span class="tab-icon">💸</span>Transfer</button>
-                    <button class="tab-btn" onclick="switchTab('loans')"><span class="tab-icon">🏧</span>Loans</button>
-                    <button class="tab-btn" onclick="switchTab('stocks')"><span class="tab-icon">📈</span>Stocks</button>
-                    <button class="tab-btn" onclick="switchTab('portfolio')"><span class="tab-icon">💼</span>Portfolio</button>
-                </div>
-
-                <div class="tab-section" data-label="Collection">
-                    <button class="tab-btn" onclick="switchTab('packs')"><span class="tab-icon">🎁</span>Packs</button>
-                    <button class="tab-btn" onclick="switchTab('collection')"><span class="tab-icon">🎒</span>Collection</button>
-                </div>
-
-                <div class="tab-section" data-label="Services">
-                    <button class="tab-btn" onclick="switchTab('passport')"><span class="tab-icon">🛂</span>Passport</button>
-                    <button class="tab-btn" onclick="switchTab('travel')"><span class="tab-icon">✈️</span>Travel</button>
-                </div>
-
-                <div class="tab-section" data-label="Entertainment">
-                    <button class="tab-btn" onclick="switchTab('casino')"><span class="tab-icon">🎰</span>Casino</button>
-                    <button class="tab-btn" onclick="switchTab('chat')"><span class="tab-icon">💬</span>Chat</button>
-                    <button class="tab-btn" onclick="switchTab('leaderboard')"><span class="tab-icon">🏆</span>Leaders</button>
-                </div>
-
-                <div class="tab-section hidden" id="adminSection" data-label="Admin">
-                    <button class="tab-btn" onclick="switchTab('admin')"><span class="tab-icon">👑</span>Control</button>
-                </div>
+                <button class="tab-btn active" onclick="switchTab('dashboard')">🏦 Bank</button>
+                <button class="tab-btn" onclick="switchTab('transfer')">💸 Transfer</button>
+                <button class="tab-btn" onclick="switchTab('packs')">🎁 Packs</button>
+                <button class="tab-btn" onclick="switchTab('collection')">🎒 Collection</button>
+                <button class="tab-btn" onclick="switchTab('casino')">🎰 Casino</button>
+                <button class="tab-btn" onclick="switchTab('leaderboard')">🏆 Leaders</button>
             </div>
-
-            <!-- Dashboard -->
+            <!-- DASHBOARD -->
             <div id="dashboardContent" class="tab-content">
-                <div class="balance-card">
-                    <div class="balance-label">Total Balance</div>
-                    <div class="balance-amount">$<span id="balanceAmount">0.00</span></div>
-                </div>
-
+                <div class="balance-card"><div class="balance-label">Total Balance</div><div class="balance-amount">$<span id="balanceAmount">0</span></div></div>
                 <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="creditScoreDisplay">650</div>
-                        <div class="stat-label">Credit Score</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="activeLoansDisplay">0</div>
-                        <div class="stat-label">Active Loans</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalDebtDisplay">$0</div>
-                        <div class="stat-label">Total Debt</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="emojiScoreDisplay">0</div>
-                        <div class="stat-label">Emoji Score</div>
-                    </div>
-                </div>
-
-                <div class="glass-card">
-                    <div class="section-header">
-                        <h2>📊 Recent Transactions</h2>
-                        <span class="badge" id="transactionCount">0 transactions</span>
-                    </div>
-                    <div id="transactionList">
-                        <div class="empty-state">
-                            <div class="empty-icon">💰</div>
-                            <p>No transactions yet</p>
-                        </div>
-                    </div>
+                    <div class="stat-card"><div class="stat-value" id="creditScoreDisplay">650</div><div class="stat-label">Credit Score</div></div>
+                    <div class="stat-card"><div class="stat-value" id="emojiScoreDisplay">0</div><div class="stat-label">Emoji Score</div></div>
                 </div>
             </div>
-
-            <!-- Transfer -->
+            <!-- TRANSFER -->
             <div id="transferContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">💸 Send Money</h2>
-                    <div class="form-group">
-                        <label class="form-label">Recipient Email</label>
-                        <input type="email" id="recipientEmail" class="form-input" placeholder="recipient@example.com">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Amount ($)</label>
-                        <input type="number" id="transferAmount" class="form-input" placeholder="0.00" step="0.01" min="0.01">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Note (Optional)</label>
-                        <input type="text" id="transferNote" class="form-input" placeholder="What's this for?">
-                    </div>
-                    <button class="btn btn-success" onclick="transferMoney()" style="width: 100%;">Send Money</button>
+                    <h2 style="color:var(--gold);margin-bottom:1rem">💸 Send Money</h2>
+                    <div class="form-group"><label class="form-label">Recipient Email</label><input type="email" id="recipientEmail" class="form-input"></div>
+                    <div class="form-group"><label class="form-label">Amount ($)</label><input type="number" id="transferAmount" class="form-input" min="0.01" step="0.01"></div>
+                    <div class="form-group"><label class="form-label">Note</label><input type="text" id="transferNote" class="form-input"></div>
+                    <button class="btn btn-success" onclick="transferMoney()" style="width:100%">Send</button>
                 </div>
             </div>
-
-            <!-- Loans -->
-            <div id="loansContent" class="tab-content hidden">
-                <div class="credit-score-container">
-                    <div class="credit-gauge">
-                        <div class="credit-gauge-bg"></div>
-                        <div class="credit-gauge-needle" id="creditNeedle"></div>
-                        <div class="credit-gauge-center"></div>
-                    </div>
-                    <div class="credit-score-value" id="creditScoreMain">650</div>
-                    <div class="credit-score-label" id="creditScoreLabel">Fair</div>
-                    <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.875rem;">
-                        Your credit score affects loan approval and interest rates
-                    </p>
-                </div>
-
-                <div class="glass-card">
-                    <div class="section-header">
-                        <h2>📝 Apply for a Loan</h2>
-                    </div>
-                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
-                        Select a loan type below. Interest rates depend on your credit score.
-                    </p>
-                    <div class="service-grid" id="loanTypes">
-                        <div class="loan-type-card" onclick="selectLoanType('personal')" id="loanType_personal">
-                            <div class="loan-type-icon">💼</div>
-                            <h3 style="color: var(--gold);">Personal Loan</h3>
-                            <p style="color: var(--text-muted); font-size: 0.875rem;">$1,000 - $50,000</p>
-                            <p style="color: var(--success); font-size: 0.875rem; margin-top: 0.5rem;">Best rates!</p>
-                        </div>
-                        <div class="loan-type-card" onclick="selectLoanType('emergency')" id="loanType_emergency">
-                            <div class="loan-type-icon">🚨</div>
-                            <h3 style="color: var(--gold);">Emergency Loan</h3>
-                            <p style="color: var(--text-muted); font-size: 0.875rem;">$500 - $10,000</p>
-                            <p style="color: var(--warning); font-size: 0.875rem; margin-top: 0.5rem;">Quick approval</p>
-                        </div>
-                        <div class="loan-type-card" onclick="selectLoanType('payday')" id="loanType_payday">
-                            <div class="loan-type-icon">💵</div>
-                            <h3 style="color: var(--gold);">Payday Loan</h3>
-                            <p style="color: var(--text-muted); font-size: 0.875rem;">$100 - $2,000</p>
-                            <p style="color: var(--danger); font-size: 0.875rem; margin-top: 0.5rem;">High interest!</p>
-                        </div>
-                    </div>
-
-                    <div id="loanApplicationForm" class="hidden" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
-                        <h3 style="color: var(--gold); margin-bottom: 1rem;">Loan Application - <span id="selectedLoanType">Personal</span></h3>
-                        <div class="form-group">
-                            <label class="form-label">Loan Amount ($)</label>
-                            <input type="number" id="loanAmount" class="form-input" placeholder="Enter amount" min="100" oninput="updateLoanPreview()">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Repayment Term</label>
-                            <select id="loanTerm" class="form-input" onchange="updateLoanPreview()">
-                                <option value="30" selected>30 Days</option>
-                                <option value="60">60 Days</option>
-                                <option value="90">90 Days</option>
-                            </select>
-                        </div>
-                        <div style="background: rgba(15, 23, 42, 0.6); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
-                            <h4 style="color: var(--gold); margin-bottom: 0.5rem;">Loan Preview</h4>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.875rem;">
-                                <span style="color: var(--text-muted);">Interest Rate:</span>
-                                <span id="previewInterestRate" style="color: var(--gold);">12%</span>
-                                <span style="color: var(--text-muted);">Interest Amount:</span>
-                                <span id="previewInterestAmount">$0</span>
-                                <span style="color: var(--text-muted);">Total Repayment:</span>
-                                <span id="previewTotalRepayment" style="color: var(--danger); font-weight: 700;">$0</span>
-                            </div>
-                        </div>
-                        <button class="btn btn-success" onclick="applyForLoan()" style="width: 100%;">Apply for Loan</button>
-                    </div>
-                </div>
-
-                <div class="glass-card" style="margin-top: 2rem;">
-                    <div class="section-header">
-                        <h2>📋 Your Active Loans</h2>
-                    </div>
-                    <div id="activeLoans">
-                        <div class="empty-state">
-                            <div class="empty-icon">💸</div>
-                            <p>No active loans</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Stocks -->
-            <div id="stocksContent" class="tab-content hidden">
-                <div class="tax-info">
-                    ⚠️ <strong>Stock Market Tax:</strong> 5% tax on all buy/sell transactions.
-                </div>
-                <div class="glass-card">
-                    <div class="section-header">
-                        <h2>📈 Available Stocks</h2>
-                        <button class="btn btn-sm" onclick="loadStocks()">Refresh</button>
-                    </div>
-                    <div id="stocksList">
-                        <div class="empty-state"><div class="empty-icon">📈</div><p>Loading...</p></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Portfolio -->
-            <div id="portfolioContent" class="tab-content hidden">
-                <div class="glass-card">
-                    <div class="section-header"><h2>💼 Your Portfolio</h2></div>
-                    <div id="portfolioList">
-                        <div class="empty-state"><div class="empty-icon">💼</div><p>No stocks owned</p></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Emoji Packs -->
+            <!-- PACKS -->
             <div id="packsContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <div class="section-header">
-                        <h2>🎁 Emoji Packs</h2>
-                        <button class="btn btn-sm" onclick="showChancesModal()">📊 View Chances</button>
+                    <div class="section-header"><h2>🎁 Emoji Packs (20 Unique!)</h2><button class="btn btn-sm" onclick="showChancesModal()">📊 Chances</button></div>
+                    <div style="background:rgba(37,99,235,0.1);border-radius:10px;padding:1rem;margin-bottom:1rem;text-align:center">
+                        <p style="font-size:1.25rem;color:var(--gold);font-weight:700">$7,500 per pack</p>
                     </div>
-                    
-                    <div style="background: rgba(37, 99, 235, 0.1); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
-                        <p style="font-size: 1.25rem; color: var(--gold); font-weight: 700;">$7,500 per pack</p>
-                        <p style="font-size: 0.875rem; color: var(--text-muted);">Select a pack below, then click "Open Pack" to reveal your emoji!</p>
-                    </div>
-
                     <div class="service-grid" id="packsList"></div>
-                    
-                    <!-- BUY PACK BUTTON -->
-                    <div style="margin-top: 2rem; text-align: center;">
-                        <button class="btn btn-success" onclick="buyPack()" id="buyPackBtn" style="font-size: 1.25rem; padding: 1.5rem 3rem;" disabled>
-                            🎁 Open Pack ($7,500)
-                        </button>
-                        <p id="selectedPackName" style="color: var(--text-muted); margin-top: 1rem;">Select a pack above</p>
+                    <div style="margin-top:1.5rem;text-align:center">
+                        <button class="btn btn-success" onclick="buyPack()" id="buyPackBtn" style="font-size:1.1rem;padding:1.25rem 2.5rem" disabled>🎁 Open Pack</button>
+                        <p id="selectedPackName" style="color:var(--text-muted);margin-top:0.75rem">Select a pack</p>
+                        <button class="btn btn-sm" onclick="showPackContentsModal()" id="viewPackBtn" style="margin-top:0.5rem" disabled>👁️ View Contents</button>
                     </div>
                 </div>
             </div>
-
-            <!-- Collection -->
+            <!-- COLLECTION -->
             <div id="collectionContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <div class="section-header">
-                        <h2>🎒 Your Emoji Collection</h2>
-                        <span class="badge" id="emojiScore">0 pts</span>
-                    </div>
-                    <div id="emojiCollection">
-                        <div class="empty-state"><div class="empty-icon">🎒</div><p>No emojis yet</p></div>
-                    </div>
+                    <div class="section-header"><h2>🎒 Your Collection</h2><span style="color:var(--gold)" id="emojiScore">0 pts</span></div>
+                    <div id="emojiCollection"><div class="empty-state"><div class="empty-icon">🎒</div><p>No emojis yet</p></div></div>
                 </div>
             </div>
-
-            <!-- Passport -->
-            <div id="passportContent" class="tab-content hidden">
-                <div class="glass-card">
-                    <div class="section-header"><h2>🛂 Passport Services</h2></div>
-                    <div id="passportInfo"></div>
-                    <button class="btn" onclick="applyPassport()" style="margin-top: 1rem;" id="applyPassportBtn">Apply for Passport ($500)</button>
-                    
-                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--gold);">🌍 Your Visas</h3>
-                    <div id="visasList"><p style="color: var(--text-muted);">No visas yet</p></div>
-                </div>
-            </div>
-
-            <!-- Travel -->
-            <div id="travelContent" class="tab-content hidden">
-                <div class="glass-card">
-                    <div class="section-header"><h2>🌍 Destinations</h2></div>
-                    <div class="service-grid" id="citiesList">
-                        <div class="empty-state"><p>No cities available</p></div>
-                    </div>
-                </div>
-
-                <div class="glass-card" style="margin-top: 2rem;">
-                    <div class="section-header"><h2>✈️ Flights</h2></div>
-                    <div id="flightsList"><div class="empty-state"><p>No flights</p></div></div>
-                </div>
-            </div>
-
-            <!-- Casino -->
+            <!-- CASINO -->
             <div id="casinoContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <h2 style="margin-bottom: 0.5rem; font-weight: 700; color: var(--gold);">🎰 Lintoria Casino</h2>
-                    <p style="color: var(--danger); margin-bottom: 1rem; font-weight: 600;">⚠️ House always wins! 40-60 odds in favor of the house.</p>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-                        
-                        <!-- Dice -->
+                    <h2 style="color:var(--gold);margin-bottom:0.5rem">🎰 Casino</h2>
+                    <p style="color:var(--danger);margin-bottom:1rem;font-size:0.875rem">⚠️ House edge: 40-60%</p>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem">
+                        <!-- PLINKO -->
                         <div class="casino-game">
-                            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">🎲 Dice Roll</h3>
-                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">40% chance to win 1.9x</p>
-                            <div class="dice-container">
-                                <div class="dice" id="dice">
-                                    <div class="dice-face front">⚀</div>
-                                    <div class="dice-face back">⚅</div>
-                                    <div class="dice-face right">⚂</div>
-                                    <div class="dice-face left">⚃</div>
-                                    <div class="dice-face top">⚁</div>
-                                    <div class="dice-face bottom">⚄</div>
-                                </div>
-                            </div>
-                            <input type="number" id="diceBet" class="form-input" placeholder="Bet amount" min="1" style="margin: 1rem 0;">
-                            <button class="btn" onclick="playDice()" id="diceBtn" style="width: 100%;">Roll Dice</button>
-                            <div id="diceResult" style="margin-top: 1rem; font-weight: 700; text-align: center; min-height: 30px;"></div>
+                            <h3>📍 Plinko</h3>
+                            <p style="color:var(--text-muted);font-size:0.75rem;margin-bottom:0.5rem">Drop the ball! Win up to 100x!</p>
+                            <div class="plinko-container"><div class="plinko-board" id="plinkoBoard"></div></div>
+                            <input type="number" id="plinkoBet" class="form-input" placeholder="Bet amount" min="1" style="margin:0.75rem 0">
+                            <button class="btn btn-success" onclick="playPlinko()" id="plinkoBtn" style="width:100%">Drop Ball!</button>
+                            <div class="result" id="plinkoResult"></div>
                         </div>
-
-                        <!-- Slots -->
+                        <!-- ROULETTE -->
                         <div class="casino-game">
-                            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">🎰 Slot Machine</h3>
-                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">Match symbols! Up to 25x jackpot!</p>
-                            <div class="slots-machine">
-                                <div class="slots-display">
-                                    <div class="slot-reel" id="reel1"><span class="slot-symbol">🎰</span></div>
-                                    <div class="slot-reel" id="reel2"><span class="slot-symbol">🎰</span></div>
-                                    <div class="slot-reel" id="reel3"><span class="slot-symbol">🎰</span></div>
-                                </div>
+                            <h3>🎡 Roulette</h3>
+                            <p style="color:var(--text-muted);font-size:0.75rem;margin-bottom:0.5rem">Red/Black 1.8x, Green 14x!</p>
+                            <div class="roulette-container">
+                                <div class="roulette-pointer"></div>
+                                <div class="roulette-wheel" id="rouletteWheel"></div>
+                                <div class="roulette-center">🎰</div>
                             </div>
-                            <input type="number" id="slotsBet" class="form-input" placeholder="Bet amount" min="1" style="margin: 1rem 0;">
-                            <button class="btn btn-success" onclick="playSlots()" id="slotsBtn" style="width: 100%;">Spin!</button>
-                            <div id="slotsResult" style="margin-top: 1rem; font-weight: 700; text-align: center; min-height: 30px;"></div>
+                            <div class="roulette-bet-options">
+                                <button class="roulette-bet-btn red" onclick="selectRouletteBet('red')" id="betRed">🔴 Red</button>
+                                <button class="roulette-bet-btn black" onclick="selectRouletteBet('black')" id="betBlack">⚫ Black</button>
+                                <button class="roulette-bet-btn green" onclick="selectRouletteBet('green')" id="betGreen">🟢 Green</button>
+                            </div>
+                            <input type="number" id="rouletteBet" class="form-input" placeholder="Bet amount" min="1" style="margin:0.5rem 0">
+                            <button class="btn" onclick="playRoulette()" id="rouletteBtn" style="width:100%" disabled>Spin!</button>
+                            <div class="result" id="rouletteResult"></div>
                         </div>
-
-                        <!-- Coin Flip -->
+                        <!-- DICE -->
                         <div class="casino-game">
-                            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">🪙 Coin Flip</h3>
-                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">40% chance to win 1.9x</p>
-                            <div style="font-size: 4rem; text-align: center; margin: 1rem 0;" id="coinDisplay">🪙</div>
-                            <input type="number" id="coinBet" class="form-input" placeholder="Bet amount" min="1" style="margin: 1rem 0;">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
-                                <button class="btn" onclick="playCoinFlip('heads')" id="headsBtn">Heads</button>
-                                <button class="btn btn-success" onclick="playCoinFlip('tails')" id="tailsBtn">Tails</button>
-                            </div>
-                            <div id="coinResult" style="margin-top: 1rem; font-weight: 700; text-align: center; min-height: 30px;"></div>
+                            <h3>🎲 Dice</h3>
+                            <p style="color:var(--text-muted);font-size:0.75rem;margin-bottom:0.5rem">Roll 4-6 to win 1.9x!</p>
+                            <div class="dice-container"><div class="dice" id="dice"><div class="dice-face front">⚀</div><div class="dice-face back">⚅</div><div class="dice-face right">⚂</div><div class="dice-face left">⚃</div><div class="dice-face top">⚁</div><div class="dice-face bottom">⚄</div></div></div>
+                            <input type="number" id="diceBet" class="form-input" placeholder="Bet amount" min="1" style="margin:0.75rem 0">
+                            <button class="btn" onclick="playDice()" id="diceBtn" style="width:100%">Roll!</button>
+                            <div class="result" id="diceResult"></div>
                         </div>
-
+                        <!-- SLOTS -->
+                        <div class="casino-game">
+                            <h3>🎰 Slots</h3>
+                            <p style="color:var(--text-muted);font-size:0.75rem;margin-bottom:0.5rem">Match 3 for up to 25x!</p>
+                            <div class="slots-machine"><div class="slots-display"><div class="slot-reel" id="reel1"><span class="slot-symbol">🎰</span></div><div class="slot-reel" id="reel2"><span class="slot-symbol">🎰</span></div><div class="slot-reel" id="reel3"><span class="slot-symbol">🎰</span></div></div></div>
+                            <input type="number" id="slotsBet" class="form-input" placeholder="Bet amount" min="1" style="margin:0.75rem 0">
+                            <button class="btn btn-success" onclick="playSlots()" id="slotsBtn" style="width:100%">Spin!</button>
+                            <div class="result" id="slotsResult"></div>
+                        </div>
+                        <!-- COIN -->
+                        <div class="casino-game">
+                            <h3>🪙 Coin Flip</h3>
+                            <p style="color:var(--text-muted);font-size:0.75rem;margin-bottom:0.5rem">45% to win 1.9x!</p>
+                            <div style="perspective:300px"><div class="coin" id="coin"><div class="coin-face coin-heads">👑</div><div class="coin-face coin-tails">🦅</div></div></div>
+                            <input type="number" id="coinBet" class="form-input" placeholder="Bet amount" min="1" style="margin:0.75rem 0">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem">
+                                <button class="btn" onclick="playCoinFlip('heads')" id="headsBtn">👑 Heads</button>
+                                <button class="btn btn-success" onclick="playCoinFlip('tails')" id="tailsBtn">🦅 Tails</button>
+                            </div>
+                            <div class="result" id="coinResult"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Chat -->
-            <div id="chatContent" class="tab-content hidden">
-                <div class="glass-card">
-                    <div class="section-header">
-                        <h2>💬 Public Chat</h2>
-                        <button class="btn btn-sm" onclick="loadChat()">Refresh</button>
-                    </div>
-                    <div class="chat-container" id="chatMessages">
-                        <div class="empty-state"><p>Loading...</p></div>
-                    </div>
-                    <div class="chat-input-container">
-                        <input type="text" id="chatInput" class="form-input" placeholder="Type a message..." maxlength="500" style="flex: 1;" onkeypress="if(event.key==='Enter')sendChat()">
-                        <button class="btn btn-success" onclick="sendChat()">Send</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Leaderboard -->
+            <!-- LEADERBOARD -->
             <div id="leaderboardContent" class="tab-content hidden">
-                <div class="glass-card" style="margin-bottom: 2rem;">
-                    <div class="section-header"><h2>💰 Wealth Leaderboard</h2></div>
-                    <div id="wealthLeaderboard"><div class="empty-state"><p>Loading...</p></div></div>
-                </div>
-
-                <div class="glass-card" style="margin-bottom: 2rem;">
-                    <div class="section-header"><h2>📊 Credit Score Leaderboard</h2></div>
-                    <div id="creditLeaderboard"><div class="empty-state"><p>Loading...</p></div></div>
-                </div>
-
-                <div class="glass-card">
-                    <div class="section-header"><h2>🎯 Emoji Score Leaderboard</h2></div>
-                    <div id="emojiLeaderboard"><div class="empty-state"><p>Loading...</p></div></div>
-                </div>
-            </div>
-
-            <!-- Admin -->
-            <div id="adminContent" class="tab-content hidden">
-                <div class="glass-card">
-                    <div class="section-header">
-                        <h2>👑 Admin Panel</h2>
-                        <span class="badge" id="userCount">0 users</span>
-                    </div>
-                    <div id="adminUsersList"><div class="empty-state"><p>Loading...</p></div></div>
-                </div>
+                <div class="glass-card"><div class="section-header"><h2>💰 Wealth</h2></div><div id="wealthLeaderboard"><div class="empty-state"><p>Loading...</p></div></div></div>
             </div>
         </div>
     </div>
-
-    <!-- Toast -->
+    <!-- TOAST -->
     <div id="toast" class="toast"><div id="toastMessage"></div></div>
-
-    <!-- Chances Modal -->
+    <!-- MODALS -->
     <div class="modal-overlay" id="chancesModal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 style="color: var(--gold);">📊 Emoji Drop Chances</h2>
-                <button class="modal-close" onclick="closeChancesModal()">&times;</button>
-            </div>
-            <table class="chances-table">
-                <thead>
-                    <tr><th>Rarity</th><th>Chance</th><th>Points</th><th>Sell Price</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><span class="rarity-badge common">Common</span></td><td>50%</td><td>10 pts</td><td style="color: var(--danger);">$500</td></tr>
-                    <tr><td><span class="rarity-badge uncommon">Uncommon</span></td><td>30%</td><td>25 pts</td><td style="color: var(--danger);">$2,000</td></tr>
-                    <tr><td><span class="rarity-badge rare">Rare</span></td><td>12%</td><td>100 pts</td><td style="color: var(--success);">$10,000</td></tr>
-                    <tr><td><span class="rarity-badge epic">Epic</span></td><td>5%</td><td>500 pts</td><td style="color: var(--success);">$25,000</td></tr>
-                    <tr><td><span class="rarity-badge legendary">Legendary</span></td><td>2%</td><td>2,500 pts</td><td style="color: var(--success);">$75,000</td></tr>
-                    <tr><td><span class="rarity-badge mythic">Mythic</span></td><td>0.8%</td><td>10,000 pts</td><td style="color: var(--success);">$200,000</td></tr>
-                    <tr><td><span class="rarity-badge divine">Divine</span></td><td>0.2%</td><td>50,000 pts</td><td style="color: var(--success);">$500,000</td></tr>
-                </tbody>
-            </table>
+            <div class="modal-header"><h2 style="color:var(--gold)">📊 Drop Chances</h2><button class="modal-close" onclick="closeChancesModal()">×</button></div>
+            <table class="chances-table"><thead><tr><th>Rarity</th><th>Chance</th><th>Points</th><th>Sell</th></tr></thead><tbody>
+                <tr><td><span class="rarity-badge common">Common</span></td><td>50%</td><td>10</td><td>$500</td></tr>
+                <tr><td><span class="rarity-badge uncommon">Uncommon</span></td><td>30%</td><td>25</td><td>$2K</td></tr>
+                <tr><td><span class="rarity-badge rare">Rare</span></td><td>12%</td><td>100</td><td>$10K</td></tr>
+                <tr><td><span class="rarity-badge epic">Epic</span></td><td>5%</td><td>500</td><td>$25K</td></tr>
+                <tr><td><span class="rarity-badge legendary">Legendary</span></td><td>2%</td><td>2.5K</td><td>$75K</td></tr>
+                <tr><td><span class="rarity-badge mythic">Mythic</span></td><td>0.8%</td><td>10K</td><td>$200K</td></tr>
+                <tr><td><span class="rarity-badge divine">Divine</span></td><td>0.2%</td><td>50K</td><td>$500K</td></tr>
+            </tbody></table>
         </div>
     </div>
-
-    <!-- Settings Modal -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 style="color: var(--gold);">⚙️ Account Settings</h2>
-                <button class="modal-close" onclick="closeSettingsModal()">&times;</button>
-            </div>
-            <div class="reset-warning">
-                <h3 style="color: var(--danger); margin-bottom: 0.5rem;">🔄 Reset Account</h3>
-                <p style="font-size: 0.875rem; margin-bottom: 1rem;">Start fresh with a new balance of $100,000. This will erase ALL your data.</p>
-                <button class="btn btn-danger" onclick="confirmResetAccount()" style="width: 100%;">Reset My Account</button>
+            <div class="modal-header"><h2 style="color:var(--gold)">⚙️ Settings</h2><button class="modal-close" onclick="closeSettingsModal()">×</button></div>
+            <div style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:1rem">
+                <h3 style="color:var(--danger);margin-bottom:0.5rem">🔄 Reset Account</h3>
+                <p style="font-size:0.8rem;margin-bottom:1rem">Start fresh with $100,000</p>
+                <button class="btn btn-danger" onclick="confirmResetAccount()" style="width:100%">Reset</button>
             </div>
         </div>
     </div>
-
-    <!-- Pack Opening Modal -->
+    <div class="modal-overlay" id="packContentsModal">
+        <div class="modal-content">
+            <div class="modal-header"><h2 style="color:var(--gold)" id="packContentsTitle">Pack Contents</h2><button class="modal-close" onclick="closePackContentsModal()">×</button></div>
+            <div id="packContentsBody"></div>
+        </div>
+    </div>
     <div id="packOpeningModal" class="hidden"></div>
-
     <script>
-        // ============ CONFIGURATION ============
-        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyC_Hhtwp08H-pLrpdRJGQpQ-l5_Rt4gpgNN_cUoo3w7xDshwP3S0PPxDB9sJsLrbf8/exec';
-        const MASTER_ADMIN = 'sheepishlyroyal@gmail.com';
-        
-        // ============ STATE ============
+        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz3CPKFWGqeAZYTdhe0FcVZgDB7HDrouu7PynSB_99BRvpyMzXjzr3DtRENmBIf7ppoFA/exec';
         let currentUser = null;
         let selectedPack = null;
-        let currentLoanType = null;
+        let selectedRouletteBet = null;
 
-        // ============ PACK DATA (CLIENT-SIDE) ============
+        // 20 UNIQUE PACKS
         const THEMED_PACKS = {
-            nature: { name: '🌿 Nature Pack', emojis: { common: ['🌱','🌿','🍀','🌾','🌵','🌴','🌳','🌲','🍃','🍂','🍁','🪴','🌻','🌼','🌸','🌺','🌷','🌹','💐','🪻'], uncommon: ['🍄','🪸','🪵','🪨','🌊','💧','🔥','🌬️','☀️','🌤️','⛅','🌥️','☁️','🌦️','🌧️','⛈️','🌩️','🌨️','❄️','☃️'], rare: ['🌈','🌅','🌄','🌇','🌆','🏞️','🏔️','⛰️','🌋','🗻','🏝️','🏖️','🌌','🪷','🪹','🪺'], epic: ['🦋','🐝','🐞','🦗','🪲','🪳','🦟','🪰','🐛','🐌','🐚','🕷️','🕸️','🦂','🦎','🐍'], legendary: ['🐉','🦕','🦖','🦤','🦩','🦚','🦜','🦢','🦅','🦆','🐦‍🔥'], mythic: ['🌍','🌎','🌏','🪐','🌙','⭐','🌟','✨'], divine: ['🔮','💎','👑'] }},
-            space: { name: '🚀 Space Pack', emojis: { common: ['⭐','✨','💫','🌟','✴️','🔸','🔹','🔶','🔷','⚪','⚫','🟤','🔴','🟠','🟡','🟢','🔵','🟣','🟥','🟧'], uncommon: ['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘','🌙','🌚','🌛','🌜','🌝','🌞','☀️','🌤️','⛅','🌥️','☁️','🌦️'], rare: ['🪐','☄️','💥','🌊','🌈','⚡','🔥','💧','🌬️','🌀','🌪️','🌫️','🌁','🌃','🌉','🎆'], epic: ['🛸','🚀','🛰️','🔭','📡','🛩️','✈️','🚁','🛶','⛵','🚤','🛥️','🛳️','⛴️','🚢','🚂'], legendary: ['👽','👾','🤖','🛸','🌌','🌠','☄️','🪐'], mythic: ['🌍','🌎','🌏','🌐','🗺️','🧭'], divine: ['🔱','⚜️','💠'] }},
-            diamonds: { name: '💎 Diamonds Pack', emojis: { common: ['💠','🔷','🔹','🔵','🟦','🔶','🔸','🟠','🟧','🔴','🟥','🟡','🟨','🟢','🟩','🟣','🟪','⚪','⬜','🔘'], uncommon: ['💍','📿','👑','👒','🎩','🧢','⛑️','🪖','💄','💋','👛','👜','👝','🎒','🧳','👓','🕶️','🥽','🌂','☂️'], rare: ['💎','💍','👑','🏆','🥇','🥈','🥉','🏅','🎖️','🎗️','🎫','🎟️','🎪','🎠','🎡','🎢'], epic: ['🪙','💰','💵','💴','💶','💷','💸','💳','🧾','💹','📈','📉','📊','🏦','🏧','💱'], legendary: ['💎','👑','🏆','🥇','💍','📿','🔮','🪬'], mythic: ['🌟','⭐','✨','💫','☄️','🔥'], divine: ['👑','💎','🔱'] }},
-            animals: { name: '🐾 Animals Pack', emojis: { common: ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🙈','🙉','🙊','🐒','🐔'], uncommon: ['🐧','🐦','🐤','🐣','🐥','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐝','🐛','🦋','🐌','🐞','🐜','🦟'], rare: ['🦗','🪲','🪳','🦂','🐢','🐍','🦎','🦖','🦕','🐙','🦑','🦐','🦞','🦀','🐡','🐠'], epic: ['🐟','🐬','🐳','🐋','🦈','🐊','🐅','🐆','🦓','🦍','🦧','🐘','🦛','🦏','🐪','🐫'], legendary: ['🦒','🦘','🦬','🐃','🐂','🐄','🐎','🐖','🐏','🐑','🦙','🐐','🦌','🐕','🐩'], mythic: ['🦮','🐕‍🦺','🐈','🐈‍⬛','🪶','🐓','🦃','🦤','🦚','🦜','🦢','🦩','🕊️','🐇','🦝'], divine: ['🐉','🦄','🐦‍🔥'] }},
-            food: { name: '🍕 Food Pack', emojis: { common: ['🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🥦'], uncommon: ['🥬','🥒','🌶️','🫑','🌽','🥕','🫒','🧄','🧅','🥔','🍠','🥐','🥯','🍞','🥖','🥨','🧀','🥚','🍳','🧈'], rare: ['🥞','🧇','🥓','🥩','🍗','🍖','🦴','🌭','🍔','🍟','🍕','🫓','🥪','🥙','🧆','🌮','🌯','🫔','🥗','🥘'], epic: ['🫕','🍝','🍜','🍲','🍛','🍣','🍱','🥟','🦪','🍤','🍙','🍚','🍘','🍥','🥠','🥮','🍢','🍡','🍧','🍨'], legendary: ['🍦','🥧','🧁','🍰','🎂','🍮','🍭','🍬','🍫','🍿','🍩','🍪','🌰','🥜','🍯','🥛','🍼','🫖','☕','🍵'], mythic: ['🧃','🥤','🧋','🍶','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🧉','🍾','🧊'], divine: ['🍾','🥂','🏆'] }}
+            nature: { name: '🌿 Nature', emojis: { common: ['🌱','🌿','🍀','🌾','🌵','🌴','🌳','🌲','🍃','🍂','🍁','🪴','🌻','🌼','🌸','🌺','🌷','🌹','💐','🪻'], uncommon: ['🍄','🪸','🪵','🪨','🌊','💧','🔥','🌬️','☀️','🌤️'], rare: ['🌈','🌅','🌄','🌇','🏞️','🏔️','🌋','🗻','🏝️','🏖️'], epic: ['🦋','🐝','🐞','🦗','🪲','🐛','🐌','🐚','🕷️','🦂'], legendary: ['🐉','🦕','🦖','🦤','🦩','🦚','🦜','🦢'], mythic: ['🌍','🌎','🌏','🪐','🌙','⭐'], divine: ['🔮','💎','👑'] }},
+            space: { name: '🚀 Space', emojis: { common: ['⭐','✨','💫','🌟','✴️','🔸','🔹','🔶','🔷','⚪','⚫','🟤','🔴','🟠','🟡','🟢','🔵','🟣','🟥','🟧'], uncommon: ['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘','🌙','🌚'], rare: ['🪐','☄️','💥','🌊','🌈','⚡','🔥','💧','🌀','🌪️'], epic: ['🛸','🚀','🛰️','🔭','📡','🛩️','✈️','🚁','🛶','⛵'], legendary: ['👽','👾','🤖','🛸','🌌','🌠','☄️','🪐'], mythic: ['🌍','🌎','🌏','🌐','🗺️','🧭'], divine: ['🔱','⚜️','💠'] }},
+            ocean: { name: '🌊 Ocean', emojis: { common: ['🌊','💧','💦','🫧','🧊','❄️','💠','🔹','🔷','🟦','🐚','🪸','🪼','🦪','🧂','🌀','〰️','♒','🌐','💎'], uncommon: ['🐟','🐠','🐡','🦈','🐬','🐳','🐋','🦭','🦦','🦐'], rare: ['🐙','🦑','🦀','🦞','🦐','🐢','🐊','🦎','🐍','🦕'], epic: ['⚓','🚢','⛵','🚤','🛥️','🛳️','⛴️','🚀','🛶','🪝'], legendary: ['🧜‍♀️','🧜‍♂️','🔱','🌊','💎','🐚','🦑','🐙'], mythic: ['🏝️','🏖️','🌅','🌴','🗿','🏛️'], divine: ['🔱','👑','💎'] }},
+            fire: { name: '🔥 Fire', emojis: { common: ['🔥','🔴','🟠','🟡','❤️','🧡','💛','♨️','🌡️','☀️','🔸','🔶','💢','⭕','🎯','🔻','🔺','📛','🛑','⛔'], uncommon: ['🌋','💥','✨','⚡','🌟','💫','🎆','🎇','🧨','💣'], rare: ['🐉','🦖','🦊','🦁','🐯','🦅','🦂','🐍','🦎','🐲'], epic: ['🏍️','🚒','🚀','🛩️','✈️','🚁','⛽','🛢️','🔧','⚙️'], legendary: ['🔥','💀','👹','👺','😈','👿','🐉','🦴'], mythic: ['🌋','🌅','🌄','☀️','🌞','⚡'], divine: ['🔥','💎','👑'] }},
+            diamonds: { name: '💎 Diamonds', emojis: { common: ['💠','🔷','🔹','🔵','🟦','🔶','🔸','🟠','🟧','🔴','🟥','🟡','🟨','🟢','🟩','🟣','🟪','⚪','⬜','🔘'], uncommon: ['💍','📿','👑','👒','🎩','🧢','⛑️','🪖','💄','💋'], rare: ['💎','💍','👑','🏆','🥇','🥈','🥉','🏅','🎖️','🎗️'], epic: ['🪙','💰','💵','💴','💶','💷','💸','💳','🧾','💹'], legendary: ['💎','👑','🏆','🥇','💍','📿','🔮','🪬'], mythic: ['🌟','⭐','✨','💫','☄️','🔥'], divine: ['👑','💎','🔱'] }},
+            animals: { name: '🐾 Animals', emojis: { common: ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🙈','🙉','🙊','🐒','🐔'], uncommon: ['🐧','🐦','🐤','🐣','🐥','🦆','🦅','🦉','🦇','🐺'], rare: ['🐗','🐴','🦄','🐝','🐛','🦋','🐌','🐞','🐜','🦟'], epic: ['🦗','🪲','🦂','🐢','🐍','🦎','🦖','🦕','🐙','🦑'], legendary: ['🦒','🦘','🦬','🐃','🐂','🐄','🐎','🦌'], mythic: ['🦮','🐕‍🦺','🐈','🐈‍⬛','🐓','🦃','🦚','🦜'], divine: ['🐉','🦄','🐦‍🔥'] }},
+            food: { name: '🍕 Food', emojis: { common: ['🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🥦'], uncommon: ['🥬','🥒','🌶️','🫑','🌽','🥕','🧄','🧅','🥔','🍠'], rare: ['🥐','🥯','🍞','🥖','🥨','🧀','🥚','🍳','🧈','🥞'], epic: ['🧇','🥓','🥩','🍗','🍖','🌭','🍔','🍟','🍕','🥪'], legendary: ['🍦','🥧','🧁','🍰','🎂','🍮','🍭','🍬','🍫','🍿'], mythic: ['🍶','🍺','🍻','🥂','🍷','🥃','🍸','🍹'], divine: ['🍾','🥂','🏆'] }},
+            sports: { name: '⚽ Sports', emojis: { common: ['⚽','🏀','🏈','⚾','🥎','🎾','🏐','🏉','🥏','🎱','🪀','🏓','🏸','🏒','🏑','🥍','🏏','🪃','🥅','⛳'], uncommon: ['🎿','🛷','🥌','⛸️','🛹','🛼','🛶','🚣','🏊','🤽'], rare: ['🏆','🥇','🥈','🥉','🏅','🎖️','🏵️','🎗️','🎫','🎟️'], epic: ['🥊','🥋','🎯','🎳','🎰','🎲','♟️','🧩','🎮','🕹️'], legendary: ['🏆','👑','💪','🦾','🔥','⚡','💥','✨'], mythic: ['🏟️','🎪','🎭','🎬','🎤','🎧'], divine: ['🏆','👑','💎'] }},
+            music: { name: '🎵 Music', emojis: { common: ['🎵','🎶','🎼','♩','♪','♫','♬','🔊','🔉','🔈','🔇','📢','📣','📯','🔔','🔕','🎙️','🎚️','🎛️','🎤'], uncommon: ['🎧','📻','🎷','🎸','🎹','🎺','🎻','🪕','🪘','🪗'], rare: ['🥁','🪇','🎬','🎭','🎪','🎫','🎟️','🎠','🎡','🎢'], epic: ['📀','💿','📼','📹','📷','📸','🎥','🎞️','📽️','🎬'], legendary: ['🌟','⭐','✨','💫','🔥','💥','🎆','🎇'], mythic: ['🎭','🎬','🎤','🎧','🎼','🎹'], divine: ['👑','💎','🔱'] }},
+            tech: { name: '💻 Tech', emojis: { common: ['💻','🖥️','🖨️','⌨️','🖱️','🖲️','💽','💾','💿','📀','📱','📲','☎️','📞','📟','📠','🔋','🔌','💡','🔦'], uncommon: ['🕯️','🧯','🛢️','⚙️','🔧','🔩','🔨','⛏️','🛠️','⚒️'], rare: ['🔭','🔬','🧬','🧪','🧫','🧲','🌡️','📡','🛰️','🚀'], epic: ['🤖','👾','👽','🛸','💣','🧨','🪓','⚔️','🗡️','🔫'], legendary: ['🤖','👾','🛸','💫','⚡','🔥','💥','✨'], mythic: ['🌐','🔮','💎','🧿','🪬','✨'], divine: ['🔱','👑','💎'] }},
+            fantasy: { name: '🧙 Fantasy', emojis: { common: ['⭐','✨','💫','🌟','🔮','🧿','🪬','🎴','🀄','🎲','♠️','♣️','♥️','♦️','🃏','🎭','🪆','🪅','🎎','🎏'], uncommon: ['🧙','🧙‍♂️','🧙‍♀️','🧝','🧝‍♂️','🧝‍♀️','🧛','🧛‍♂️','🧛‍♀️','🧟'], rare: ['🧜','🧜‍♂️','🧜‍♀️','🧚','🧚‍♂️','🧚‍♀️','🧞','🧞‍♂️','🧞‍♀️','🧌'], epic: ['👹','👺','👻','💀','☠️','👽','👾','🤖','😈','👿'], legendary: ['🐉','🦄','🐦‍🔥','🧙','🔮','⚡','🔥','✨'], mythic: ['🏰','🗡️','⚔️','🛡️','👑','🏛️'], divine: ['🐉','🦄','👑'] }},
+            weather: { name: '🌤️ Weather', emojis: { common: ['☀️','🌤️','⛅','🌥️','☁️','🌦️','🌧️','⛈️','🌩️','🌨️','❄️','☃️','⛄','🌬️','💨','💧','💦','☔','🌂','🌈'], uncommon: ['🌪️','🌫️','🌊','🔥','⚡','✨','💫','🌟','⭐','🌙'], rare: ['🌡️','🧊','❄️','🏔️','🌋','🌅','🌄','🌇','🌆','🌃'], epic: ['☄️','💥','🔥','⚡','🌪️','🌊','🏔️','🌋','🌈','✨'], legendary: ['🌈','🌅','🌄','☀️','🌙','⭐','✨','💫'], mythic: ['🌍','🌎','🌏','🪐','🌌','🌠'], divine: ['🔱','👑','💎'] }},
+            love: { name: '💖 Love', emojis: { common: ['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝','💟','♥️'], uncommon: ['😍','🥰','😘','😻','💑','👩‍❤️‍👨','👨‍❤️‍👨','👩‍❤️‍👩','💏','👩‍❤️‍💋‍👨'], rare: ['🌹','🌷','🌸','🌺','💐','🎀','🎁','💍','💎','✨'], epic: ['💒','🏩','💌','🕊️','🦢','🐇','🐰','🦋','🌈','☀️'], legendary: ['💖','💘','💝','💕','💞','✨','🌟','💫'], mythic: ['💎','👑','🔮','✨','🌹','🌺'], divine: ['💖','👑','💎'] }},
+            spooky: { name: '👻 Spooky', emojis: { common: ['👻','💀','☠️','👽','👾','🎃','🕷️','🕸️','🦇','🌑','🌚','🌝','🌛','🌜','⚫','🖤','🔮','🪦','⚰️','🧟'], uncommon: ['👹','👺','😈','👿','🤡','💩','🧛','🧟‍♂️','🧟‍♀️','🧙'], rare: ['🔥','⚡','💥','✨','🌪️','🌫️','🌊','☄️','🌋','🏚️'], epic: ['⚔️','🗡️','🔪','🪓','💣','🧨','🪤','⛓️','🔗','🩸'], legendary: ['💀','👻','😈','🎃','🦇','🕷️','🔥','⚡'], mythic: ['🏰','🏚️','🌑','🌌','⚰️','🪦'], divine: ['💀','👑','🔱'] }},
+            christmas: { name: '🎄 Christmas', emojis: { common: ['🎄','🎅','🤶','🧑‍🎄','🎁','🎀','🎊','🎉','❄️','⛄','☃️','🌨️','🔔','🔕','🎶','🎵','🌟','⭐','✨','💫'], uncommon: ['🦌','🛷','🎿','⛷️','🏂','🧤','🧣','🧥','👢','🕯️'], rare: ['🏠','🏡','🏘️','🎠','🎡','🎢','🎪','🎭','🎬','🎤'], epic: ['🍪','🥛','🍫','🍬','🍭','☕','🍵','🧁','🍰','🎂'], legendary: ['🎄','🎅','🎁','✨','🌟','❄️','⛄','🔔'], mythic: ['🏔️','🌌','🌙','⭐','💫','✨'], divine: ['🎄','👑','💎'] }},
+            summer: { name: '☀️ Summer', emojis: { common: ['☀️','🌤️','⛅','🌴','🏖️','🏝️','🌊','🏄','🏊','🤽','🚣','🛶','⛵','🚤','🛥️','🛳️','⚓','🐚','🦀','🦐'], uncommon: ['🍉','🍧','🍨','🍦','🥤','🧊','🍹','🥥','🥭','🍍'], rare: ['🌺','🌸','🌼','🌻','🌷','🌹','💐','🦋','🐝','🌈'], epic: ['🎡','🎢','🎠','🎪','🎭','🎬','🎤','🎧','🎵','🎶'], legendary: ['🌅','🌄','🌇','☀️','🌊','🏝️','🌴','🌺'], mythic: ['🌍','🏔️','🌋','🗻','🏜️','🌌'], divine: ['☀️','👑','💎'] }},
+            gaming: { name: '🎮 Gaming', emojis: { common: ['🎮','🕹️','👾','🎲','🎯','🎳','🎰','🃏','🀄','🎴','♠️','♣️','♥️','♦️','🔴','🟠','🟡','🟢','🔵','🟣'], uncommon: ['🏆','🥇','🥈','🥉','🏅','🎖️','⚔️','🗡️','🛡️','🔫'], rare: ['🤖','👽','👾','🛸','💣','🧨','💥','⚡','🔥','✨'], epic: ['💎','👑','🔮','🧿','💰','💵','💴','💶','💷','💸'], legendary: ['🎮','🕹️','👾','🏆','💎','👑','⚔️','🔥'], mythic: ['🌟','✨','💫','⭐','🔮','🌌'], divine: ['🎮','👑','💎'] }},
+            royal: { name: '👑 Royal', emojis: { common: ['👑','🏰','🏯','🏛️','⚜️','🔱','🎭','🎪','🎠','🎡','🎢','🗡️','⚔️','🛡️','🏹','🔮','🧿','💎','💍','📿'], uncommon: ['🦁','🦅','🐉','🦄','🐎','🦌','🦢','🦚','🦜','🐺'], rare: ['🍷','🥂','🍾','🏆','🥇','🎖️','🎗️','🌹','🌺','💐'], epic: ['💰','💵','💴','💶','💷','💸','💳','🧾','💹','📊'], legendary: ['👑','🏰','🔱','⚜️','💎','🦁','🐉','✨'], mythic: ['🌌','🌟','⭐','💫','✨','🔮'], divine: ['👑','💎','🔱'] }},
+            cute: { name: '🥺 Cute', emojis: { common: ['🥺','🥹','😊','😇','🥰','😍','😘','😻','😽','😸','😺','🐱','🐶','🐰','🐹','🐻','🧸','🎀','💖','💕'], uncommon: ['🦊','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🙊'], rare: ['🌸','🌷','🌹','🌺','🌻','🌼','💐','🦋','🐝','🌈'], epic: ['🍰','🧁','🍩','🍪','🍭','🍬','🍫','🎂','🍦','🧇'], legendary: ['🥺','💖','✨','🌸','🦋','🌈','💕','🎀'], mythic: ['🌟','⭐','💫','✨','🔮','💎'], divine: ['🥺','👑','💖'] }},
+            ninja: { name: '🥷 Ninja', emojis: { common: ['🥷','⚔️','🗡️','🔪','🪓','🏹','🛡️','⛓️','🔗','💢','💥','✨','💫','🌟','⭐','🔴','⚫','🖤','🌑','🌚'], uncommon: ['🐉','🐍','🦂','🦎','🦇','🐺','🦅','🦊','🐯','🐻'], rare: ['🏯','🏰','🗾','🎌','🎏','🎎','🎐','🧧','🪭','🪬'], epic: ['💣','🧨','🪤','🔥','⚡','🌪️','🌊','💨','🌫️','☄️'], legendary: ['🥷','⚔️','🐉','💀','🔥','⚡','💥','✨'], mythic: ['🏯','🌙','🌌','🌑','⭐','🔮'], divine: ['🥷','👑','🐉'] }}
         };
 
         const RARITY_CHANCES = { common: 50, uncommon: 30, rare: 12, epic: 5, legendary: 2, mythic: 0.8, divine: 0.2 };
         const RARITY_POINTS = { common: 10, uncommon: 25, rare: 100, epic: 500, legendary: 2500, mythic: 10000, divine: 50000 };
         const RARITY_SELL = { common: 500, uncommon: 2000, rare: 10000, epic: 25000, legendary: 75000, mythic: 200000, divine: 500000 };
+        const RARITY_COLORS = { common: '#9ca3af', uncommon: '#22c55e', rare: '#3b82f6', epic: '#a855f7', legendary: '#fbbf24', mythic: '#ec4899', divine: '#06b6d4' };
         const PACK_PRICE = 7500;
 
-        // ============ INITIALIZATION ============
+        const ROULETTE_NUMBERS = [
+            { num: 0, color: 'green' },
+            { num: 32, color: 'red' }, { num: 15, color: 'black' }, { num: 19, color: 'red' }, { num: 4, color: 'black' },
+            { num: 21, color: 'red' }, { num: 2, color: 'black' }, { num: 25, color: 'red' }, { num: 17, color: 'black' },
+            { num: 34, color: 'red' }, { num: 6, color: 'black' }, { num: 27, color: 'red' }, { num: 13, color: 'black' },
+            { num: 36, color: 'red' }, { num: 11, color: 'black' }, { num: 30, color: 'red' }, { num: 8, color: 'black' },
+            { num: 23, color: 'red' }, { num: 10, color: 'black' }, { num: 5, color: 'red' }, { num: 24, color: 'black' },
+            { num: 16, color: 'red' }, { num: 33, color: 'black' }, { num: 1, color: 'red' }, { num: 20, color: 'black' },
+            { num: 14, color: 'red' }, { num: 31, color: 'black' }, { num: 9, color: 'red' }, { num: 22, color: 'black' },
+            { num: 18, color: 'red' }, { num: 29, color: 'black' }, { num: 7, color: 'red' }, { num: 28, color: 'black' },
+            { num: 12, color: 'red' }, { num: 35, color: 'black' }, { num: 3, color: 'red' }, { num: 26, color: 'black' }
+        ];
+
+        const PLINKO_MULTIPLIERS = [100, 25, 10, 5, 2, 1, 0.5, 0.2, 0.5, 1, 2, 5, 10, 25, 100];
+
         document.addEventListener('DOMContentLoaded', () => {
-            initParticles();
-            initGlowSystem();
-            
             const saved = localStorage.getItem('lintoriaUser');
-            if (saved) {
-                currentUser = JSON.parse(saved);
-                showApp();
-            }
+            if (saved) { currentUser = JSON.parse(saved); showApp(); }
         });
 
-        // ============ PARTICLES ============
-        function initParticles() {
-            const container = document.getElementById('particleContainer');
-            for (let i = 0; i < 30; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle' + (Math.random() > 0.5 ? ' blue' : '');
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDuration = (8 + Math.random() * 12) + 's';
-                particle.style.animationDelay = Math.random() * 10 + 's';
-                container.appendChild(particle);
-            }
+        function showToast(msg, type = 'info') {
+            const t = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = msg;
+            t.className = 'toast show ' + type;
+            setTimeout(() => t.className = 'toast', 3000);
         }
 
-        function initGlowSystem() {
-            const orb1 = document.getElementById('glowOrb1');
-            const orb2 = document.getElementById('glowOrb2');
-            document.addEventListener('mousemove', (e) => {
-                orb1.style.left = (e.clientX - 150) + 'px';
-                orb1.style.top = (e.clientY - 150) + 'px';
-                orb2.style.left = (e.clientX - 25) + 'px';
-                orb2.style.top = (e.clientY - 25) + 'px';
-            });
-        }
-
-        // ============ TOAST ============
-        function showToast(message, type = 'info') {
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toastMessage');
-            toastMessage.textContent = message;
-            toast.className = 'toast show ' + type;
-            setTimeout(() => toast.className = 'toast', 3000);
-        }
-
-        // ============ API HELPER ============
         async function apiCall(params) {
             try {
-                const url = SHEETS_URL + '?' + new URLSearchParams(params).toString();
-                console.log('API Call:', url);
-                const response = await fetch(url, {
-                    method: 'GET',
-                    redirect: 'follow'
-                });
-                const text = await response.text();
-                console.log('API Response:', text);
-                try {
-                    return JSON.parse(text);
-                } catch (e) {
-                    console.error('JSON Parse Error:', e, text);
-                    return { success: false, message: 'Invalid response from server' };
-                }
-            } catch (error) {
-                console.error('API Error:', error);
-                return { success: false, message: 'Connection error: ' + error.message };
-            }
+                const r = await fetch(SHEETS_URL + '?' + new URLSearchParams(params).toString(), { method: 'GET', redirect: 'follow' });
+                const t = await r.text();
+                try { return JSON.parse(t); } catch { return { success: false }; }
+            } catch { return { success: false }; }
         }
 
-        // ============ AUTH ============
         function switchAuthTab(tab) {
-            document.querySelectorAll('#authTabs .tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('#authScreen .tab-btn').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
             document.getElementById('loginTab').classList.toggle('hidden', tab !== 'login');
             document.getElementById('registerTab').classList.toggle('hidden', tab !== 'register');
@@ -1996,51 +423,30 @@
         async function login() {
             const email = document.getElementById('loginEmail').value.trim().toLowerCase();
             const password = document.getElementById('loginPassword').value;
-            
-            if (!email || !password) {
-                showToast('Please fill in all fields', 'error');
-                return;
-            }
-            
+            if (!email || !password) { showToast('Fill all fields', 'error'); return; }
             showToast('Logging in...');
             const data = await apiCall({ action: 'login', email, password });
-            
             if (data.success) {
                 currentUser = data.user;
                 localStorage.setItem('lintoriaUser', JSON.stringify(currentUser));
-                showToast('Welcome back!', 'success');
+                showToast('Welcome!', 'success');
                 showApp();
-            } else {
-                showToast(data.message || data.error || 'Login failed', 'error');
-            }
+            } else showToast(data.error || 'Failed', 'error');
         }
 
         async function register() {
             const email = document.getElementById('registerEmail').value.trim().toLowerCase();
             const name = document.getElementById('registerName').value.trim();
             const password = document.getElementById('registerPassword').value;
-            
-            if (!email || !name || !password) {
-                showToast('Please fill in all fields', 'error');
-                return;
-            }
-            
-            if (password.length < 4) {
-                showToast('Password must be at least 4 characters', 'error');
-                return;
-            }
-            
-            showToast('Creating account...');
+            if (!email || !name || !password) { showToast('Fill all fields', 'error'); return; }
+            showToast('Creating...');
             const data = await apiCall({ action: 'register', email, name, password });
-            
             if (data.success) {
                 currentUser = data.user;
                 localStorage.setItem('lintoriaUser', JSON.stringify(currentUser));
-                showToast('Account created! Welcome to Lintoria!', 'success');
+                showToast('Account created!', 'success');
                 showApp();
-            } else {
-                showToast(data.message || data.error || 'Registration failed', 'error');
-            }
+            } else showToast(data.message || 'Failed', 'error');
         }
 
         function logout() {
@@ -2048,20 +454,12 @@
             localStorage.removeItem('lintoriaUser');
             document.getElementById('appScreen').classList.add('hidden');
             document.getElementById('authScreen').classList.remove('hidden');
-            showToast('Logged out', 'success');
         }
 
-        // ============ APP DISPLAY ============
         function showApp() {
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('appScreen').classList.remove('hidden');
             document.getElementById('userName').textContent = currentUser.name;
-            
-            if (currentUser.email === MASTER_ADMIN) {
-                document.getElementById('masterBadge').classList.remove('hidden');
-                document.getElementById('adminSection').classList.remove('hidden');
-            }
-            
             loadDashboard();
         }
 
@@ -2070,934 +468,383 @@
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tab + 'Content').classList.remove('hidden');
             event.target.classList.add('active');
-            
-            switch(tab) {
-                case 'dashboard': loadDashboard(); break;
-                case 'loans': loadLoans(); break;
-                case 'stocks': loadStocks(); break;
-                case 'portfolio': loadPortfolio(); break;
-                case 'packs': loadPacks(); break;
-                case 'collection': loadCollection(); break;
-                case 'passport': loadPassport(); break;
-                case 'travel': loadTravel(); break;
-                case 'chat': loadChat(); break;
-                case 'leaderboard': loadLeaderboards(); break;
-                case 'admin': loadAdmin(); break;
-            }
+            if (tab === 'dashboard') loadDashboard();
+            if (tab === 'packs') loadPacks();
+            if (tab === 'collection') loadCollection();
+            if (tab === 'casino') { initRoulette(); initPlinko(); }
+            if (tab === 'leaderboard') loadLeaderboards();
         }
 
-        // ============ DASHBOARD ============
         async function loadDashboard() {
             const data = await apiCall({ action: 'getDashboard', email: currentUser.email });
-            
             if (data.success) {
                 currentUser.balance = data.balance || 0;
                 document.getElementById('balanceAmount').textContent = formatNumber(data.balance || 0);
                 document.getElementById('creditScoreDisplay').textContent = data.creditScore || 650;
-                document.getElementById('activeLoansDisplay').textContent = data.activeLoans || 0;
-                document.getElementById('totalDebtDisplay').textContent = '$' + formatNumber(data.totalDebt || 0);
                 document.getElementById('emojiScoreDisplay').textContent = data.emojiScore || 0;
-                renderTransactions(data.transactions || []);
             } else {
-                // Fallback to stored data
                 document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance || 100000);
-                document.getElementById('creditScoreDisplay').textContent = currentUser.creditScore || 650;
             }
         }
 
-        function renderTransactions(transactions) {
-            const container = document.getElementById('transactionList');
-            document.getElementById('transactionCount').textContent = transactions.length + ' transactions';
-            
-            if (transactions.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-icon">💰</div><p>No transactions yet</p></div>';
-                return;
-            }
-            
-            container.innerHTML = transactions.slice(0, 20).map(t => `
-                <div class="transaction-item">
-                    <div>
-                        <div style="font-weight: 600;">${t.type}</div>
-                        <div style="color: var(--text-muted); font-size: 0.875rem;">${t.note || ''}</div>
-                        <div style="color: var(--text-muted); font-size: 0.75rem;">${formatDate(t.timestamp)}</div>
-                    </div>
-                    <div style="font-weight: 700; color: ${t.amount >= 0 ? 'var(--success)' : 'var(--danger)'};">
-                        ${t.amount >= 0 ? '+' : ''}$${formatNumber(Math.abs(t.amount))}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // ============ TRANSFER ============
         async function transferMoney() {
-            const recipient = document.getElementById('recipientEmail').value.trim().toLowerCase();
+            const to = document.getElementById('recipientEmail').value.trim().toLowerCase();
             const amount = parseFloat(document.getElementById('transferAmount').value);
-            const note = document.getElementById('transferNote').value.trim();
-            
-            if (!recipient || !amount || amount <= 0) {
-                showToast('Please enter valid details', 'error');
-                return;
-            }
-            
-            if (recipient === currentUser.email) {
-                showToast('Cannot transfer to yourself', 'error');
-                return;
-            }
-            
-            if (amount > currentUser.balance) {
-                showToast('Insufficient balance', 'error');
-                return;
-            }
-            
-            showToast('Processing...');
-            const data = await apiCall({ action: 'transfer', from: currentUser.email, to: recipient, amount, note });
-            
+            if (!to || !amount || amount <= 0) { showToast('Enter valid details', 'error'); return; }
+            if (amount > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
+            const data = await apiCall({ action: 'transfer', from: currentUser.email, to, amount, note: document.getElementById('transferNote').value });
             if (data.success) {
                 currentUser.balance -= amount;
                 document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-                document.getElementById('recipientEmail').value = '';
-                document.getElementById('transferAmount').value = '';
-                document.getElementById('transferNote').value = '';
-                showToast('Transfer successful!', 'success');
-            } else {
-                showToast(data.message || 'Transfer failed', 'error');
-            }
+                showToast('Sent!', 'success');
+            } else showToast(data.message || 'Failed', 'error');
         }
 
-        // ============ LOANS ============
-        async function loadLoans() {
-            const data = await apiCall({ action: 'getLoanData', email: currentUser.email });
-            
-            if (data.success) {
-                updateCreditScoreDisplay(data.creditScore || 650);
-                renderActiveLoans(data.activeLoans || []);
-            }
-        }
-
-        function updateCreditScoreDisplay(score) {
-            document.getElementById('creditScoreMain').textContent = score;
-            document.getElementById('creditScoreDisplay').textContent = score;
-            
-            let label, colorClass;
-            if (score >= 750) { label = 'Excellent'; colorClass = 'credit-excellent'; }
-            else if (score >= 700) { label = 'Good'; colorClass = 'credit-good'; }
-            else if (score >= 650) { label = 'Fair'; colorClass = 'credit-fair'; }
-            else if (score >= 550) { label = 'Poor'; colorClass = 'credit-poor'; }
-            else { label = 'Bad'; colorClass = 'credit-bad'; }
-            
-            const labelEl = document.getElementById('creditScoreLabel');
-            labelEl.textContent = label;
-            labelEl.className = 'credit-score-label ' + colorClass;
-            document.getElementById('creditScoreMain').className = 'credit-score-value ' + colorClass;
-            
-            const needle = document.getElementById('creditNeedle');
-            const normalized = (score - 300) / 550;
-            const angle = -90 + (normalized * 180);
-            needle.style.transform = `translateX(-50%) rotate(${angle}deg)`;
-        }
-
-        function selectLoanType(type) {
-            currentLoanType = type;
-            document.querySelectorAll('.loan-type-card').forEach(c => c.classList.remove('selected'));
-            document.getElementById('loanType_' + type).classList.add('selected');
-            document.getElementById('loanApplicationForm').classList.remove('hidden');
-            
-            const names = { personal: 'Personal Loan', emergency: 'Emergency Loan', payday: 'Payday Loan' };
-            document.getElementById('selectedLoanType').textContent = names[type];
-            updateLoanPreview();
-        }
-
-        function updateLoanPreview() {
-            const amount = parseFloat(document.getElementById('loanAmount').value) || 0;
-            const term = parseInt(document.getElementById('loanTerm').value) || 30;
-            const baseRates = { personal: 0.08, emergency: 0.15, payday: 0.25 };
-            const rate = (baseRates[currentLoanType] || 0.10) * (term / 30);
-            const interest = amount * rate;
-            const total = amount + interest;
-            
-            document.getElementById('previewInterestRate').textContent = (rate * 100).toFixed(1) + '%';
-            document.getElementById('previewInterestAmount').textContent = '$' + formatNumber(interest);
-            document.getElementById('previewTotalRepayment').textContent = '$' + formatNumber(total);
-        }
-
-        async function applyForLoan() {
-            if (!currentLoanType) {
-                showToast('Please select a loan type', 'error');
-                return;
-            }
-            
-            const amount = parseFloat(document.getElementById('loanAmount').value);
-            const term = parseInt(document.getElementById('loanTerm').value);
-            
-            if (!amount || amount <= 0) {
-                showToast('Please enter a valid amount', 'error');
-                return;
-            }
-            
-            showToast('Processing application...');
-            const data = await apiCall({ action: 'applyLoan', email: currentUser.email, type: currentLoanType, amount, term });
-            
-            if (data.success) {
-                currentUser.balance += amount;
-                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-                showToast('Loan approved! $' + formatNumber(amount) + ' credited.', 'success');
-                loadLoans();
-                document.getElementById('loanApplicationForm').classList.add('hidden');
-                document.querySelectorAll('.loan-type-card').forEach(c => c.classList.remove('selected'));
-                currentLoanType = null;
-            } else {
-                showToast(data.message || 'Loan application failed', 'error');
-            }
-        }
-
-        function renderActiveLoans(loans) {
-            const container = document.getElementById('activeLoans');
-            
-            if (loans.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-icon">💸</div><p>No active loans</p></div>';
-                return;
-            }
-            
-            container.innerHTML = loans.map(loan => {
-                const progress = ((loan.amountPaid / loan.totalOwed) * 100).toFixed(1);
-                const remaining = loan.totalOwed - loan.amountPaid;
-                return `
-                    <div class="loan-active-card">
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
-                            <div>
-                                <h4 style="color: var(--gold);">${loan.type} Loan</h4>
-                                <p style="font-size: 0.875rem; color: var(--text-muted);">Principal: $${formatNumber(loan.principal)}</p>
-                            </div>
-                            <span class="loan-status ${loan.status}">${loan.status.toUpperCase()}</span>
-                        </div>
-                        <div class="loan-progress">
-                            <div class="loan-progress-bar" style="width: ${progress}%;"></div>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.875rem;">
-                            <span style="color: var(--text-muted);">Paid:</span>
-                            <span style="color: var(--success);">$${formatNumber(loan.amountPaid)} (${progress}%)</span>
-                            <span style="color: var(--text-muted);">Remaining:</span>
-                            <span style="color: var(--danger);">$${formatNumber(remaining)}</span>
-                        </div>
-                        <button class="btn btn-success btn-sm" onclick="payLoan('${loan.id}', ${remaining})" style="width: 100%; margin-top: 1rem;">Pay in Full</button>
-                    </div>
-                `;
+        // PACKS
+        function loadPacks() {
+            const c = document.getElementById('packsList');
+            c.innerHTML = Object.entries(THEMED_PACKS).map(([key, pack]) => {
+                const preview = [pack.emojis.common[0], pack.emojis.rare[0], pack.emojis.legendary[0], pack.emojis.divine[0]].join('');
+                return `<div class="pack-card ${selectedPack === key ? 'selected' : ''}" onclick="selectPack('${key}')"><div class="pack-name">${pack.name}</div><div class="pack-emojis">${preview}</div></div>`;
             }).join('');
         }
 
-        async function payLoan(loanId, amount) {
-            if (amount > currentUser.balance) {
-                showToast('Insufficient balance', 'error');
-                return;
-            }
-            
-            showToast('Processing payment...');
-            const data = await apiCall({ action: 'makeLoanPayment', email: currentUser.email, loanId, amount });
-            
-            if (data.success) {
-                currentUser.balance -= amount;
-                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-                showToast(data.message || 'Payment successful!', 'success');
-                loadLoans();
-            } else {
-                showToast(data.message || 'Payment failed', 'error');
-            }
-        }
-
-        // ============ STOCKS ============
-        async function loadStocks() {
-            const data = await apiCall({ action: 'getStocks' });
-            
-            if (data.success && data.stocks) {
-                renderStocks(data.stocks);
-            } else {
-                document.getElementById('stocksList').innerHTML = '<div class="empty-state"><div class="empty-icon">📈</div><p>Failed to load stocks</p></div>';
-            }
-        }
-
-        function renderStocks(stocks) {
-            const container = document.getElementById('stocksList');
-            
-            if (stocks.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-icon">📈</div><p>No stocks available</p></div>';
-                return;
-            }
-            
-            container.innerHTML = stocks.map(stock => `
-                <div class="stock-card" onclick="buyStockPrompt('${stock.symbol}', '${stock.name}', ${stock.price})">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span style="font-weight: 800; color: var(--gold); font-size: 1.25rem;">${stock.symbol}</span>
-                            <span style="color: var(--text-muted); margin-left: 0.5rem;">${stock.name}</span>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-weight: 700; font-size: 1.25rem;">$${formatNumber(stock.price)}</div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function buyStockPrompt(symbol, name, price) {
-            const shares = prompt(`How many shares of ${symbol} would you like to buy?\nPrice: $${formatNumber(price)} per share (+5% tax)`);
-            if (shares && parseInt(shares) > 0) {
-                buyStock(symbol, parseInt(shares), price);
-            }
-        }
-
-        async function buyStock(symbol, shares, price) {
-            const total = shares * price * 1.05;
-            if (total > currentUser.balance) {
-                showToast('Insufficient balance', 'error');
-                return;
-            }
-            
-            showToast('Processing...');
-            const data = await apiCall({ action: 'buyStock', email: currentUser.email, symbol, shares, price });
-            
-            if (data.success) {
-                currentUser.balance -= total;
-                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-                showToast(`Bought ${shares} ${symbol} shares!`, 'success');
-            } else {
-                showToast(data.message || 'Purchase failed', 'error');
-            }
-        }
-
-        // ============ PORTFOLIO ============
-        async function loadPortfolio() {
-            const data = await apiCall({ action: 'getPortfolio', email: currentUser.email });
-            
-            if (data.success) {
-                renderPortfolio(data.portfolio || []);
-            }
-        }
-
-        function renderPortfolio(holdings) {
-            const container = document.getElementById('portfolioList');
-            
-            if (holdings.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-icon">💼</div><p>No stocks owned</p></div>';
-                return;
-            }
-            
-            container.innerHTML = holdings.map(h => `
-                <div class="stock-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span style="font-weight: 800; color: var(--gold);">${h.symbol}</span>
-                            <span style="color: var(--text-muted);">${h.shares} shares</span>
-                        </div>
-                        <button class="btn btn-sm btn-danger" onclick="sellStock('${h.symbol}', ${h.shares}, ${h.currentPrice})">Sell All</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        async function sellStock(symbol, shares, price) {
-            showToast('Selling...');
-            const data = await apiCall({ action: 'sellStock', email: currentUser.email, symbol, shares, price });
-            
-            if (data.success) {
-                currentUser.balance += data.amount;
-                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-                showToast(`Sold ${shares} ${symbol} shares!`, 'success');
-                loadPortfolio();
-            } else {
-                showToast(data.message || 'Sale failed', 'error');
-            }
-        }
-
-        // ============ EMOJI PACKS (FIXED) ============
-        function loadPacks() {
-            const container = document.getElementById('packsList');
-            
-            container.innerHTML = Object.entries(THEMED_PACKS).map(([key, pack]) => `
-                <div class="pack-card ${selectedPack === key ? 'selected' : ''}" onclick="selectPack('${key}')">
-                    <h3 style="color: var(--gold); margin-bottom: 0.5rem;">${pack.name}</h3>
-                    <div class="pack-emojis">
-                        ${pack.emojis.common.slice(0,2).join('')}${pack.emojis.rare[0]}${pack.emojis.legendary[0]}${pack.emojis.divine ? pack.emojis.divine[0] : '✨'}
-                    </div>
-                    <p style="font-size: 0.75rem; color: var(--text-muted);">Click to select</p>
-                </div>
-            `).join('');
-        }
-        
-        function selectPack(packKey) {
-            selectedPack = packKey;
+        function selectPack(key) {
+            selectedPack = key;
             loadPacks();
             document.getElementById('buyPackBtn').disabled = false;
-            document.getElementById('selectedPackName').textContent = `Selected: ${THEMED_PACKS[packKey].name}`;
-            showToast(`Selected: ${THEMED_PACKS[packKey].name}`, 'success');
+            document.getElementById('viewPackBtn').disabled = false;
+            document.getElementById('selectedPackName').textContent = 'Selected: ' + THEMED_PACKS[key].name;
         }
 
         async function buyPack() {
-            if (!selectedPack) {
-                showToast('Select a pack first!', 'error');
-                return;
-            }
-            
-            if (currentUser.balance < PACK_PRICE) {
-                showToast('Insufficient balance! Need $7,500', 'error');
-                return;
-            }
-            
+            if (!selectedPack) { showToast('Select a pack!', 'error'); return; }
+            if (currentUser.balance < PACK_PRICE) { showToast('Need $7,500!', 'error'); return; }
             const pack = THEMED_PACKS[selectedPack];
-            
-            // Determine rarity
             const roll = Math.random() * 100;
-            let cumulative = 0;
-            let rarity = 'common';
-            
+            let cumulative = 0, rarity = 'common';
             for (const [r, chance] of Object.entries(RARITY_CHANCES)) {
                 cumulative += chance;
-                if (roll < cumulative) {
-                    rarity = r;
-                    break;
-                }
+                if (roll < cumulative) { rarity = r; break; }
             }
-            
-            // Pick emoji
             const pool = pack.emojis[rarity] || pack.emojis.common;
             const emoji = pool[Math.floor(Math.random() * pool.length)];
-            const points = RARITY_POINTS[rarity];
-            
-            // Call API
-            showToast('Opening pack...');
-            const data = await apiCall({
-                action: 'buyPack',
-                email: currentUser.email,
-                pack: selectedPack,
-                emoji: encodeURIComponent(emoji),
-                rarity: rarity,
-                points: points,
-                price: PACK_PRICE
+            showToast('Opening...');
+            const data = await apiCall({ action: 'buyPack', email: currentUser.email, pack: selectedPack, emoji: encodeURIComponent(emoji), rarity, points: RARITY_POINTS[rarity], price: PACK_PRICE });
+            currentUser.balance = data.newBalance || (currentUser.balance - PACK_PRICE);
+            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+            showPackOpening(emoji, rarity, data.isDuplicate || false);
+        }
+
+        function showPackOpening(emoji, rarity, isDuplicate) {
+            const m = document.getElementById('packOpeningModal');
+            m.className = 'pack-opening';
+            m.innerHTML = `<div class="pack-reveal">${emoji}</div><div class="pack-rarity-text" style="color:${RARITY_COLORS[rarity]}">${rarity.toUpperCase()}!</div><p style="margin-top:1rem;color:var(--text-muted)">${isDuplicate ? '(Duplicate)' : '+' + RARITY_POINTS[rarity] + ' pts'}</p><p style="margin-top:0.5rem;color:var(--text-secondary)">Sell: $${formatNumber(RARITY_SELL[rarity])}</p><button class="btn" onclick="closePackOpening()" style="margin-top:1.5rem">Continue</button>`;
+        }
+
+        function closePackOpening() { document.getElementById('packOpeningModal').className = 'hidden'; }
+
+        function showPackContentsModal() {
+            if (!selectedPack) return;
+            const pack = THEMED_PACKS[selectedPack];
+            const m = document.getElementById('packContentsModal');
+            document.getElementById('packContentsTitle').textContent = pack.name + ' Contents';
+            const rarities = ['divine', 'mythic', 'legendary', 'epic', 'rare', 'uncommon', 'common'];
+            let html = '';
+            rarities.forEach(r => {
+                if (pack.emojis[r] && pack.emojis[r].length > 0) {
+                    html += `<div class="rarity-section"><div class="rarity-section-header"><span class="rarity-badge ${r}">${r}</span><span style="color:var(--text-muted);font-size:0.75rem">${RARITY_CHANCES[r]}% • ${RARITY_POINTS[r]} pts</span></div><div class="pack-contents-grid">${pack.emojis[r].map(e => `<div class="pack-emoji-item" style="background:${RARITY_COLORS[r]}22;border:1px solid ${RARITY_COLORS[r]}">${e}</div>`).join('')}</div></div>`;
+                }
             });
-            
-            if (data.success) {
-                currentUser.balance = data.newBalance || (currentUser.balance - PACK_PRICE);
-                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-                showPackOpening(emoji, rarity, data.isDuplicate, pack.name);
-            } else {
-                // Still show animation even if API fails (for demo purposes)
-                currentUser.balance -= PACK_PRICE;
-                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-                showPackOpening(emoji, rarity, false, pack.name);
-            }
+            document.getElementById('packContentsBody').innerHTML = html;
+            m.classList.add('active');
         }
 
-        function showPackOpening(emoji, rarity, isDuplicate, packName) {
-            const modal = document.getElementById('packOpeningModal');
-            modal.className = 'pack-opening';
-            
-            const rarityColors = {
-                common: '#ffffff',
-                uncommon: '#22c55e',
-                rare: '#3b82f6',
-                epic: '#a855f7',
-                legendary: '#fbbf24',
-                mythic: '#ec4899',
-                divine: '#06b6d4'
-            };
-            
-            modal.innerHTML = `
-                <div class="pack-reveal">${emoji}</div>
-                <div class="pack-rarity-text" style="color: ${rarityColors[rarity]};">
-                    ${rarity.toUpperCase()}!
-                </div>
-                <p style="margin-top: 1rem; color: var(--text-muted);">
-                    ${isDuplicate ? '(Duplicate - 0 points)' : `+${RARITY_POINTS[rarity]} points!`}
-                </p>
-                <p style="margin-top: 0.5rem; color: var(--text-secondary);">
-                    Sell value: $${formatNumber(RARITY_SELL[rarity])}
-                </p>
-                <button class="btn" onclick="closePackOpening()" style="margin-top: 2rem;">Continue</button>
-            `;
-        }
+        function closePackContentsModal() { document.getElementById('packContentsModal').classList.remove('active'); }
+        function showChancesModal() { document.getElementById('chancesModal').classList.add('active'); }
+        function closeChancesModal() { document.getElementById('chancesModal').classList.remove('active'); }
 
-        function closePackOpening() {
-            document.getElementById('packOpeningModal').className = 'hidden';
-        }
-
-        function showChancesModal() {
-            document.getElementById('chancesModal').classList.add('active');
-        }
-
-        function closeChancesModal() {
-            document.getElementById('chancesModal').classList.remove('active');
-        }
-
-        // ============ COLLECTION ============
         async function loadCollection() {
             const data = await apiCall({ action: 'getCollection', email: currentUser.email });
-            
             if (data.success) {
                 document.getElementById('emojiScore').textContent = (data.totalPoints || 0) + ' pts';
-                renderCollection(data.emojis || []);
+                const c = document.getElementById('emojiCollection');
+                if (!data.emojis || data.emojis.length === 0) {
+                    c.innerHTML = '<div class="empty-state"><div class="empty-icon">🎒</div><p>No emojis yet</p></div>';
+                } else {
+                    c.innerHTML = data.emojis.map(e => `<div class="emoji-card ${e.rarity}" onclick="sellEmoji('${encodeURIComponent(e.emoji)}','${e.rarity}')"><span class="emoji">${e.emoji}</span><span class="rarity-badge ${e.rarity}">${e.rarity}</span><span style="font-size:0.65rem;color:var(--text-muted)">$${formatNumber(RARITY_SELL[e.rarity])}</span></div>`).join('');
+                }
             }
-        }
-
-        function renderCollection(emojis) {
-            const container = document.getElementById('emojiCollection');
-            
-            if (emojis.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-icon">🎒</div><p>No emojis yet. Buy some packs!</p></div>';
-                return;
-            }
-            
-            container.innerHTML = emojis.map(e => `
-                <div class="emoji-card ${e.rarity}" onclick="sellEmoji('${encodeURIComponent(e.emoji)}', '${e.rarity}')">
-                    <span class="emoji">${e.emoji}</span>
-                    <span class="rarity-badge ${e.rarity}">${e.rarity}</span>
-                    <span style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">
-                        Sell: $${formatNumber(RARITY_SELL[e.rarity])}
-                    </span>
-                </div>
-            `).join('');
         }
 
         async function sellEmoji(emoji, rarity) {
-            if (!confirm(`Sell this emoji for $${formatNumber(RARITY_SELL[rarity])}?`)) return;
-            
+            if (!confirm('Sell for $' + formatNumber(RARITY_SELL[rarity]) + '?')) return;
             const data = await apiCall({ action: 'sellEmoji', email: currentUser.email, emoji, rarity, price: RARITY_SELL[rarity], points: RARITY_POINTS[rarity] });
-            
             if (data.success) {
                 currentUser.balance = data.newBalance;
                 document.getElementById('balanceAmount').textContent = formatNumber(data.newBalance);
-                showToast(`Sold for $${formatNumber(RARITY_SELL[rarity])}!`, 'success');
+                showToast('Sold!', 'success');
                 loadCollection();
-            } else {
-                showToast(data.message || 'Sale failed', 'error');
             }
         }
 
-        // ============ PASSPORT ============
-        async function loadPassport() {
-            const data = await apiCall({ action: 'getPassport', email: currentUser.email });
-            
-            const info = document.getElementById('passportInfo');
-            const btn = document.getElementById('applyPassportBtn');
-            
-            if (data.success && data.hasPassport) {
-                info.innerHTML = `
-                    <div style="background: var(--gradient-gold); padding: 2rem; border-radius: 16px; color: var(--bg-primary); text-align: center;">
-                        <div style="font-size: 3rem; margin-bottom: 1rem;">🛂</div>
-                        <h3>LINTORIA PASSPORT</h3>
-                        <p style="font-size: 1.25rem; margin-top: 0.5rem;">${currentUser.name}</p>
-                    </div>
-                `;
-                btn.textContent = '✓ Passport Owned';
-                btn.disabled = true;
-            } else {
-                info.innerHTML = '<p style="color: var(--text-muted);">You don\'t have a passport yet. Apply to travel!</p>';
-                btn.disabled = false;
+        // CASINO - PLINKO with PHYSICS
+        function initPlinko() {
+            const board = document.getElementById('plinkoBoard');
+            if (!board) return;
+            board.innerHTML = '';
+            const w = board.offsetWidth || 360, h = board.offsetHeight || 400;
+            const rows = 10, pegSpacing = 28, startY = 35;
+            for (let row = 0; row < rows; row++) {
+                const pegsInRow = row + 3;
+                const rowWidth = (pegsInRow - 1) * pegSpacing;
+                const startX = (w - rowWidth) / 2;
+                for (let col = 0; col < pegsInRow; col++) {
+                    const peg = document.createElement('div');
+                    peg.className = 'plinko-peg';
+                    peg.style.left = (startX + col * pegSpacing) + 'px';
+                    peg.style.top = (startY + row * 30) + 'px';
+                    board.appendChild(peg);
+                }
             }
+            const slots = document.createElement('div');
+            slots.className = 'plinko-slots';
+            PLINKO_MULTIPLIERS.forEach((mult, i) => {
+                const slot = document.createElement('div');
+                slot.className = 'plinko-slot';
+                slot.dataset.mult = mult;
+                slot.dataset.index = i;
+                slot.textContent = mult + 'x';
+                slots.appendChild(slot);
+            });
+            board.appendChild(slots);
         }
 
-        async function applyPassport() {
-            if (currentUser.balance < 500) {
-                showToast('Insufficient balance! Need $500', 'error');
-                return;
+        async function playPlinko() {
+            const bet = parseFloat(document.getElementById('plinkoBet').value);
+            if (!bet || bet <= 0) { showToast('Enter bet', 'error'); return; }
+            if (bet > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
+            document.getElementById('plinkoBtn').disabled = true;
+            document.getElementById('plinkoResult').innerHTML = '';
+            const board = document.getElementById('plinkoBoard');
+            const w = board.offsetWidth || 360, h = board.offsetHeight || 400;
+            board.querySelectorAll('.plinko-ball').forEach(b => b.remove());
+            const ball = document.createElement('div');
+            ball.className = 'plinko-ball';
+            board.appendChild(ball);
+            let x = w / 2 + (Math.random() - 0.5) * 30, y = 10, vx = 0, vy = 0;
+            const gravity = 0.25, bounce = 0.65, friction = 0.98;
+            const pegs = Array.from(board.querySelectorAll('.plinko-peg')).map(peg => ({ x: parseFloat(peg.style.left), y: parseFloat(peg.style.top), r: 4 }));
+            const ballR = 8;
+            let landed = false;
+            function animate() {
+                if (landed) return;
+                vy += gravity;
+                vx *= friction;
+                x += vx;
+                y += vy;
+                if (x < ballR) { x = ballR; vx = -vx * bounce; }
+                if (x > w - ballR) { x = w - ballR; vx = -vx * bounce; }
+                pegs.forEach(peg => {
+                    const dx = x - peg.x, dy = y - peg.y, dist = Math.sqrt(dx * dx + dy * dy), minDist = ballR + peg.r;
+                    if (dist < minDist) {
+                        const angle = Math.atan2(dy, dx), overlap = minDist - dist;
+                        x += Math.cos(angle) * overlap;
+                        y += Math.sin(angle) * overlap;
+                        const nx = Math.cos(angle), ny = Math.sin(angle), dot = vx * nx + vy * ny;
+                        vx = (vx - 2 * dot * nx) * bounce + (Math.random() - 0.5) * 1.5;
+                        vy = (vy - 2 * dot * ny) * bounce;
+                    }
+                });
+                ball.style.left = x + 'px';
+                ball.style.top = y + 'px';
+                if (y > h - 50) {
+                    landed = true;
+                    const slotWidth = 32, slotsStart = (w - 15 * slotWidth) / 2;
+                    let finalSlot = Math.floor((x - slotsStart) / slotWidth);
+                    finalSlot = Math.max(0, Math.min(14, finalSlot));
+                    finishPlinko(bet, finalSlot, ball);
+                    return;
+                }
+                requestAnimationFrame(animate);
             }
-            
-            const data = await apiCall({ action: 'applyPassport', email: currentUser.email });
-            
-            if (data.success) {
-                currentUser.balance = data.newBalance;
-                document.getElementById('balanceAmount').textContent = formatNumber(data.newBalance);
-                showToast('Passport issued!', 'success');
-                loadPassport();
-            } else {
-                showToast(data.message || 'Application failed', 'error');
-            }
+            animate();
         }
 
-        // ============ TRAVEL ============
-        const CITIES = [
-            { name: 'Paris', country: 'France', flag: '🇫🇷', cost: 2500, bonus: 500 },
-            { name: 'Tokyo', country: 'Japan', flag: '🇯🇵', cost: 4000, bonus: 800 },
-            { name: 'New York', country: 'USA', flag: '🇺🇸', cost: 3000, bonus: 600 },
-            { name: 'London', country: 'UK', flag: '🇬🇧', cost: 2800, bonus: 550 },
-            { name: 'Dubai', country: 'UAE', flag: '🇦🇪', cost: 5000, bonus: 1000 },
-            { name: 'Sydney', country: 'Australia', flag: '🇦🇺', cost: 4500, bonus: 900 }
-        ];
-
-        function loadTravel() {
-            const container = document.getElementById('citiesList');
-            container.innerHTML = CITIES.map(city => `
-                <div class="service-card" style="text-align: center;">
-                    <div style="font-size: 3rem;">${city.flag}</div>
-                    <h3 style="color: var(--gold); margin: 0.5rem 0;">${city.name}</h3>
-                    <p style="color: var(--text-muted);">${city.country}</p>
-                    <p style="margin-top: 0.5rem;">Flight: <strong>$${formatNumber(city.cost)}</strong></p>
-                    <p style="color: var(--success); font-size: 0.875rem;">Bonus: +$${formatNumber(city.bonus)}</p>
-                    <button class="btn btn-sm" onclick="bookFlight('${city.name}', ${city.cost}, ${city.bonus})" style="margin-top: 1rem;">✈️ Book Flight</button>
-                </div>
-            `).join('');
+        async function finishPlinko(bet, slotIndex, ball) {
+            const mult = PLINKO_MULTIPLIERS[slotIndex], winnings = bet * mult, profit = winnings - bet, win = profit > 0;
+            const slots = document.querySelectorAll('.plinko-slot');
+            slots[slotIndex].classList.add('active');
+            ball.classList.add(win ? 'win-animation' : 'lose-animation');
+            await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'plinko', wagered: bet, won: win ? winnings : 0, lost: win ? 0 : bet, result: win ? 'win' : 'loss' });
+            currentUser.balance += profit;
+            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+            document.getElementById('plinkoResult').innerHTML = win ? `<span style="color:var(--success)" class="win-animation">${mult}x WIN! +$${formatNumber(profit)}</span>` : `<span style="color:var(--danger)" class="lose-animation">${mult}x LOSE -$${formatNumber(Math.abs(profit))}</span>`;
+            setTimeout(() => { slots[slotIndex].classList.remove('active'); ball.remove(); document.getElementById('plinkoBtn').disabled = false; }, 2000);
         }
 
-        async function bookFlight(cityName, cost, bonus) {
-            if (currentUser.balance < cost) {
-                showToast('Insufficient balance!', 'error');
-                return;
-            }
-            
-            const data = await apiCall({ action: 'bookFlight', email: currentUser.email, city: cityName, cost, bonus });
-            
-            if (data.success) {
-                currentUser.balance = data.newBalance || (currentUser.balance - cost + bonus);
+        // ROULETTE with SPINNING
+        function initRoulette() {
+            const wheel = document.getElementById('rouletteWheel');
+            if (!wheel) return;
+            wheel.innerHTML = '';
+            const segAngle = 360 / ROULETTE_NUMBERS.length;
+            ROULETTE_NUMBERS.forEach((item, i) => {
+                const seg = document.createElement('div');
+                seg.className = 'roulette-segment';
+                seg.style.transform = `rotate(${i * segAngle - 90}deg) skewY(${90 - segAngle}deg)`;
+                seg.style.background = item.color === 'red' ? '#dc2626' : item.color === 'black' ? '#1f2937' : '#16a34a';
+                seg.innerHTML = `<span style="transform:skewY(${segAngle - 90}deg) rotate(${segAngle / 2}deg)">${item.num}</span>`;
+                wheel.appendChild(seg);
+            });
+        }
+
+        function selectRouletteBet(bet) {
+            selectedRouletteBet = bet;
+            document.querySelectorAll('.roulette-bet-btn').forEach(b => b.classList.remove('selected'));
+            document.getElementById('bet' + bet.charAt(0).toUpperCase() + bet.slice(1)).classList.add('selected');
+            document.getElementById('rouletteBtn').disabled = false;
+        }
+
+        async function playRoulette() {
+            if (!selectedRouletteBet) { showToast('Select a bet!', 'error'); return; }
+            const bet = parseFloat(document.getElementById('rouletteBet').value);
+            if (!bet || bet <= 0) { showToast('Enter bet', 'error'); return; }
+            if (bet > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
+            document.getElementById('rouletteBtn').disabled = true;
+            document.getElementById('rouletteResult').innerHTML = '';
+            document.querySelectorAll('.roulette-bet-btn').forEach(b => b.disabled = true);
+            const wheel = document.getElementById('rouletteWheel');
+            const resultIdx = Math.floor(Math.random() * ROULETTE_NUMBERS.length);
+            const result = ROULETTE_NUMBERS[resultIdx];
+            const segAngle = 360 / ROULETTE_NUMBERS.length;
+            const targetAngle = 360 - (resultIdx * segAngle) - segAngle / 2;
+            const spins = 5 + Math.floor(Math.random() * 3);
+            const totalRot = spins * 360 + targetAngle;
+            wheel.style.transition = 'transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
+            wheel.style.transform = `rotate(${totalRot}deg)`;
+            setTimeout(async () => {
+                let mult = 0, win = false;
+                if (selectedRouletteBet === 'green' && result.color === 'green') { mult = 14; win = true; }
+                else if (selectedRouletteBet === 'red' && result.color === 'red') { mult = 1.8; win = true; }
+                else if (selectedRouletteBet === 'black' && result.color === 'black') { mult = 1.8; win = true; }
+                const winnings = bet * mult, profit = winnings - bet;
+                await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'roulette', wagered: bet, won: win ? winnings : 0, lost: win ? 0 : bet, result: win ? 'win' : 'loss' });
+                currentUser.balance += profit;
                 document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-                showToast(`Flight booked to ${cityName}! Bonus: +$${formatNumber(bonus)}`, 'success');
-            } else {
-                showToast(data.message || 'Booking failed', 'error');
-            }
+                const colorEmoji = result.color === 'red' ? '🔴' : result.color === 'black' ? '⚫' : '🟢';
+                document.getElementById('rouletteResult').innerHTML = `<div class="${win ? 'win-animation' : 'lose-animation'}">${colorEmoji} ${result.num}<br>${win ? `<span style="color:var(--success)">WIN! +$${formatNumber(profit)}</span>` : `<span style="color:var(--danger)">LOSE -$${formatNumber(bet)}</span>`}</div>`;
+                setTimeout(() => { wheel.style.transition = 'none'; wheel.style.transform = `rotate(${targetAngle}deg)`; document.getElementById('rouletteBtn').disabled = false; document.querySelectorAll('.roulette-bet-btn').forEach(b => b.disabled = false); }, 1000);
+            }, 5000);
         }
 
-        // ============ CASINO ============
+        // DICE
         async function playDice() {
             const bet = parseFloat(document.getElementById('diceBet').value);
-            if (!bet || bet <= 0) { showToast('Enter a valid bet', 'error'); return; }
+            if (!bet || bet <= 0) { showToast('Enter bet', 'error'); return; }
             if (bet > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
-            
             document.getElementById('diceBtn').disabled = true;
             const dice = document.getElementById('dice');
             dice.classList.add('rolling');
-            
-            // 40% win chance
-            const win = Math.random() < 0.4;
-            const multiplier = win ? 1.9 : 0;
-            const winnings = bet * multiplier;
-            const profit = winnings - bet;
-            
+            const roll = Math.floor(Math.random() * 6) + 1;
+            const win = roll >= 4 && Math.random() < 0.8;
+            const mult = win ? 1.9 : 0, winnings = bet * mult, profit = winnings - bet;
             setTimeout(async () => {
                 dice.classList.remove('rolling');
-                
-                // Record gambling
-                await apiCall({
-                    action: 'recordGambling',
-                    email: currentUser.email,
-                    game: 'dice',
-                    wagered: bet,
-                    won: win ? winnings : 0,
-                    lost: win ? 0 : bet,
-                    result: win ? 'win' : 'loss'
-                });
-                
+                const faces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+                dice.querySelector('.front').textContent = faces[roll - 1];
+                await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'dice', wagered: bet, won: win ? winnings : 0, lost: win ? 0 : bet, result: win ? 'win' : 'loss' });
                 currentUser.balance += profit;
                 document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-                
-                document.getElementById('diceResult').innerHTML = win
-                    ? `<span style="color: var(--success);">WIN! +$${formatNumber(profit)}</span>`
-                    : `<span style="color: var(--danger);">LOSE -$${formatNumber(bet)}</span>`;
-                
+                document.getElementById('diceResult').innerHTML = `<div class="${win ? 'win-animation' : 'lose-animation'}">Rolled: ${roll}<br>${win ? `<span style="color:var(--success)">WIN! +$${formatNumber(profit)}</span>` : `<span style="color:var(--danger)">LOSE -$${formatNumber(bet)}</span>`}</div>`;
                 document.getElementById('diceBtn').disabled = false;
             }, 1000);
         }
 
+        // SLOTS
         async function playSlots() {
             const bet = parseFloat(document.getElementById('slotsBet').value);
-            if (!bet || bet <= 0) { showToast('Enter a valid bet', 'error'); return; }
+            if (!bet || bet <= 0) { showToast('Enter bet', 'error'); return; }
             if (bet > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
-            
             document.getElementById('slotsBtn').disabled = true;
-            
             const symbols = ['🍒', '🍋', '🍊', '🍇', '💎', '🎰', '💰'];
             const reels = document.querySelectorAll('.slot-reel');
-            
             reels.forEach(r => r.classList.add('spinning'));
-            
-            // Determine outcome
             const roll = Math.random();
-            let result, multiplier = 0;
-            
-            if (roll < 0.01) { result = ['💰', '💰', '💰']; multiplier = 25; }
-            else if (roll < 0.10) { const sym = symbols[Math.floor(Math.random() * 7)]; result = [sym, sym, sym]; multiplier = 5; }
-            else if (roll < 0.35) { multiplier = 1.5; result = [symbols[0], symbols[0], symbols[1]]; }
-            else { result = [symbols[Math.floor(Math.random() * 4)], symbols[Math.floor(Math.random() * 4) + 1], symbols[Math.floor(Math.random() * 4) + 2]]; }
-            
-            const win = multiplier > 0;
-            const winnings = bet * multiplier;
-            const profit = winnings - bet;
-            
-            reels.forEach((reel, i) => {
-                setTimeout(() => {
-                    reel.classList.remove('spinning');
-                    reel.querySelector('.slot-symbol').textContent = result[i];
-                }, 500 + i * 500);
-            });
-            
+            let result, mult = 0;
+            if (roll < 0.01) { result = ['💰', '💰', '💰']; mult = 25; }
+            else if (roll < 0.05) { result = ['💎', '💎', '💎']; mult = 10; }
+            else if (roll < 0.15) { const s = symbols[Math.floor(Math.random() * 4)]; result = [s, s, s]; mult = 5; }
+            else if (roll < 0.35) { const s = symbols[Math.floor(Math.random() * 4)]; result = [s, s, symbols[(Math.floor(Math.random() * 3) + 1) % 7]]; mult = 1.5; }
+            else { result = [symbols[Math.floor(Math.random() * 7)], symbols[Math.floor(Math.random() * 7)], symbols[Math.floor(Math.random() * 7)]]; }
+            const win = mult > 0, winnings = bet * mult, profit = winnings - bet;
+            reels.forEach((reel, i) => { setTimeout(() => { reel.classList.remove('spinning'); reel.querySelector('.slot-symbol').textContent = result[i]; }, 500 + i * 500); });
             setTimeout(async () => {
-                await apiCall({
-                    action: 'recordGambling',
-                    email: currentUser.email,
-                    game: 'slots',
-                    wagered: bet,
-                    won: win ? winnings : 0,
-                    lost: win ? 0 : bet,
-                    result: win ? 'win' : 'loss'
-                });
-                
+                await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'slots', wagered: bet, won: win ? winnings : 0, lost: win ? 0 : bet, result: win ? 'win' : 'loss' });
                 currentUser.balance += profit;
                 document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-                
-                document.getElementById('slotsResult').innerHTML = win
-                    ? `<span style="color: var(--success);">WIN! ${multiplier}x = +$${formatNumber(profit)}</span>`
-                    : `<span style="color: var(--danger);">LOSE -$${formatNumber(bet)}</span>`;
-                
+                document.getElementById('slotsResult').innerHTML = `<div class="${win ? 'win-animation' : 'lose-animation'}">${win ? `<span style="color:var(--success)">${mult}x WIN! +$${formatNumber(profit)}</span>` : `<span style="color:var(--danger)">LOSE -$${formatNumber(bet)}</span>`}</div>`;
                 document.getElementById('slotsBtn').disabled = false;
             }, 2000);
         }
 
+        // COIN FLIP
         async function playCoinFlip(choice) {
             const bet = parseFloat(document.getElementById('coinBet').value);
-            if (!bet || bet <= 0) { showToast('Enter a valid bet', 'error'); return; }
+            if (!bet || bet <= 0) { showToast('Enter bet', 'error'); return; }
             if (bet > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
-            
             document.getElementById('headsBtn').disabled = true;
             document.getElementById('tailsBtn').disabled = true;
-            
-            const coinDisplay = document.getElementById('coinDisplay');
-            coinDisplay.style.animation = 'pulse 0.5s ease-in-out 3';
-            
-            // 40% win chance
+            const coin = document.getElementById('coin');
+            coin.classList.add('flipping');
             const result = Math.random() < 0.5 ? 'heads' : 'tails';
-            const win = Math.random() < 0.4 && choice === result;
-            const multiplier = win ? 1.9 : 0;
-            const winnings = bet * multiplier;
-            const profit = winnings - bet;
-            
+            const win = choice === result && Math.random() < 0.9;
+            const mult = win ? 1.9 : 0, winnings = bet * mult, profit = winnings - bet;
             setTimeout(async () => {
-                coinDisplay.textContent = result === 'heads' ? '🪙' : '🔵';
-                coinDisplay.style.animation = '';
-                
-                await apiCall({
-                    action: 'recordGambling',
-                    email: currentUser.email,
-                    game: 'coinflip',
-                    wagered: bet,
-                    won: win ? winnings : 0,
-                    lost: win ? 0 : bet,
-                    result: win ? 'win' : 'loss'
-                });
-                
+                coin.classList.remove('flipping');
+                coin.style.transform = result === 'heads' ? 'rotateY(0deg)' : 'rotateY(180deg)';
+                await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'coinflip', wagered: bet, won: win ? winnings : 0, lost: win ? 0 : bet, result: win ? 'win' : 'loss' });
                 currentUser.balance += profit;
                 document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-                
-                document.getElementById('coinResult').innerHTML = `
-                    <span>Result: ${result.toUpperCase()}</span><br>
-                    ${win
-                        ? `<span style="color: var(--success);">WIN! +$${formatNumber(profit)}</span>`
-                        : `<span style="color: var(--danger);">LOSE -$${formatNumber(bet)}</span>`}
-                `;
-                
+                document.getElementById('coinResult').innerHTML = `<div class="${win ? 'win-animation' : 'lose-animation'}">${result === 'heads' ? '👑' : '🦅'} ${result.toUpperCase()}<br>${win ? `<span style="color:var(--success)">WIN! +$${formatNumber(profit)}</span>` : `<span style="color:var(--danger)">LOSE -$${formatNumber(bet)}</span>`}</div>`;
                 document.getElementById('headsBtn').disabled = false;
                 document.getElementById('tailsBtn').disabled = false;
             }, 1500);
         }
 
-        // ============ CHAT ============
-        async function loadChat() {
-            const data = await apiCall({ action: 'getChat', limit: 50 });
-            
-            if (data.success && data.messages) {
-                renderChat(data.messages);
-            }
-        }
-
-        function renderChat(messages) {
-            const container = document.getElementById('chatMessages');
-            
-            if (messages.length === 0) {
-                container.innerHTML = '<div class="empty-state"><p>No messages yet. Be the first!</p></div>';
-                return;
-            }
-            
-            container.innerHTML = messages.map(m => `
-                <div class="chat-message">
-                    <span class="chat-username">${m.username || m.name}</span>
-                    <span class="chat-time">${formatDate(m.timestamp)}</span>
-                    <div class="chat-text">${m.message}</div>
-                </div>
-            `).join('');
-            
-            container.scrollTop = container.scrollHeight;
-        }
-
-        async function sendChat() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            
-            if (!message) return;
-            
-            const data = await apiCall({
-                action: 'sendChat',
-                email: currentUser.email,
-                username: currentUser.name,
-                message: encodeURIComponent(message)
-            });
-            
-            if (data.success) {
-                input.value = '';
-                loadChat();
-            } else {
-                showToast('Failed to send message', 'error');
-            }
-        }
-
-        // ============ LEADERBOARDS ============
+        // LEADERBOARD
         async function loadLeaderboards() {
-            // Wealth
-            const wealthData = await apiCall({ action: 'getLeaderboard' });
-            if (wealthData.success && wealthData.users) {
-                renderLeaderboard('wealthLeaderboard', wealthData.users, 'balance', '$');
-            }
-            
-            // Credit
-            const creditData = await apiCall({ action: 'getCreditLeaderboard' });
-            if (creditData.success && creditData.users) {
-                renderLeaderboard('creditLeaderboard', creditData.users, 'creditScore', '');
-            }
-            
-            // Emoji
-            const emojiData = await apiCall({ action: 'getEmojiLeaderboard' });
-            if (emojiData.success && emojiData.leaderboard) {
-                renderLeaderboard('emojiLeaderboard', emojiData.leaderboard, 'points', '', ' pts');
-            }
-        }
-
-        function renderLeaderboard(containerId, users, field, prefix = '', suffix = '') {
-            const container = document.getElementById(containerId);
-            const medals = ['🥇', '🥈', '🥉'];
-            
-            if (!users || users.length === 0) {
-                container.innerHTML = '<div class="empty-state"><p>No data yet</p></div>';
-                return;
-            }
-            
-            container.innerHTML = users.slice(0, 20).map((user, i) => {
-                const isCurrentUser = user.email === currentUser.email;
-                return `
-                    <div class="transaction-item" style="${isCurrentUser ? 'border: 2px solid var(--gold);' : ''}">
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <span style="font-size: 1.5rem; min-width: 40px;">${i < 3 ? medals[i] : '#' + (i + 1)}</span>
-                            <div>
-                                <div style="font-weight: 600; ${isCurrentUser ? 'color: var(--gold);' : ''}">${user.name}</div>
-                            </div>
-                        </div>
-                        <div style="font-weight: 700; color: var(--gold);">
-                            ${prefix}${formatNumber(user[field] || 0)}${suffix}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ============ ADMIN ============
-        async function loadAdmin() {
-            if (currentUser.email !== MASTER_ADMIN) {
-                showToast('Access denied', 'error');
-                return;
-            }
-            
-            const data = await apiCall({ action: 'getAllUsers' });
-            
+            const data = await apiCall({ action: 'getLeaderboard' });
             if (data.success && data.users) {
-                document.getElementById('userCount').textContent = data.users.length + ' users';
-                renderAdminUsers(data.users);
+                const c = document.getElementById('wealthLeaderboard');
+                const medals = ['🥇', '🥈', '🥉'];
+                c.innerHTML = data.users.slice(0, 20).map((u, i) => {
+                    const isMe = u.email === currentUser.email;
+                    return `<div class="transaction-item" style="${isMe ? 'border:2px solid var(--gold)' : ''}"><div style="display:flex;align-items:center;gap:0.75rem"><span style="font-size:1.25rem">${i < 3 ? medals[i] : '#' + (i + 1)}</span><span style="font-weight:600;${isMe ? 'color:var(--gold)' : ''}">${u.name}</span></div><span style="font-weight:700;color:var(--gold)">$${formatNumber(u.balance || 0)}</span></div>`;
+                }).join('');
             }
         }
 
-        function renderAdminUsers(users) {
-            const container = document.getElementById('adminUsersList');
-            
-            container.innerHTML = users.map(u => `
-                <div class="transaction-item">
-                    <div>
-                        <div style="font-weight: 600;">${u.name}</div>
-                        <div style="color: var(--text-muted); font-size: 0.75rem;">${u.email}</div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="font-weight: 700; color: var(--gold);">$${formatNumber(u.balance || 0)}</div>
-                        <button class="btn btn-sm btn-success" onclick="adminAddMoney('${u.email}')" style="margin-top: 0.5rem;">+$</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        async function adminAddMoney(email) {
-            const amount = prompt('Amount to add:');
-            if (!amount || isNaN(amount)) return;
-            
-            const data = await apiCall({
-                action: 'adminAdjustBalance',
-                adminEmail: currentUser.email,
-                email,
-                amount: parseFloat(amount)
-            });
-            
-            if (data.success) {
-                showToast('Money added!', 'success');
-                loadAdmin();
-            } else {
-                showToast(data.message || 'Failed', 'error');
-            }
-        }
-
-        // ============ SETTINGS ============
-        function showSettingsModal() {
-            document.getElementById('settingsModal').classList.add('active');
-        }
-
-        function closeSettingsModal() {
-            document.getElementById('settingsModal').classList.remove('active');
-        }
-
+        // SETTINGS
+        function showSettingsModal() { document.getElementById('settingsModal').classList.add('active'); }
+        function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('active'); }
         async function confirmResetAccount() {
-            const confirmation = prompt('This will PERMANENTLY delete all your data. Type "RESET" to confirm:');
-            
-            if (confirmation !== 'RESET') {
-                showToast('Reset cancelled', 'info');
-                return;
-            }
-            
-            showToast('Resetting account...');
+            if (prompt('Type "RESET" to confirm:') !== 'RESET') return;
             const data = await apiCall({ action: 'resetAccount', email: currentUser.email });
-            
             if (data.success) {
                 currentUser.balance = data.newBalance || 100000;
                 document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-                showToast('Account reset! New balance: $' + formatNumber(currentUser.balance), 'success');
+                showToast('Account reset!', 'success');
                 closeSettingsModal();
                 loadDashboard();
-            } else {
-                showToast(data.message || 'Reset failed', 'error');
             }
         }
 
-        // ============ HELPER FUNCTIONS ============
-        function formatNumber(num) {
-            if (num === undefined || num === null) return '0';
-            return parseFloat(num).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-        }
+        function formatNumber(n) { return n === undefined || n === null ? '0' : parseFloat(n).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); }
 
-        function formatDate(dateStr) {
-            if (!dateStr) return '-';
-            try {
-                return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-            } catch (e) {
-                return dateStr;
-            }
-        }
-
-        // ============ AUTO-REFRESH ============
         setInterval(() => {
             if (currentUser && !document.hidden) {
-                apiCall({ action: 'getUser', email: currentUser.email }).then(data => {
-                    if (data.success && data.user) {
-                        currentUser.balance = data.user.balance;
-                        document.getElementById('balanceAmount').textContent = formatNumber(data.user.balance);
-                    }
-                });
+                apiCall({ action: 'getBalance', email: currentUser.email }).then(d => { if (d.success) { currentUser.balance = d.balance; document.getElementById('balanceAmount').textContent = formatNumber(d.balance); } });
             }
         }, 30000);
     </script>
