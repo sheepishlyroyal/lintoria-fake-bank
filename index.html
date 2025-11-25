@@ -3,216 +3,863 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lintoria Hub V4.02</title>
+    <title>Lintoria Hub V4.02 - Ultimate Edition</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
         
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --primary: #2563eb; --gold: #fbbf24; --success: #10b981; --danger: #ef4444;
-            --bg-primary: #050817; --bg-secondary: #0f172a; --bg-card: rgba(15, 23, 42, 0.8);
-            --text-primary: #f8fafc; --text-secondary: #cbd5e1; --text-muted: #64748b;
-            --border: rgba(148, 163, 184, 0.1);
-            --rarity-common: #ffffff; --rarity-uncommon: #22c55e; --rarity-rare: #3b82f6;
-            --rarity-epic: #a855f7; --rarity-legendary: #fbbf24; --rarity-mythic: #ec4899; --rarity-divine: #06b6d4;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        body { font-family: 'Inter', sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; }
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #60a5fa;
+            --primary-glow: #3b82f6;
+            
+            --gold: #fbbf24;
+            --gold-dark: #f59e0b;
+            --gold-light: #fcd34d;
+            --gold-glow: #facc15;
+            
+            --accent: #0ea5e9;
+            --accent-dark: #0284c7;
+            --accent-light: #38bdf8;
+            
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            
+            --bg-primary: #050817;
+            --bg-secondary: #0f172a;
+            --bg-tertiary: #1e293b;
+            --bg-card: rgba(15, 23, 42, 0.8);
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            
+            --border: rgba(148, 163, 184, 0.1);
+            --border-light: rgba(148, 163, 184, 0.2);
+            
+            --gradient-blue-gold: linear-gradient(135deg, #2563eb 0%, #fbbf24 100%);
+            --gradient-gold-blue: linear-gradient(135deg, #fbbf24 0%, #2563eb 100%);
+            --gradient-blue: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+            --gradient-gold: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #fcd34d 100%);
+            --gradient-premium: linear-gradient(135deg, #1e40af 0%, #fbbf24 100%);
+        }
 
-        .app-container { position: relative; z-index: 10; min-height: 100vh; padding: 1.5rem; max-width: 1400px; margin: 0 auto; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .interactive-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .grid-layer {
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(rgba(37, 99, 235, 0.08) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.08) 2px, transparent 2px);
+            background-size: 80px 80px;
+            transform: perspective(500px) rotateX(60deg) translateY(-50%);
+            transform-origin: center center;
+            animation: gridScroll 20s linear infinite;
+        }
+
+        @keyframes gridScroll {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(-50%); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(calc(-50% + 80px)); }
+        }
+
+        .particle-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #fbbf24 0%, rgba(251, 191, 36, 0.6) 40%, transparent 70%);
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+            opacity: 0;
+            box-shadow: 0 0 10px 3px rgba(251, 191, 36, 0.6);
+        }
+
+        .particle.blue {
+            background: radial-gradient(circle, #3b82f6 0%, rgba(59, 130, 246, 0.6) 40%, transparent 70%);
+            box-shadow: 0 0 10px 3px rgba(59, 130, 246, 0.6);
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-20vh) scale(1); opacity: 0; }
+        }
+
+        .glow-system {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            mix-blend-mode: screen;
+            pointer-events: none;
+        }
+
+        .orb-primary {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.5) 0%, transparent 70%);
+        }
+
+        .orb-secondary {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.4) 0%, transparent 70%);
+        }
+
+        .app-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            padding: 2rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         .glass-card {
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(251, 191, 36, 0.05) 100%);
-            backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 20px; padding: 1.5rem;
-            margin-bottom: 1.5rem; transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
         }
-        .glass-card:hover { transform: translateY(-2px); box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2); }
 
-        .logo-container { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
-        .logo-icon { width: 50px; height: 50px; background: linear-gradient(135deg, #2563eb, #fbbf24); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-        .logo-text { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #2563eb, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .logo-badge { padding: 0.3rem 0.8rem; background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #050817; font-size: 0.7rem; font-weight: 800; border-radius: 20px; margin-left: 0.5rem; }
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 30px 40px -5px rgba(37, 99, 235, 0.3);
+        }
 
-        .disclaimer-banner { background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(251, 191, 36, 0.15)); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1rem; font-size: 0.8rem; }
-        .disclaimer-banner strong { color: var(--danger); }
+        .logo-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
 
-        .tab-container { display: flex; gap: 0.5rem; padding: 0.5rem; background: rgba(37, 99, 235, 0.1); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 1.5rem; overflow-x: auto; flex-wrap: wrap; }
-        .tab-section { display: flex; gap: 0.3rem; padding: 0.3rem; background: rgba(255, 255, 255, 0.03); border-radius: 12px; }
-        .tab-btn { padding: 0.6rem 1rem; background: rgba(37, 99, 235, 0.1); color: var(--text-secondary); border: none; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: all 0.3s ease; white-space: nowrap; }
-        .tab-btn:hover { color: var(--text-primary); background: rgba(251, 191, 36, 0.2); }
-        .tab-btn.active { background: linear-gradient(135deg, #2563eb, #fbbf24); color: white; }
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-blue-gold);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            box-shadow: 0 10px 40px rgba(37, 99, 235, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
 
-        .form-group { margin-bottom: 1rem; }
-        .form-label { display: block; margin-bottom: 0.4rem; font-weight: 700; font-size: 0.75rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
-        .form-input, select { width: 100%; padding: 0.8rem 1rem; background: rgba(15, 23, 42, 0.6); border: 2px solid var(--border); border-radius: 10px; color: var(--text-primary); font-size: 0.9rem; transition: all 0.3s ease; }
-        .form-input:focus, select:focus { outline: none; border-color: var(--gold); }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
 
-        .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 10px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; }
-        .btn:hover { transform: translateY(-2px); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-success { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #050817; }
-        .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
-        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.7rem; }
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient-blue-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-        .balance-card { background: linear-gradient(135deg, #1e40af, #fbbf24); padding: 2rem; border-radius: 20px; text-align: center; margin-bottom: 1.5rem; }
-        .balance-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.9); font-weight: 700; }
-        .balance-amount { font-size: 2.5rem; font-weight: 900; color: white; font-family: 'Space Grotesk', sans-serif; }
+        .logo-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--gradient-gold);
+            color: var(--bg-primary);
+            font-size: 0.75rem;
+            font-weight: 800;
+            border-radius: 20px;
+            margin-left: 1rem;
+        }
 
-        .credit-score-card { background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(251, 191, 36, 0.2)); border: 2px solid var(--gold); border-radius: 16px; padding: 1.5rem; text-align: center; margin-bottom: 1rem; }
-        .credit-score-number { font-size: 3rem; font-weight: 900; font-family: 'Space Grotesk', sans-serif; }
-        .credit-tier { font-size: 1rem; font-weight: 700; margin-top: 0.5rem; }
-        .credit-tier.very-poor { color: #ef4444; }
-        .credit-tier.poor { color: #f97316; }
-        .credit-tier.fair { color: #eab308; }
-        .credit-tier.good { color: #22c55e; }
-        .credit-tier.very-good { color: #3b82f6; }
-        .credit-tier.excellent { color: #a855f7; }
+        .disclaimer-banner {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(251, 191, 36, 0.2) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+        }
 
-        .loan-card { background: rgba(37, 99, 235, 0.1); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; margin-bottom: 1rem; transition: all 0.3s ease; }
-        .loan-card:hover { border-color: var(--gold); }
-        .loan-card.active { border-left: 4px solid var(--success); }
-        .loan-card.defaulted { border-left: 4px solid var(--danger); opacity: 0.7; }
-        .loan-card.paid { border-left: 4px solid var(--gold); opacity: 0.8; }
+        .disclaimer-banner strong {
+            color: var(--danger);
+        }
 
-        .loan-type-card { background: rgba(37, 99, 235, 0.1); border: 2px solid var(--border); border-radius: 14px; padding: 1.25rem; cursor: pointer; transition: all 0.3s ease; }
-        .loan-type-card:hover { border-color: var(--gold); transform: translateY(-3px); }
-        .loan-type-card.disabled { opacity: 0.5; cursor: not-allowed; }
+        .tab-container {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            flex-wrap: wrap;
+        }
 
-        .progress-bar { height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin: 0.5rem 0; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--success), var(--gold)); border-radius: 4px; transition: width 0.5s ease; }
+        .tab-section {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            position: relative;
+        }
 
-        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.75rem; }
-        .stat-item { background: rgba(37, 99, 235, 0.1); padding: 1rem; border-radius: 10px; text-align: center; }
-        .stat-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .stat-value { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin-top: 0.25rem; }
-        .stat-value.positive { color: var(--success); }
-        .stat-value.negative { color: var(--danger); }
+        .tab-section::before {
+            content: attr(data-label);
+            position: absolute;
+            top: -10px;
+            left: 16px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--gold);
+            background: var(--bg-secondary);
+            padding: 0 10px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
 
-        .reset-card { background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(251, 191, 36, 0.1)); border: 2px solid rgba(239, 68, 68, 0.3); border-radius: 16px; padding: 1.5rem; text-align: center; }
+        .tab-btn {
+            padding: 0.875rem 1.5rem;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(251, 191, 36, 0.05) 100%);
+            color: var(--text-secondary);
+            border: 1px solid transparent;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
 
-        .transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(37, 99, 235, 0.05); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 0.75rem; }
+        .tab-btn:hover {
+            color: var(--text-primary);
+            transform: translateY(-2px);
+            border-color: rgba(251, 191, 36, 0.3);
+        }
 
-        .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
-        .service-card { background: rgba(37, 99, 235, 0.08); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; transition: all 0.3s ease; }
-        .service-card:hover { transform: translateY(-3px); border-color: var(--gold); }
+        .tab-btn.active {
+            background: var(--gradient-blue-gold);
+            color: white;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
+        }
 
-        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
-        .section-header h2 { font-size: 1.1rem; font-weight: 700; color: var(--gold); }
-        .badge { padding: 0.2rem 0.6rem; background: rgba(251, 191, 36, 0.2); border-radius: 20px; font-size: 0.7rem; color: var(--gold); }
+        .tab-icon {
+            margin-right: 0.5rem;
+            font-size: 1.125rem;
+        }
 
-        .casino-game { background: rgba(37, 99, 235, 0.1); border: 1px solid var(--border); border-radius: 16px; padding: 1.25rem; }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
 
-        .chat-container { height: 300px; overflow-y: auto; background: rgba(15, 23, 42, 0.6); border-radius: 12px; padding: 0.75rem; margin-bottom: 0.75rem; }
-        .chat-message { margin-bottom: 0.5rem; padding: 0.5rem 0.75rem; background: rgba(37, 99, 235, 0.1); border-radius: 8px; }
-        .chat-username { font-weight: 700; color: var(--gold); font-size: 0.8rem; }
-        .chat-text { color: var(--text-primary); font-size: 0.85rem; }
-        .chat-time { font-size: 0.65rem; color: var(--text-muted); }
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-        .pack-card { background: rgba(37, 99, 235, 0.1); border: 2px solid var(--border); border-radius: 16px; padding: 1.25rem; text-align: center; cursor: pointer; transition: all 0.3s ease; }
-        .pack-card:hover { border-color: var(--gold); transform: scale(1.02); }
-        .pack-emojis { font-size: 1.2rem; margin: 0.75rem 0; }
+        .form-input, select, textarea {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
 
-        .emoji-card { display: inline-flex; flex-direction: column; align-items: center; padding: 0.75rem; border-radius: 10px; min-width: 70px; margin: 0.2rem; cursor: pointer; transition: all 0.3s ease; }
-        .emoji-card:hover { transform: scale(1.1); }
-        .emoji-card .emoji { font-size: 2rem; }
-        .emoji-card.common { background: rgba(255,255,255,0.1); border: 1px solid var(--rarity-common); }
-        .emoji-card.uncommon { background: rgba(34,197,94,0.15); border: 1px solid var(--rarity-uncommon); }
-        .emoji-card.rare { background: rgba(59,130,246,0.15); border: 1px solid var(--rarity-rare); }
-        .emoji-card.epic { background: rgba(168,85,247,0.15); border: 1px solid var(--rarity-epic); }
-        .emoji-card.legendary { background: rgba(251,191,36,0.15); border: 1px solid var(--rarity-legendary); }
-        .emoji-card.mythic { background: rgba(236,72,153,0.15); border: 1px solid var(--rarity-mythic); }
-        .emoji-card.divine { background: rgba(6,182,212,0.2); border: 2px solid var(--rarity-divine); }
+        .form-input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.1);
+        }
 
-        .rarity-badge { display: inline-block; padding: 0.15rem 0.4rem; border-radius: 6px; font-size: 0.55rem; font-weight: 700; text-transform: uppercase; }
-        .rarity-badge.common { background: var(--rarity-common); color: #000; }
-        .rarity-badge.uncommon { background: var(--rarity-uncommon); color: #000; }
-        .rarity-badge.rare { background: var(--rarity-rare); color: #fff; }
-        .rarity-badge.epic { background: var(--rarity-epic); color: #fff; }
-        .rarity-badge.legendary { background: var(--rarity-legendary); color: #000; }
-        .rarity-badge.mythic { background: var(--rarity-mythic); color: #fff; }
-        .rarity-badge.divine { background: var(--rarity-divine); color: #000; }
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--gradient-blue);
+            color: white;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
+        }
 
-        .toast { position: fixed; top: 1rem; right: -400px; padding: 0.75rem 1.25rem; background: linear-gradient(135deg, #2563eb, #fbbf24); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: right 0.4s ease; z-index: 2000; color: white; font-weight: 600; font-size: 0.85rem; }
-        .toast.show { right: 1rem; }
-        .toast.success { background: linear-gradient(135deg, #10b981, #059669); }
-        .toast.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.5);
+        }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 8, 23, 0.9); backdrop-filter: blur(10px); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 20px; padding: 1.5rem; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
+        .btn:active { transform: translateY(0); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .btn-success {
+            background: var(--gradient-gold);
+            color: var(--bg-primary);
+            box-shadow: 0 10px 25px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+        }
+
+        .balance-card {
+            background: var(--gradient-premium);
+            padding: 3rem;
+            border-radius: 28px;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 30px 60px rgba(37, 99, 235, 0.4);
+        }
+
+        .balance-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .balance-amount {
+            font-size: 4rem;
+            font-weight: 900;
+            color: white;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(251, 191, 36, 0.05) 100%);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .transaction-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(251, 191, 36, 0.08) 100%);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .toast {
+            position: fixed;
+            top: 2rem;
+            right: -400px;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(251, 191, 36, 0.95) 100%);
+            border-radius: 14px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transition: right 0.5s ease;
+            z-index: 2000;
+            color: white;
+            font-weight: 600;
+            min-width: 300px;
+        }
+
+        .toast.show { right: 2rem; }
+        .toast.success { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .toast.error { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            opacity: 0.3;
+            margin-bottom: 1rem;
+        }
 
         .hidden { display: none !important; }
-        .tab-content { animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .empty-state { text-align: center; padding: 2rem; color: var(--text-muted); }
-        .empty-icon { font-size: 3rem; opacity: 0.3; margin-bottom: 0.5rem; }
-
-        .verification-input { display: flex; gap: 0.4rem; justify-content: center; margin: 1rem 0; }
-        .verification-input input { width: 45px; height: 55px; text-align: center; font-size: 1.3rem; font-weight: 700; background: rgba(15, 23, 42, 0.6); border: 2px solid var(--border); border-radius: 10px; color: var(--text-primary); }
-        .verification-input input:focus { border-color: var(--gold); outline: none; }
-
-        @media (max-width: 768px) {
-            .logo-text { font-size: 1.5rem; }
-            .balance-amount { font-size: 2rem; }
-            .tab-container { flex-direction: column; }
+        .tab-content {
+            animation: contentFade 0.5s ease-out;
         }
 
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        @keyframes contentFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes coinFlip {
+            0% { transform: rotateY(0deg); }
+            50% { transform: rotateY(180deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        @keyframes dealCard {
+            from { transform: translateY(-30px) rotate(-10deg); opacity: 0; }
+            to { transform: translateY(0) rotate(0); opacity: 1; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .casino-game {
+            transition: all 0.3s ease;
+        }
+
+        .casino-game:hover {
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.2);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .section-header h2 {
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .section-header .badge {
+            padding: 0.25rem 0.75rem;
+            background: rgba(251, 191, 36, 0.2);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--gold);
+        }
+
+        /* Credit Score Gauge */
+        .credit-score-container {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
+            border-radius: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .credit-gauge {
+            position: relative;
+            width: 200px;
+            height: 100px;
+            margin: 0 auto 1rem;
+            overflow: hidden;
+        }
+
+        .credit-gauge-bg {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #ef4444 0deg 60deg,
+                #f97316 60deg 90deg,
+                #fbbf24 90deg 120deg,
+                #84cc16 120deg 150deg,
+                #22c55e 150deg 180deg,
+                transparent 180deg 360deg
+            );
+            clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+        }
+
+        .credit-gauge-needle {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            height: 80px;
+            background: white;
+            transform-origin: bottom center;
+            transition: transform 1s ease-out;
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .credit-gauge-center {
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--gold);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        .credit-score-value {
+            font-size: 3rem;
+            font-weight: 900;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .credit-score-label {
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .credit-excellent { color: #22c55e; }
+        .credit-good { color: #84cc16; }
+        .credit-fair { color: #fbbf24; }
+        .credit-poor { color: #f97316; }
+        .credit-bad { color: #ef4444; }
+
+        /* Loan Cards */
+        .loan-type-card {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(251, 191, 36, 0.05) 100%);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .loan-type-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(251, 191, 36, 0.2);
+        }
+
+        .loan-type-card.selected {
+            border-color: var(--gold);
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(37, 99, 235, 0.1) 100%);
+        }
+
+        .loan-type-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .loan-active-card {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .loan-progress {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .loan-progress-bar {
+            height: 100%;
+            background: var(--gradient-gold);
+            transition: width 0.5s ease;
+        }
+
+        .loan-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .loan-status.active { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .loan-status.overdue { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .loan-status.paid { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+        .loan-status.defaulted { background: rgba(239, 68, 68, 0.3); color: #ef4444; }
+
+        /* Reset Account Modal */
+        .reset-warning {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(251, 191, 36, 0.1) 100%);
+            border: 2px solid rgba(239, 68, 68, 0.5);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .reset-calculation {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Space Grotesk', monospace;
+        }
+
+        .reset-calculation-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .reset-calculation-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--gold);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 8, 23, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content { transform: scale(1); }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-close:hover { color: var(--danger); }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--gold);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .logo-text { font-size: 2rem; }
+            .balance-amount { font-size: 3rem; }
+            .tab-container { flex-direction: column; }
+            .tab-section { width: 100%; }
+            .credit-score-value { font-size: 2rem; }
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-secondary); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
     </style>
 </head>
 <body>
+    <div class="interactive-bg">
+        <div class="grid-layer"></div>
+        <div class="particle-container" id="particleContainer"></div>
+    </div>
+
+    <div class="glow-system" id="glowSystem">
+        <div class="glow-orb orb-primary" id="glowOrb1"></div>
+        <div class="glow-orb orb-secondary" id="glowOrb2"></div>
+    </div>
+
     <div class="app-container">
         <!-- Auth Screen -->
         <div id="authScreen">
-            <div style="max-width: 450px; margin: 0 auto;">
-                <div class="logo-container" style="justify-content: center;">
+            <div style="max-width: 500px; margin: 0 auto;">
+                <div class="logo-container">
                     <div class="logo-icon">🏛️</div>
                     <span class="logo-text">Lintoria</span>
                     <span class="logo-badge">V4.02</span>
                 </div>
 
                 <div class="disclaimer-banner">
-                    <strong>⚠️ DISCLAIMER:</strong> Lintoria Hub is a <strong>virtual economy simulation</strong> with NO real money. 
-                    This app holds <strong>no responsibility</strong> for misuse (including playing at school/work). For entertainment only!
+                    <strong>⚠️ DISCLAIMER:</strong> Lintoria Hub is a <strong>virtual economy simulation game</strong> using fictional currency only. 
+                    No real money is involved. <strong>Gamble responsibly - even with fake money!</strong>
                 </div>
 
                 <div class="glass-card">
                     <div id="authTabs">
-                        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
-                            <button class="btn active" style="flex: 1;" onclick="switchAuthTab('login')" id="loginTabBtn">Login</button>
-                            <button class="btn" style="flex: 1; background: rgba(37,99,235,0.2);" onclick="switchAuthTab('register')" id="registerTabBtn">Register</button>
+                        <div class="tab-container" style="margin-bottom: 2rem;">
+                            <button class="tab-btn active" onclick="switchAuthTab('login')">
+                                <span class="tab-icon">🔐</span>Login
+                            </button>
+                            <button class="tab-btn" onclick="switchAuthTab('register')">
+                                <span class="tab-icon">✨</span>Register
+                            </button>
                         </div>
 
                         <div id="loginTab">
                             <div class="form-group">
-                                <label class="form-label">Email</label>
-                                <input type="email" id="loginEmail" class="form-input" placeholder="your@email.com">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" id="loginEmail" class="form-input" placeholder="Enter your email">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Password</label>
-                                <input type="password" id="loginPassword" class="form-input" placeholder="Password">
+                                <input type="password" id="loginPassword" class="form-input" placeholder="Enter your password">
                             </div>
-                            <button class="btn btn-success" onclick="login()" style="width: 100%;">Sign In</button>
+                            <button class="btn" onclick="login()" style="width: 100%;">Sign In</button>
                         </div>
 
                         <div id="registerTab" class="hidden">
                             <div class="form-group">
-                                <label class="form-label">Email</label>
-                                <input type="email" id="registerEmail" class="form-input" placeholder="your@email.com">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" id="registerEmail" class="form-input" placeholder="Your email">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Name</label>
-                                <input type="text" id="registerName" class="form-input" placeholder="Your name">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" id="registerName" class="form-input" placeholder="Your full name">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Password</label>
-                                <input type="password" id="registerPassword" class="form-input" placeholder="Choose password">
+                                <input type="password" id="registerPassword" class="form-input" placeholder="Choose a password">
                             </div>
                             <button class="btn btn-success" onclick="register()" style="width: 100%;">Create Account</button>
                         </div>
@@ -220,23 +867,25 @@
 
                     <div id="verificationScreen" class="hidden">
                         <div style="text-align: center;">
-                            <div style="font-size: 3rem;">📧</div>
-                            <h3 style="color: var(--gold); margin: 0.5rem 0;">Verify Email</h3>
-                            <p style="color: var(--text-muted); font-size: 0.85rem;">Code sent to <strong id="verifyEmailDisplay"></strong></p>
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">📧</div>
+                            <h2 style="color: var(--gold); margin-bottom: 0.5rem;">Verify Your Email</h2>
+                            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                                We sent a 6-digit code to <strong id="verifyEmailDisplay"></strong>
+                            </p>
                             
-                            <div class="verification-input">
-                                <input type="text" maxlength="1" id="code1" oninput="handleCodeInput(1)">
-                                <input type="text" maxlength="1" id="code2" oninput="handleCodeInput(2)">
-                                <input type="text" maxlength="1" id="code3" oninput="handleCodeInput(3)">
-                                <input type="text" maxlength="1" id="code4" oninput="handleCodeInput(4)">
-                                <input type="text" maxlength="1" id="code5" oninput="handleCodeInput(5)">
-                                <input type="text" maxlength="1" id="code6" oninput="handleCodeInput(6)">
+                            <div style="display: flex; gap: 0.5rem; justify-content: center; margin: 1.5rem 0;">
+                                <input type="text" maxlength="1" id="code1" class="form-input" style="width: 50px; text-align: center; font-size: 1.5rem;" oninput="handleCodeInput(1)">
+                                <input type="text" maxlength="1" id="code2" class="form-input" style="width: 50px; text-align: center; font-size: 1.5rem;" oninput="handleCodeInput(2)">
+                                <input type="text" maxlength="1" id="code3" class="form-input" style="width: 50px; text-align: center; font-size: 1.5rem;" oninput="handleCodeInput(3)">
+                                <input type="text" maxlength="1" id="code4" class="form-input" style="width: 50px; text-align: center; font-size: 1.5rem;" oninput="handleCodeInput(4)">
+                                <input type="text" maxlength="1" id="code5" class="form-input" style="width: 50px; text-align: center; font-size: 1.5rem;" oninput="handleCodeInput(5)">
+                                <input type="text" maxlength="1" id="code6" class="form-input" style="width: 50px; text-align: center; font-size: 1.5rem;" oninput="handleCodeInput(6)">
                             </div>
                             
-                            <button class="btn btn-success" onclick="verifyCode()" style="width: 100%; margin-bottom: 0.5rem;">Verify</button>
+                            <button class="btn btn-success" onclick="verifyCode()" style="width: 100%; margin-bottom: 1rem;">Verify Email</button>
                             <button class="btn btn-sm" onclick="resendCode()" style="opacity: 0.7;">Resend Code</button>
                             <br><br>
-                            <button class="btn btn-sm btn-danger" onclick="backToLogin()">Back</button>
+                            <button class="btn btn-sm btn-danger" onclick="backToLogin()">Back to Login</button>
                         </div>
                     </div>
                 </div>
@@ -245,58 +894,51 @@
 
         <!-- Main App -->
         <div id="appScreen" class="hidden">
-            <div class="disclaimer-banner" style="padding: 0.5rem 1rem; font-size: 0.7rem;">
-                ⚠️ Virtual simulation - NO real money - Entertainment only!
+            <div class="disclaimer-banner">
+                <strong>⚠️ REMINDER:</strong> This is a <strong>virtual simulation</strong> with <strong>no real money</strong>. 
+                For entertainment only. Play responsibly!
             </div>
 
             <!-- Header -->
-            <div class="glass-card" style="padding: 1rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-                    <div style="display: flex; align-items: center; gap: 0.75rem;">
-                        <div class="logo-icon" style="width: 40px; height: 40px; font-size: 20px;">🏛️</div>
+            <div class="glass-card" style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div class="logo-container" style="margin-bottom: 0;">
+                        <div class="logo-icon">🏛️</div>
                         <div>
-                            <div style="font-weight: 700; color: var(--gold);">Lintoria Hub</div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted);">
-                                <span id="userName"></span>
-                                <span id="masterBadge" class="hidden" style="color: var(--gold);"> ⚡Admin</span>
+                            <div class="logo-text">Lintoria Hub</div>
+                            <div style="color: var(--text-muted); font-size: 0.875rem;">
+                                Welcome, <span id="userName" style="color: var(--gold); font-weight: 700;"></span>
+                                <span id="masterBadge" class="hidden" style="margin-left: 0.5rem; color: var(--gold);">⚡ Admin</span>
                             </div>
                         </div>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <div style="text-align: right;">
-                            <div style="font-size: 0.65rem; color: var(--text-muted);">CREDIT SCORE</div>
-                            <div id="headerCreditScore" style="font-weight: 700; color: var(--gold);">600</div>
-                        </div>
-                        <button class="btn btn-danger btn-sm" onclick="logout()">Logout</button>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-sm" onclick="showSettingsModal()">⚙️ Settings</button>
+                        <button class="btn btn-sm btn-danger" onclick="logout()">Logout</button>
                     </div>
                 </div>
             </div>
 
             <!-- Navigation -->
             <div class="tab-container">
-                <div class="tab-section">
-                    <button class="tab-btn active" onclick="switchTab('dashboard')">🏦 Bank</button>
-                    <button class="tab-btn" onclick="switchTab('transfer')">💸 Send</button>
-                    <button class="tab-btn" onclick="switchTab('loans')">💳 Loans</button>
+                <div class="tab-section" data-label="Core">
+                    <button class="tab-btn active" onclick="switchTab('dashboard')"><span class="tab-icon">🏦</span>Bank</button>
+                    <button class="tab-btn" onclick="switchTab('transfer')"><span class="tab-icon">💸</span>Transfer</button>
+                    <button class="tab-btn" onclick="switchTab('loans')"><span class="tab-icon">🏧</span>Loans</button>
                 </div>
-                <div class="tab-section">
-                    <button class="tab-btn" onclick="switchTab('stocks')">📈 Stocks</button>
-                    <button class="tab-btn" onclick="switchTab('portfolio')">💼 Portfolio</button>
+
+                <div class="tab-section" data-label="Invest">
+                    <button class="tab-btn" onclick="switchTab('stocks')"><span class="tab-icon">📈</span>Stocks</button>
+                    <button class="tab-btn" onclick="switchTab('portfolio')"><span class="tab-icon">💼</span>Portfolio</button>
                 </div>
-                <div class="tab-section">
-                    <button class="tab-btn" onclick="switchTab('packs')">🎁 Packs</button>
-                    <button class="tab-btn" onclick="switchTab('collection')">🎒 Collection</button>
+
+                <div class="tab-section" data-label="Entertainment">
+                    <button class="tab-btn" onclick="switchTab('casino')"><span class="tab-icon">🎰</span>Casino</button>
+                    <button class="tab-btn" onclick="switchTab('leaderboard')"><span class="tab-icon">🏆</span>Leaders</button>
                 </div>
-                <div class="tab-section">
-                    <button class="tab-btn" onclick="switchTab('casino')">🎰 Casino</button>
-                    <button class="tab-btn" onclick="switchTab('chat')">💬 Chat</button>
-                    <button class="tab-btn" onclick="switchTab('leaderboard')">🏆 Leaders</button>
-                </div>
-                <div class="tab-section">
-                    <button class="tab-btn" onclick="switchTab('reset')">🔄 Reset</button>
-                </div>
-                <div class="tab-section hidden" id="adminSection">
-                    <button class="tab-btn" onclick="switchTab('admin')">👑 Admin</button>
+
+                <div class="tab-section hidden" id="adminSection" data-label="Admin">
+                    <button class="tab-btn" onclick="switchTab('admin')"><span class="tab-icon">👑</span>Control</button>
                 </div>
             </div>
 
@@ -307,13 +949,35 @@
                     <div class="balance-amount">$<span id="balanceAmount">0.00</span></div>
                 </div>
 
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="creditScoreDisplay">650</div>
+                        <div class="stat-label">Credit Score</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="activeLoansDisplay">0</div>
+                        <div class="stat-label">Active Loans</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalDebtDisplay">$0</div>
+                        <div class="stat-label">Total Debt</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="gamblingStatsDisplay">0%</div>
+                        <div class="stat-label">Gambling Ratio</div>
+                    </div>
+                </div>
+
                 <div class="glass-card">
                     <div class="section-header">
                         <h2>📊 Recent Transactions</h2>
-                        <span class="badge" id="transactionCount">0</span>
+                        <span class="badge" id="transactionCount">0 transactions</span>
                     </div>
                     <div id="transactionList">
-                        <div class="empty-state"><div class="empty-icon">💰</div><p>No transactions</p></div>
+                        <div class="empty-state">
+                            <div class="empty-icon">💰</div>
+                            <p>No transactions yet</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -321,14 +985,14 @@
             <!-- Transfer -->
             <div id="transferContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <h2 style="color: var(--gold); margin-bottom: 1rem;">💸 Send Money</h2>
+                    <h2 style="margin-bottom: 1.5rem; font-weight: 700; color: var(--gold);">💸 Send Money</h2>
                     <div class="form-group">
                         <label class="form-label">Recipient Email</label>
-                        <input type="email" id="recipientEmail" class="form-input" placeholder="recipient@email.com">
+                        <input type="email" id="recipientEmail" class="form-input" placeholder="recipient@example.com">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Amount</label>
-                        <input type="number" id="transferAmount" class="form-input" placeholder="0.00" min="0.01" step="0.01">
+                        <label class="form-label">Amount ($)</label>
+                        <input type="number" id="transferAmount" class="form-input" placeholder="0.00" step="0.01" min="0.01">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Note (Optional)</label>
@@ -338,261 +1002,313 @@
                 </div>
             </div>
 
-            <!-- LOANS -->
+            <!-- LOANS SECTION -->
             <div id="loansContent" class="tab-content hidden">
+                <!-- Credit Score Display -->
+                <div class="credit-score-container">
+                    <div class="credit-gauge">
+                        <div class="credit-gauge-bg"></div>
+                        <div class="credit-gauge-needle" id="creditNeedle"></div>
+                        <div class="credit-gauge-center"></div>
+                    </div>
+                    <div class="credit-score-value" id="creditScoreMain">650</div>
+                    <div class="credit-score-label" id="creditScoreLabel">Fair</div>
+                    <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.875rem;">
+                        Your credit score affects loan approval and interest rates
+                    </p>
+                </div>
+
+                <!-- Loan Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="loansTaken">0</div>
+                        <div class="stat-label">Loans Taken</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="loansPaid">0</div>
+                        <div class="stat-label">Loans Paid</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="loansDefaulted">0</div>
+                        <div class="stat-label">Defaults</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="onTimePayments">0%</div>
+                        <div class="stat-label">On-Time Rate</div>
+                    </div>
+                </div>
+
+                <!-- Apply for Loan -->
                 <div class="glass-card">
                     <div class="section-header">
-                        <h2>💳 Credit & Loans</h2>
-                        <button class="btn btn-sm" onclick="loadLoans()">Refresh</button>
+                        <h2>📝 Apply for a Loan</h2>
                     </div>
 
-                    <!-- Credit Score Display -->
-                    <div class="credit-score-card">
-                        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Credit Score</div>
-                        <div class="credit-score-number" id="creditScoreDisplay">600</div>
-                        <div class="credit-tier" id="creditTierDisplay">Fair</div>
-                        <div style="margin-top: 0.75rem; font-size: 0.8rem;">
-                            <span style="color: var(--text-muted);">Max Loan:</span> 
-                            <span style="color: var(--gold); font-weight: 700;" id="maxLoanDisplay">$50,000</span>
-                            <span style="color: var(--text-muted); margin-left: 1rem;">Interest:</span>
-                            <span style="color: var(--danger); font-weight: 700;" id="interestRateDisplay">15%</span>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                        Select a loan type below. Interest rates depend on your credit score.
+                    </p>
+
+                    <div class="service-grid" id="loanTypes">
+                        <div class="loan-type-card" onclick="selectLoanType('personal')" id="loanType_personal">
+                            <div class="loan-type-icon">💼</div>
+                            <h3 style="color: var(--gold);">Personal Loan</h3>
+                            <p style="color: var(--text-muted); font-size: 0.875rem;">$1,000 - $50,000</p>
+                            <p style="color: var(--text-muted); font-size: 0.75rem;">30-90 day terms</p>
+                            <p style="color: var(--success); font-size: 0.875rem; margin-top: 0.5rem;">Best rates!</p>
+                        </div>
+
+                        <div class="loan-type-card" onclick="selectLoanType('emergency')" id="loanType_emergency">
+                            <div class="loan-type-icon">🚨</div>
+                            <h3 style="color: var(--gold);">Emergency Loan</h3>
+                            <p style="color: var(--text-muted); font-size: 0.875rem;">$500 - $10,000</p>
+                            <p style="color: var(--text-muted); font-size: 0.75rem;">7-30 day terms</p>
+                            <p style="color: var(--warning); font-size: 0.875rem; margin-top: 0.5rem;">Quick approval</p>
+                        </div>
+
+                        <div class="loan-type-card" onclick="selectLoanType('payday')" id="loanType_payday">
+                            <div class="loan-type-icon">💵</div>
+                            <h3 style="color: var(--gold);">Payday Loan</h3>
+                            <p style="color: var(--text-muted); font-size: 0.875rem;">$100 - $2,000</p>
+                            <p style="color: var(--text-muted); font-size: 0.75rem;">7-14 day terms</p>
+                            <p style="color: var(--danger); font-size: 0.875rem; margin-top: 0.5rem;">High interest!</p>
+                        </div>
+
+                        <div class="loan-type-card" onclick="selectLoanType('business')" id="loanType_business">
+                            <div class="loan-type-icon">🏢</div>
+                            <h3 style="color: var(--gold);">Business Loan</h3>
+                            <p style="color: var(--text-muted); font-size: 0.875rem;">$10,000 - $200,000</p>
+                            <p style="color: var(--text-muted); font-size: 0.75rem;">60-180 day terms</p>
+                            <p style="color: var(--primary-light); font-size: 0.875rem; margin-top: 0.5rem;">700+ score req.</p>
                         </div>
                     </div>
 
-                    <div style="background: rgba(37, 99, 235, 0.1); border-radius: 10px; padding: 0.75rem; margin-bottom: 1rem; font-size: 0.8rem;">
-                        <strong style="color: var(--gold);">💡 How Credit Score Works:</strong>
-                        <ul style="margin: 0.5rem 0 0 1rem; color: var(--text-secondary);">
-                            <li>On-time payments: +5 points</li>
-                            <li>Late payments: -15 points</li>
-                            <li>Pay off loan early: +20 points</li>
-                            <li>Loan default: -100 points</li>
-                        </ul>
-                    </div>
+                    <div id="loanApplicationForm" class="hidden" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+                        <h3 style="color: var(--gold); margin-bottom: 1rem;">Loan Application - <span id="selectedLoanType">Personal</span></h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Loan Amount ($)</label>
+                            <input type="number" id="loanAmount" class="form-input" placeholder="Enter amount" min="100">
+                            <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem;">
+                                Range: $<span id="loanMinAmount">1,000</span> - $<span id="loanMaxAmount">50,000</span>
+                            </p>
+                        </div>
 
-                    <!-- Active Loans -->
-                    <h3 style="color: var(--gold); margin: 1rem 0 0.75rem;">📋 Your Active Loans (<span id="activeLoansCount">0</span>/3)</h3>
-                    <div id="activeLoansContainer">
-                        <div class="empty-state" style="padding: 1rem;"><p>No active loans</p></div>
-                    </div>
+                        <div class="form-group">
+                            <label class="form-label">Repayment Term</label>
+                            <select id="loanTerm" class="form-input">
+                                <option value="7">7 Days</option>
+                                <option value="14">14 Days</option>
+                                <option value="30" selected>30 Days</option>
+                                <option value="60">60 Days</option>
+                                <option value="90">90 Days</option>
+                            </select>
+                        </div>
 
-                    <!-- Apply for Loan -->
-                    <h3 style="color: var(--gold); margin: 1.5rem 0 0.75rem;">✨ Apply for New Loan</h3>
-                    <div class="service-grid" id="loanTypesContainer">
-                        <div class="empty-state"><p>Loading...</p></div>
+                        <div style="background: rgba(15, 23, 42, 0.6); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
+                            <h4 style="color: var(--gold); margin-bottom: 0.5rem;">Loan Preview</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.875rem;">
+                                <span style="color: var(--text-muted);">Interest Rate:</span>
+                                <span id="previewInterestRate" style="color: var(--gold);">12%</span>
+                                <span style="color: var(--text-muted);">Interest Amount:</span>
+                                <span id="previewInterestAmount">$0</span>
+                                <span style="color: var(--text-muted);">Total Repayment:</span>
+                                <span id="previewTotalRepayment" style="color: var(--danger); font-weight: 700;">$0</span>
+                                <span style="color: var(--text-muted);">Due Date:</span>
+                                <span id="previewDueDate">-</span>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-success" onclick="applyForLoan()" style="width: 100%;">Apply for Loan</button>
+                    </div>
+                </div>
+
+                <!-- Active Loans -->
+                <div class="glass-card" style="margin-top: 2rem;">
+                    <div class="section-header">
+                        <h2>📋 Your Active Loans</h2>
+                        <button class="btn btn-sm" onclick="loadLoans()">Refresh</button>
+                    </div>
+                    <div id="activeLoans">
+                        <div class="empty-state">
+                            <div class="empty-icon">💸</div>
+                            <p>No active loans</p>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Loan History -->
-                <div class="glass-card">
+                <div class="glass-card" style="margin-top: 2rem;">
                     <div class="section-header">
                         <h2>📜 Loan History</h2>
                     </div>
-                    <div id="loanHistoryContainer">
-                        <div class="empty-state" style="padding: 1rem;"><p>No loan history</p></div>
+                    <div id="loanHistory">
+                        <div class="empty-state">
+                            <div class="empty-icon">📜</div>
+                            <p>No loan history</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Stocks -->
             <div id="stocksContent" class="tab-content hidden">
-                <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 10px; padding: 0.75rem; margin-bottom: 1rem; font-size: 0.8rem;">
-                    ⚠️ <strong>5% Tax</strong> on all stock transactions
-                </div>
                 <div class="glass-card">
                     <div class="section-header">
-                        <h2>📈 Stocks</h2>
-                        <button class="btn btn-sm" onclick="loadStocks()">Refresh</button>
+                        <h2>📈 Stock Market</h2>
+                        <span class="badge">5% Tax on trades</span>
                     </div>
-                    <div id="stocksList"><div class="empty-state"><p>Loading...</p></div></div>
+                    <div id="stocksList">
+                        <div class="empty-state"><div class="empty-icon">📈</div><p>Loading...</p></div>
+                    </div>
                 </div>
             </div>
 
             <!-- Portfolio -->
             <div id="portfolioContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <div class="section-header"><h2>💼 Portfolio</h2></div>
-                    <div id="portfolioList"><div class="empty-state"><p>No stocks</p></div></div>
-                </div>
-            </div>
-
-            <!-- Packs -->
-            <div id="packsContent" class="tab-content hidden">
-                <div class="glass-card">
-                    <div class="section-header">
-                        <h2>🎁 Emoji Packs</h2>
-                        <button class="btn btn-sm" onclick="showChancesModal()">📊 Chances</button>
+                    <div class="section-header"><h2>💼 Your Portfolio</h2></div>
+                    <div id="portfolioList">
+                        <div class="empty-state"><div class="empty-icon">💼</div><p>No stocks owned</p></div>
                     </div>
-                    <p style="color: var(--gold); font-weight: 700; margin-bottom: 1rem;">$7,500 per pack</p>
-                    <div class="service-grid" id="packsList"><div class="empty-state"><p>Loading...</p></div></div>
                 </div>
             </div>
 
-            <!-- Collection -->
-            <div id="collectionContent" class="tab-content hidden">
-                <div class="glass-card">
-                    <div class="section-header">
-                        <h2>🎒 Collection</h2>
-                        <span class="badge" id="emojiScore">0 pts</span>
-                    </div>
-                    <div id="emojiCollection"><div class="empty-state"><p>No emojis</p></div></div>
-                </div>
-            </div>
-
-            <!-- Casino -->
+            <!-- FULL CASINO -->
             <div id="casinoContent" class="tab-content hidden">
                 <div class="glass-card">
-                    <h2 style="color: var(--gold); margin-bottom: 0.5rem;">🎰 Casino</h2>
-                    <p style="color: var(--danger); font-size: 0.8rem; margin-bottom: 1rem;">⚠️ House edge: 40-60 odds. Virtual currency only!</p>
+                    <h2 style="margin-bottom: 0.5rem; font-weight: 700; color: var(--gold);">🎰 Lintoria Casino</h2>
+                    <p style="color: var(--danger); margin-bottom: 1rem; font-weight: 600;">⚠️ House always wins! 40-60 odds in favor of the house.</p>
                     
-                    <div class="service-grid">
-                        <div class="casino-game">
-                            <h3 style="color: var(--gold);">🎡 Roulette</h3>
-                            <input type="number" id="rouletteBet" class="form-input" placeholder="Bet" min="1" style="margin: 0.5rem 0;">
-                            <div style="display: grid; grid-template-columns: repeat(3,1fr); gap: 0.3rem;">
-                                <button class="btn btn-sm" onclick="playRoulette('red')" style="background: #dc2626;">Red</button>
-                                <button class="btn btn-sm" onclick="playRoulette('black')" style="background: #1f2937;">Black</button>
-                                <button class="btn btn-sm btn-success" onclick="playRoulette('green')">Green</button>
+                    <div class="reset-warning">
+                        <strong>⚠️ Warning:</strong> Gambling losses affect your account reset penalty! 
+                        The more you gamble away, the less you'll start with if you reset your account.
+                    </div>
+
+                    <div class="stats-grid" style="margin-top: 1rem;">
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalGambled">$0</div>
+                            <div class="stat-label">Total Wagered</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalGamblingLosses">$0</div>
+                            <div class="stat-label">Net Losses</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="gamblingWinRate">0%</div>
+                            <div class="stat-label">Win Rate</div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                        
+                        <!-- DICE -->
+                        <div class="service-card casino-game">
+                            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">🎲 Dice Roll</h3>
+                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">40% chance to win 1.9x</p>
+                            
+                            <div class="dice-display" id="diceDisplay" style="font-size: 4rem; text-align: center; margin: 1rem 0;">🎲</div>
+                            
+                            <input type="number" id="diceBet" class="form-input" placeholder="Bet amount" min="1">
+                            <button class="btn" onclick="playDice()" id="diceBtn" style="width: 100%; margin-top: 1rem;">Roll Dice</button>
+                            <div id="diceResult" style="margin-top: 1rem; font-weight: 700; text-align: center; min-height: 30px;"></div>
+                        </div>
+
+                        <!-- SLOTS -->
+                        <div class="service-card casino-game">
+                            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">🎰 Slot Machine</h3>
+                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">Match symbols! Up to 25x jackpot!</p>
+                            
+                            <div style="display: flex; justify-content: center; gap: 0.5rem; background: #0a0a0a; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
+                                <div class="slot-reel" id="reel1" style="width: 60px; height: 70px; background: linear-gradient(180deg, #1a1a1a, #2a2a2a); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 2px solid #444;">🎰</div>
+                                <div class="slot-reel" id="reel2" style="width: 60px; height: 70px; background: linear-gradient(180deg, #1a1a1a, #2a2a2a); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 2px solid #444;">🎰</div>
+                                <div class="slot-reel" id="reel3" style="width: 60px; height: 70px; background: linear-gradient(180deg, #1a1a1a, #2a2a2a); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 2px solid #444;">🎰</div>
                             </div>
-                            <div id="rouletteResult" style="margin-top: 0.5rem; font-weight: 700; text-align: center;"></div>
+                            
+                            <input type="number" id="slotsBet" class="form-input" placeholder="Bet amount" min="1">
+                            <button class="btn btn-success" onclick="playSlots()" id="slotsBtn" style="width: 100%; margin-top: 1rem;">Spin!</button>
+                            <div id="slotsResult" style="margin-top: 1rem; font-weight: 700; text-align: center; min-height: 30px;"></div>
                         </div>
 
-                        <div class="casino-game">
-                            <h3 style="color: var(--gold);">🎲 Dice</h3>
-                            <input type="number" id="diceBet" class="form-input" placeholder="Bet" min="1" style="margin: 0.5rem 0;">
-                            <button class="btn" onclick="playDice()" style="width: 100%;">Roll</button>
-                            <div id="diceResult" style="margin-top: 0.5rem; font-weight: 700; text-align: center;"></div>
+                        <!-- COIN FLIP -->
+                        <div class="service-card casino-game">
+                            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">🪙 Coin Flip</h3>
+                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">40% chance to win 1.9x</p>
+                            
+                            <div id="coinDisplay" style="font-size: 4rem; text-align: center; margin: 1rem 0; transition: transform 0.5s;">🪙</div>
+                            
+                            <input type="number" id="coinBet" class="form-input" placeholder="Bet amount" min="1">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 1rem;">
+                                <button class="btn" onclick="playCoinFlip('heads')" id="headsBtn">👤 Heads</button>
+                                <button class="btn btn-success" onclick="playCoinFlip('tails')" id="tailsBtn">🦅 Tails</button>
+                            </div>
+                            <div id="coinResult" style="margin-top: 1rem; font-weight: 700; text-align: center; min-height: 30px;"></div>
                         </div>
 
-                        <div class="casino-game">
-                            <h3 style="color: var(--gold);">🎰 Slots</h3>
-                            <input type="number" id="slotsBet" class="form-input" placeholder="Bet" min="1" style="margin: 0.5rem 0;">
-                            <button class="btn btn-success" onclick="playSlots()" style="width: 100%;">Spin</button>
-                            <div id="slotsResult" style="margin-top: 0.5rem; font-weight: 700; text-align: center;"></div>
+                        <!-- ROULETTE -->
+                        <div class="service-card casino-game">
+                            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">🎡 Roulette</h3>
+                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">Red/Black ~1.9x, Green ~10x</p>
+                            
+                            <div id="rouletteDisplay" style="font-size: 3rem; text-align: center; margin: 1rem 0; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 50%; width: 80px; height: 80px; margin: 1rem auto; display: flex; align-items: center; justify-content: center;">🎱</div>
+                            
+                            <input type="number" id="rouletteBet" class="form-input" placeholder="Bet amount" min="1">
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 1rem;">
+                                <button class="btn" onclick="playRoulette('red')" id="rouletteRedBtn" style="background: linear-gradient(135deg, #ef4444, #dc2626);">🔴 Red</button>
+                                <button class="btn" onclick="playRoulette('black')" id="rouletteBlackBtn" style="background: linear-gradient(135deg, #1f2937, #111827);">⚫ Black</button>
+                                <button class="btn btn-success" onclick="playRoulette('green')" id="rouletteGreenBtn">🟢 Green</button>
+                            </div>
+                            <div id="rouletteResult" style="margin-top: 1rem; font-weight: 700; text-align: center; min-height: 30px;"></div>
                         </div>
 
-                        <div class="casino-game">
-                            <h3 style="color: var(--gold);">📍 Plinko</h3>
-                            <input type="number" id="plinkoBet" class="form-input" placeholder="Bet" min="1" style="margin: 0.5rem 0;">
-                            <button class="btn btn-success" onclick="playPlinko()" style="width: 100%;">Drop</button>
-                            <div id="plinkoResult" style="margin-top: 0.5rem; font-weight: 700; text-align: center;"></div>
+                        <!-- BLACKJACK -->
+                        <div class="service-card casino-game">
+                            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">🃏 Blackjack</h3>
+                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">Auto-play blackjack! Get 21!</p>
+                            
+                            <div style="background: linear-gradient(135deg, #0f5132, #198754); border-radius: 16px; padding: 1rem; margin: 1rem 0;">
+                                <div style="text-align: center; color: rgba(255,255,255,0.7); font-size: 0.7rem;">DEALER</div>
+                                <div id="dealerHand" style="display: flex; justify-content: center; gap: 5px; min-height: 60px; margin: 0.5rem 0;"></div>
+                                <div style="border-top: 1px dashed rgba(255,255,255,0.3); margin: 0.5rem 0;"></div>
+                                <div id="playerHand" style="display: flex; justify-content: center; gap: 5px; min-height: 60px; margin: 0.5rem 0;"></div>
+                                <div style="text-align: center; color: rgba(255,255,255,0.7); font-size: 0.7rem;">YOU</div>
+                            </div>
+                            
+                            <input type="number" id="blackjackBet" class="form-input" placeholder="Bet amount" min="1">
+                            <button class="btn" onclick="playBlackjack()" id="blackjackBtn" style="width: 100%; margin-top: 1rem;">Deal Cards</button>
+                            <div id="blackjackResult" style="margin-top: 1rem; font-weight: 700; text-align: center; min-height: 30px;"></div>
                         </div>
 
-                        <div class="casino-game">
-                            <h3 style="color: var(--gold);">🎡 Wheel</h3>
-                            <input type="number" id="wheelBet" class="form-input" placeholder="Bet" min="1" style="margin: 0.5rem 0;">
-                            <button class="btn btn-success" onclick="playWheel()" style="width: 100%;">Spin</button>
-                            <div id="wheelResult" style="margin-top: 0.5rem; font-weight: 700; text-align: center;"></div>
+                        <!-- HIGHER LOWER -->
+                        <div class="service-card casino-game">
+                            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">📊 Higher or Lower</h3>
+                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">Guess if next number is higher or lower!</p>
+                            
+                            <div style="display: flex; justify-content: center; gap: 1rem; margin: 1rem 0;">
+                                <div id="currentNumber" style="font-size: 3rem; font-weight: 900; color: var(--gold); background: rgba(0,0,0,0.3); padding: 1rem 2rem; border-radius: 12px;">?</div>
+                            </div>
+                            
+                            <input type="number" id="hiLoBet" class="form-input" placeholder="Bet amount" min="1">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 1rem;">
+                                <button class="btn" onclick="playHiLo('higher')" id="higherBtn" style="background: var(--success);">⬆️ Higher</button>
+                                <button class="btn btn-danger" onclick="playHiLo('lower')" id="lowerBtn">⬇️ Lower</button>
+                            </div>
+                            <div id="hiLoResult" style="margin-top: 1rem; font-weight: 700; text-align: center; min-height: 30px;"></div>
                         </div>
 
-                        <div class="casino-game">
-                            <h3 style="color: var(--gold);">🃏 Blackjack</h3>
-                            <input type="number" id="blackjackBet" class="form-input" placeholder="Bet" min="1" style="margin: 0.5rem 0;">
-                            <button class="btn" onclick="playBlackjack()" style="width: 100%;">Deal</button>
-                            <div id="blackjackResult" style="margin-top: 0.5rem; font-weight: 700; text-align: center; font-size: 0.8rem;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chat -->
-            <div id="chatContent" class="tab-content hidden">
-                <div class="glass-card">
-                    <div class="section-header">
-                        <h2>💬 Chat</h2>
-                        <button class="btn btn-sm" onclick="loadChat()">Refresh</button>
-                    </div>
-                    <div class="chat-container" id="chatMessages"><div class="empty-state"><p>Loading...</p></div></div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <input type="text" id="chatInput" class="form-input" placeholder="Message..." maxlength="500" style="flex: 1;" onkeypress="if(event.key==='Enter')sendChat()">
-                        <button class="btn btn-success" onclick="sendChat()">Send</button>
                     </div>
                 </div>
             </div>
 
             <!-- Leaderboard -->
             <div id="leaderboardContent" class="tab-content hidden">
-                <div class="glass-card">
-                    <div class="section-header"><h2>💰 Wealth</h2></div>
+                <div class="glass-card" style="margin-bottom: 2rem;">
+                    <div class="section-header"><h2>💰 Wealth Leaderboard</h2></div>
                     <div id="wealthLeaderboard"><div class="empty-state"><p>Loading...</p></div></div>
                 </div>
+
                 <div class="glass-card">
-                    <div class="section-header"><h2>🎯 Emoji Score</h2></div>
-                    <div id="emojiLeaderboard"><div class="empty-state"><p>Loading...</p></div></div>
-                </div>
-            </div>
-
-            <!-- RESET -->
-            <div id="resetContent" class="tab-content hidden">
-                <div class="glass-card">
-                    <div class="section-header">
-                        <h2>🔄 Account Reset</h2>
-                    </div>
-
-                    <div class="reset-card">
-                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">🔄</div>
-                        <h3 style="color: var(--gold);">Fresh Start</h3>
-                        <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0.5rem 0;">
-                            Reset your account and start over. The more you lost gambling, the bigger your bonus!
-                        </p>
-                        
-                        <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 1rem; margin: 1rem 0;">
-                            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">You Will Receive</div>
-                            <div style="font-size: 2.5rem; font-weight: 900; color: var(--success);" id="resetAmountDisplay">$100,000</div>
-                            <div style="font-size: 0.8rem; color: var(--text-muted);">
-                                Base: $100,000 + Bonus: <span id="resetBonusDisplay" style="color: var(--gold);">$0</span>
-                            </div>
-                        </div>
-
-                        <div id="resetCooldown" class="hidden" style="color: var(--danger); font-weight: 700; margin-bottom: 1rem;">
-                            ⏰ Cooldown: <span id="cooldownTime">0</span> hours remaining
-                        </div>
-
-                        <button class="btn btn-danger" onclick="resetAccount()" id="resetBtn" style="width: 100%;">
-                            Reset My Account
-                        </button>
-                    </div>
-
-                    <!-- Gambling Stats -->
-                    <h3 style="color: var(--gold); margin: 1.5rem 0 1rem;">📊 Your Gambling Statistics</h3>
-                    <div class="stat-grid" id="gamblingStatsGrid">
-                        <div class="stat-item">
-                            <div class="stat-label">Wagered</div>
-                            <div class="stat-value" id="statWagered">$0</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Won</div>
-                            <div class="stat-value positive" id="statWon">$0</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Lost</div>
-                            <div class="stat-value negative" id="statLost">$0</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Net Result</div>
-                            <div class="stat-value" id="statNet">$0</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Games</div>
-                            <div class="stat-value" id="statGames">0</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Loss Rate</div>
-                            <div class="stat-value" id="statLossRate">0%</div>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(251, 191, 36, 0.1); border-radius: 10px; font-size: 0.8rem;">
-                        <strong style="color: var(--gold);">Reset Details:</strong>
-                        <ul style="margin: 0.5rem 0 0 1rem; color: var(--text-secondary);">
-                            <li>Balance → Reset amount (base + bonus)</li>
-                            <li>Credit Score → Reset to 600</li>
-                            <li>Stocks → All sold (no payout)</li>
-                            <li>Loans → All cleared</li>
-                            <li>Gambling stats → Reset to zero</li>
-                            <li><strong>Keeps:</strong> Emojis, Passport, Account</li>
-                            <li>24-hour cooldown between resets</li>
-                        </ul>
-                    </div>
+                    <div class="section-header"><h2>📊 Credit Score Leaderboard</h2></div>
+                    <div id="creditLeaderboard"><div class="empty-state"><p>Loading...</p></div></div>
                 </div>
             </div>
 
@@ -612,76 +1328,211 @@
     <!-- Toast -->
     <div id="toast" class="toast"><div id="toastMessage"></div></div>
 
-    <!-- Chances Modal -->
-    <div class="modal-overlay" id="chancesModal">
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 style="color: var(--gold);">📊 Drop Chances</h2>
-                <button class="modal-close" onclick="closeChancesModal()">&times;</button>
+                <h2 style="color: var(--gold);">⚙️ Account Settings</h2>
+                <button class="modal-close" onclick="closeSettingsModal()">&times;</button>
             </div>
-            <table style="width: 100%; font-size: 0.8rem;">
-                <tr><th style="text-align: left; color: var(--gold); padding: 0.5rem;">Rarity</th><th>Chance</th><th>Points</th><th>Sell</th></tr>
-                <tr><td><span class="rarity-badge common">Common</span></td><td>50%</td><td>10</td><td style="color: var(--danger);">$500</td></tr>
-                <tr><td><span class="rarity-badge uncommon">Uncommon</span></td><td>30%</td><td>25</td><td style="color: var(--danger);">$2K</td></tr>
-                <tr><td><span class="rarity-badge rare">Rare</span></td><td>12%</td><td>100</td><td style="color: var(--success);">$10K</td></tr>
-                <tr><td><span class="rarity-badge epic">Epic</span></td><td>5%</td><td>500</td><td style="color: var(--success);">$25K</td></tr>
-                <tr><td><span class="rarity-badge legendary">Legendary</span></td><td>2%</td><td>2.5K</td><td style="color: var(--success);">$75K</td></tr>
-                <tr><td><span class="rarity-badge mythic">Mythic</span></td><td>0.8%</td><td>10K</td><td style="color: var(--success);">$200K</td></tr>
-                <tr><td><span class="rarity-badge divine">Divine</span></td><td>0.2%</td><td>50K</td><td style="color: var(--success);">$500K</td></tr>
-            </table>
-            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 1rem;">Pack cost: $7,500. Only Rare+ gives profit!</p>
+            
+            <div class="service-card" style="margin-bottom: 1rem;">
+                <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">📊 Account Statistics</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.875rem;">
+                    <span style="color: var(--text-muted);">Account Created:</span>
+                    <span id="settingsCreatedAt">-</span>
+                    <span style="color: var(--text-muted);">Total Earned:</span>
+                    <span id="settingsTotalEarned">$0</span>
+                    <span style="color: var(--text-muted);">Total Gambled:</span>
+                    <span id="settingsTotalGambled">$0</span>
+                    <span style="color: var(--text-muted);">Gambling Losses:</span>
+                    <span id="settingsGamblingLosses" style="color: var(--danger);">$0</span>
+                </div>
+            </div>
+
+            <div class="reset-warning">
+                <h3 style="color: var(--danger); margin-bottom: 0.5rem;">🔄 Reset Account</h3>
+                <p style="font-size: 0.875rem; margin-bottom: 1rem;">
+                    Start fresh with a new balance. Your gambling history affects your new starting amount!
+                </p>
+                
+                <div class="reset-calculation" id="resetCalculation">
+                    <div class="reset-calculation-row">
+                        <span>Base Amount:</span>
+                        <span>$100,000</span>
+                    </div>
+                    <div class="reset-calculation-row">
+                        <span>Gambling Penalty:</span>
+                        <span id="resetGamblingPenalty" style="color: var(--danger);">-$0</span>
+                    </div>
+                    <div class="reset-calculation-row">
+                        <span>Loan Default Penalty:</span>
+                        <span id="resetLoanPenalty" style="color: var(--danger);">-$0</span>
+                    </div>
+                    <div class="reset-calculation-row">
+                        <span>Credit Score Adjustment:</span>
+                        <span id="resetCreditAdjust">+$0</span>
+                    </div>
+                    <div class="reset-calculation-row">
+                        <span>New Starting Balance:</span>
+                        <span id="resetNewBalance">$100,000</span>
+                    </div>
+                </div>
+
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    ⚠️ This will erase ALL your data: balance, loans, stocks, transactions. This cannot be undone!
+                </p>
+
+                <button class="btn btn-danger" onclick="confirmResetAccount()" style="width: 100%;">
+                    Reset My Account
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Loan Application Modal -->
-    <div class="modal-overlay" id="loanModal">
+    <!-- Loan Payment Modal -->
+    <div class="modal-overlay" id="loanPaymentModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 style="color: var(--gold);" id="loanModalTitle">Apply for Loan</h2>
-                <button class="modal-close" onclick="closeLoanModal()">&times;</button>
+                <h2 style="color: var(--gold);">💳 Make Payment</h2>
+                <button class="modal-close" onclick="closeLoanPaymentModal()">&times;</button>
             </div>
-            <div id="loanModalContent"></div>
+            
+            <div id="loanPaymentDetails"></div>
+            
+            <div class="form-group">
+                <label class="form-label">Payment Amount ($)</label>
+                <input type="number" id="paymentAmount" class="form-input" placeholder="Enter amount">
+                <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                    <button class="btn btn-sm" onclick="setPaymentAmount('minimum')">Minimum</button>
+                    <button class="btn btn-sm" onclick="setPaymentAmount('half')">Half</button>
+                    <button class="btn btn-sm btn-success" onclick="setPaymentAmount('full')">Pay in Full</button>
+                </div>
+            </div>
+            
+            <button class="btn btn-success" onclick="makePayment()" style="width: 100%; margin-top: 1rem;">
+                Make Payment
+            </button>
         </div>
     </div>
-
-    <!-- Pack Opening -->
-    <div id="packOpeningModal" class="hidden"></div>
 
     <script>
-        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzqSEpZIr8mRzhOSEL0uawFBkasjYROkmz_DCur-ULGWMgx_xmHe_bxVEF7uaJ7etP-pQ/exec';
+        const APP_VERSION = '4.02';
+        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzFz0IfYMIQfz38RpcL2GZ1wVhlYCGrDu0_NvcfW3WyahH_xsZ_ql4UsKocXqKKAUARCw/exec';
         const MASTER_ADMIN = 'sheepishlyroyal@gmail.com';
         
         let currentUser = null;
-        let stocks = [];
-        let pendingVerificationEmail = null;
-        let chatInterval = null;
         let selectedLoanType = null;
+        let currentPayingLoan = null;
+        let pendingVerificationEmail = null;
+
+        // Loan Type Configurations
+        const LOAN_TYPES = {
+            personal: { name: 'Personal', min: 1000, max: 50000, terms: [30, 60, 90], baseRate: 0.08 },
+            emergency: { name: 'Emergency', min: 500, max: 10000, terms: [7, 14, 30], baseRate: 0.15 },
+            payday: { name: 'Payday', min: 100, max: 2000, terms: [7, 14], baseRate: 0.25 },
+            business: { name: 'Business', min: 10000, max: 200000, terms: [60, 90, 180], baseRate: 0.06, minCredit: 700 }
+        };
+
+        // ============ INITIALIZATION ============
+        document.addEventListener('DOMContentLoaded', () => {
+            initParticles();
+            initGlowSystem();
+            
+            // Loan amount input listener
+            document.getElementById('loanAmount')?.addEventListener('input', updateLoanPreview);
+            document.getElementById('loanTerm')?.addEventListener('change', updateLoanPreview);
+        });
+
+        function initParticles() {
+            const container = document.getElementById('particleContainer');
+            for (let i = 0; i < 40; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle' + (Math.random() > 0.4 ? '' : ' blue');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = (4 + Math.random() * 6) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        let orbitAngle = 0;
+        let targetX = window.innerWidth / 2, targetY = window.innerHeight / 2;
+        let currentX = targetX, currentY = targetY;
+
+        function initGlowSystem() {
+            document.addEventListener('mousemove', (e) => { targetX = e.clientX; targetY = e.clientY; });
+            animateGlows();
+        }
+
+        function animateGlows() {
+            currentX += (targetX - currentX) * 0.08;
+            currentY += (targetY - currentY) * 0.08;
+            orbitAngle += 0.015;
+
+            const orb1 = document.getElementById('glowOrb1');
+            const orb2 = document.getElementById('glowOrb2');
+
+            if (orb1) {
+                orb1.style.left = (currentX + Math.cos(orbitAngle) * 100 - 150) + 'px';
+                orb1.style.top = (currentY + Math.sin(orbitAngle) * 100 - 150) + 'px';
+            }
+            if (orb2) {
+                orb2.style.left = (currentX + Math.cos(-orbitAngle + Math.PI) * 80 - 125) + 'px';
+                orb2.style.top = (currentY + Math.sin(-orbitAngle + Math.PI) * 80 - 125) + 'px';
+            }
+
+            requestAnimationFrame(animateGlows);
+        }
 
         // ============ AUTH ============
         function switchAuthTab(tab) {
-            document.getElementById('loginTab').classList.toggle('hidden', tab !== 'login');
-            document.getElementById('registerTab').classList.toggle('hidden', tab !== 'register');
-            document.getElementById('loginTabBtn').classList.toggle('active', tab === 'login');
-            document.getElementById('registerTabBtn').classList.toggle('active', tab === 'register');
-            document.getElementById('loginTabBtn').style.background = tab === 'login' ? '' : 'rgba(37,99,235,0.2)';
-            document.getElementById('registerTabBtn').style.background = tab === 'register' ? '' : 'rgba(37,99,235,0.2)';
+            const tabs = document.querySelectorAll('#authScreen .tab-btn');
+            tabs.forEach(t => t.classList.remove('active'));
+            
+            if (tab === 'login') {
+                tabs[0].classList.add('active');
+                document.getElementById('loginTab').classList.remove('hidden');
+                document.getElementById('registerTab').classList.add('hidden');
+            } else {
+                tabs[1].classList.add('active');
+                document.getElementById('loginTab').classList.add('hidden');
+                document.getElementById('registerTab').classList.remove('hidden');
+            }
         }
 
         async function register() {
             const email = document.getElementById('registerEmail').value.trim();
             const name = document.getElementById('registerName').value.trim();
             const password = document.getElementById('registerPassword').value.trim();
+
             if (!email || !name || !password) return showToast('Fill all fields', 'error');
 
             try {
-                const res = await fetch(SHEETS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'register', email, name, password }) });
-                const result = await res.json();
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: 'register', email, name, password })
+                });
+                const result = await response.json();
+                
                 if (result.success) {
-                    pendingVerificationEmail = email;
-                    showVerificationScreen(email);
-                    showToast('Check email for code!', 'success');
-                } else showToast(result.error, 'error');
-            } catch (e) { showToast('Network error', 'error'); }
+                    if (result.requiresVerification) {
+                        pendingVerificationEmail = email;
+                        showVerificationScreen(email);
+                        showToast('Check your email for verification code!', 'success');
+                    } else {
+                        showToast('Account created!', 'success');
+                        switchAuthTab('login');
+                    }
+                } else {
+                    showToast(result.error, 'error');
+                }
+            } catch (e) {
+                showToast('Network error', 'error');
+            }
         }
 
         function showVerificationScreen(email) {
@@ -693,7 +1544,9 @@
 
         function handleCodeInput(num) {
             const input = document.getElementById('code' + num);
-            if (input.value.length === 1 && num < 6) document.getElementById('code' + (num + 1)).focus();
+            if (input.value.length === 1 && num < 6) {
+                document.getElementById('code' + (num + 1)).focus();
+            }
         }
 
         async function verifyCode() {
@@ -701,19 +1554,36 @@
             if (code.length !== 6) return showToast('Enter complete code', 'error');
 
             try {
-                const res = await fetch(SHEETS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'verifyEmail', email: pendingVerificationEmail, code }) });
-                const result = await res.json();
-                if (result.success) { showToast('Verified! Login now.', 'success'); backToLogin(); }
-                else showToast(result.error, 'error');
-            } catch (e) { showToast('Network error', 'error'); }
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: 'verifyEmail', email: pendingVerificationEmail, code })
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Email verified! You can now login.', 'success');
+                    backToLogin();
+                } else {
+                    showToast(result.error, 'error');
+                }
+            } catch (e) {
+                showToast('Network error', 'error');
+            }
         }
 
         async function resendCode() {
             try {
-                const res = await fetch(SHEETS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'resendCode', email: pendingVerificationEmail }) });
-                const result = await res.json();
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: 'resendCode', email: pendingVerificationEmail })
+                });
+                const result = await response.json();
                 showToast(result.success ? 'Code resent!' : result.error, result.success ? 'success' : 'error');
-            } catch (e) { showToast('Network error', 'error'); }
+            } catch (e) {
+                showToast('Network error', 'error');
+            }
         }
 
         function backToLogin() {
@@ -726,568 +1596,1018 @@
         async function login() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
-            if (!email || !password) return showToast('Enter credentials', 'error');
+
+            if (!email || !password) return showToast('Enter email and password', 'error');
 
             try {
-                const res = await fetch(`${SHEETS_URL}?action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
-                const result = await res.json();
-                if (result.success) { currentUser = result.user; showApp(); showToast('Welcome! 🎉', 'success'); }
-                else if (result.requiresVerification) { pendingVerificationEmail = result.email; showVerificationScreen(result.email); showToast('Verify email first', 'error'); }
-                else showToast(result.error, 'error');
-            } catch (e) { showToast('Network error', 'error'); }
+                const response = await fetch(`${SHEETS_URL}?action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentUser = result.user;
+                    showApp();
+                    showToast('Welcome back! 🎉', 'success');
+                } else if (result.requiresVerification) {
+                    pendingVerificationEmail = result.email;
+                    showVerificationScreen(result.email);
+                    showToast('Please verify your email first', 'error');
+                } else {
+                    showToast(result.error, 'error');
+                }
+            } catch (e) {
+                showToast('Network error', 'error');
+            }
         }
 
         function showApp() {
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('appScreen').classList.remove('hidden');
             document.getElementById('userName').textContent = currentUser.name;
-            document.getElementById('headerCreditScore').textContent = currentUser.creditScore || 600;
+            
             if (currentUser.email === MASTER_ADMIN) {
                 document.getElementById('masterBadge').classList.remove('hidden');
                 document.getElementById('adminSection').classList.remove('hidden');
             }
+
             loadDashboard();
         }
 
         function logout() {
             currentUser = null;
-            if (chatInterval) clearInterval(chatInterval);
             document.getElementById('authScreen').classList.remove('hidden');
             document.getElementById('appScreen').classList.add('hidden');
+            showToast('Logged out', 'success');
         }
 
         function switchTab(tab) {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tab + 'Content')?.classList.remove('hidden');
-            event?.target?.classList.add('active');
+            
+            const content = document.getElementById(tab + 'Content');
+            if (content) content.classList.remove('hidden');
+            if (event?.target) event.target.closest('.tab-btn')?.classList.add('active');
 
             if (tab === 'dashboard') loadDashboard();
+            else if (tab === 'loans') loadLoans();
             else if (tab === 'stocks') loadStocks();
             else if (tab === 'portfolio') loadPortfolio();
-            else if (tab === 'packs') loadPacks();
-            else if (tab === 'collection') loadCollection();
-            else if (tab === 'loans') loadLoans();
-            else if (tab === 'reset') loadResetInfo();
-            else if (tab === 'chat') { loadChat(); chatInterval = setInterval(loadChat, 5000); }
+            else if (tab === 'casino') loadCasinoStats();
             else if (tab === 'leaderboard') loadLeaderboards();
             else if (tab === 'admin') loadAdminPanel();
-
-            if (tab !== 'chat' && chatInterval) { clearInterval(chatInterval); chatInterval = null; }
         }
 
         // ============ DASHBOARD ============
         async function loadDashboard() {
             try {
-                const res = await fetch(`${SHEETS_URL}?action=getUser&email=${encodeURIComponent(currentUser.email)}`);
-                const result = await res.json();
+                const response = await fetch(`${SHEETS_URL}?action=getUser&email=${encodeURIComponent(currentUser.email)}`);
+                const result = await response.json();
+                
                 if (result.success) {
                     currentUser = result.user;
-                    document.getElementById('balanceAmount').textContent = (currentUser.balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2 });
-                    document.getElementById('headerCreditScore').textContent = currentUser.creditScore || 600;
+                    document.getElementById('balanceAmount').textContent = 
+                        (currentUser.balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    
+                    // Update stats
+                    document.getElementById('creditScoreDisplay').textContent = currentUser.creditScore || 650;
+                    document.getElementById('activeLoansDisplay').textContent = currentUser.activeLoans || 0;
+                    document.getElementById('totalDebtDisplay').textContent = '$' + (currentUser.totalDebt || 0).toLocaleString();
+                    
+                    const gamblingRatio = currentUser.totalEarned > 0 
+                        ? ((currentUser.gamblingLosses || 0) / currentUser.totalEarned * 100).toFixed(1) 
+                        : 0;
+                    document.getElementById('gamblingStatsDisplay').textContent = gamblingRatio + '%';
                 }
 
-                const txRes = await fetch(`${SHEETS_URL}?action=getTransactions&email=${encodeURIComponent(currentUser.email)}`);
-                const txResult = await txRes.json();
-                const list = document.getElementById('transactionList');
+                // Load transactions
+                const txResponse = await fetch(`${SHEETS_URL}?action=getTransactions&email=${encodeURIComponent(currentUser.email)}`);
+                const txResult = await txResponse.json();
+                
+                const txList = document.getElementById('transactionList');
                 if (txResult.transactions?.length > 0) {
-                    document.getElementById('transactionCount').textContent = txResult.transactions.length;
-                    list.innerHTML = txResult.transactions.slice(-10).reverse().map(tx => {
+                    document.getElementById('transactionCount').textContent = `${txResult.transactions.length} transactions`;
+                    txList.innerHTML = txResult.transactions.slice(-15).reverse().map(tx => {
                         const isReceived = tx.to === currentUser.email;
-                        return `<div class="transaction-item">
-                            <div><div style="font-weight: 700;">${tx.type}</div><div style="color: var(--text-muted); font-size: 0.75rem;">${tx.note || ''}</div></div>
-                            <div style="font-weight: 700; color: ${isReceived ? 'var(--success)' : 'var(--danger)'};">${isReceived ? '+' : '-'}$${Number(tx.amount).toFixed(2)}</div>
-                        </div>`;
+                        return `
+                            <div class="transaction-item">
+                                <div>
+                                    <div style="font-weight: 700;">${tx.type || 'TRANSFER'}</div>
+                                    <div style="color: var(--text-muted); font-size: 0.875rem;">${isReceived ? 'From: ' + tx.from : 'To: ' + tx.to}</div>
+                                    <div style="color: var(--text-muted); font-size: 0.75rem;">${tx.note || ''}</div>
+                                </div>
+                                <div style="font-size: 1.25rem; font-weight: 700; color: ${isReceived ? 'var(--success)' : 'var(--danger)'};">
+                                    ${isReceived ? '+' : '-'}$${Number(tx.amount).toFixed(2)}
+                                </div>
+                            </div>
+                        `;
                     }).join('');
-                } else list.innerHTML = '<div class="empty-state"><p>No transactions</p></div>';
-            } catch (e) { console.error(e); }
+                } else {
+                    txList.innerHTML = '<div class="empty-state"><div class="empty-icon">💰</div><p>No transactions yet</p></div>';
+                }
+            } catch (e) {
+                console.error('Dashboard error:', e);
+            }
         }
 
         async function transferMoney() {
             const recipient = document.getElementById('recipientEmail').value.trim();
             const amount = parseFloat(document.getElementById('transferAmount').value);
             const note = document.getElementById('transferNote').value.trim();
-            if (!recipient || !amount || amount <= 0) return showToast('Invalid input', 'error');
+
+            if (!recipient || !amount || amount <= 0) return showToast('Enter valid recipient and amount', 'error');
 
             try {
-                const res = await fetch(SHEETS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'transfer', from: currentUser.email, to: recipient, amount, note }) });
-                const result = await res.json();
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: 'transfer', from: currentUser.email, to: recipient, amount, note })
+                });
+                const result = await response.json();
+                
                 if (result.success) {
                     showToast(`Sent $${amount.toFixed(2)}!`, 'success');
                     document.getElementById('recipientEmail').value = '';
                     document.getElementById('transferAmount').value = '';
                     document.getElementById('transferNote').value = '';
                     loadDashboard();
-                } else showToast(result.error, 'error');
-            } catch (e) { showToast('Network error', 'error'); }
+                } else {
+                    showToast(result.error, 'error');
+                }
+            } catch (e) {
+                showToast('Network error', 'error');
+            }
         }
 
         // ============ LOANS ============
         async function loadLoans() {
             try {
-                const [loanInfoRes, loansRes] = await Promise.all([
-                    fetch(`${SHEETS_URL}?action=getLoanInfo&email=${encodeURIComponent(currentUser.email)}`),
-                    fetch(`${SHEETS_URL}?action=getLoans&email=${encodeURIComponent(currentUser.email)}`)
-                ]);
-                const loanInfo = await loanInfoRes.json();
-                const loansData = await loansRes.json();
-
-                // Credit Score
-                document.getElementById('creditScoreDisplay').textContent = loanInfo.creditScore;
-                document.getElementById('creditTierDisplay').textContent = loanInfo.creditTier;
-                document.getElementById('creditTierDisplay').className = 'credit-tier ' + loanInfo.creditTier.toLowerCase().replace(' ', '-');
-                document.getElementById('maxLoanDisplay').textContent = '$' + loanInfo.maxLoanAmount.toLocaleString();
-                document.getElementById('interestRateDisplay').textContent = (loanInfo.interestRate * 100).toFixed(1) + '%';
-
-                // Active Loans
-                document.getElementById('activeLoansCount').textContent = loanInfo.activeLoansCount;
-                const activeLoans = loansData.loans?.filter(l => l.status === 'active') || [];
-                const activeContainer = document.getElementById('activeLoansContainer');
+                const response = await fetch(`${SHEETS_URL}?action=getLoanData&email=${encodeURIComponent(currentUser.email)}`);
+                const result = await response.json();
                 
-                if (activeLoans.length > 0) {
-                    activeContainer.innerHTML = activeLoans.map(loan => {
-                        const progress = (loan.amountPaid / loan.totalOwed) * 100;
-                        return `<div class="loan-card active">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                                <div><strong style="color: var(--gold);">${loan.type}</strong></div>
-                                <div style="color: var(--text-muted); font-size: 0.75rem;">ID: ${loan.id.slice(-8)}</div>
+                if (result.success) {
+                    // Update credit score display
+                    const score = result.creditScore || 650;
+                    updateCreditScoreDisplay(score);
+                    
+                    // Update stats
+                    document.getElementById('loansTaken').textContent = result.stats?.loansTaken || 0;
+                    document.getElementById('loansPaid').textContent = result.stats?.loansPaid || 0;
+                    document.getElementById('loansDefaulted').textContent = result.stats?.loansDefaulted || 0;
+                    document.getElementById('onTimePayments').textContent = (result.stats?.onTimeRate || 0) + '%';
+                    
+                    // Active loans
+                    const activeLoansDiv = document.getElementById('activeLoans');
+                    if (result.activeLoans?.length > 0) {
+                        activeLoansDiv.innerHTML = result.activeLoans.map(loan => {
+                            const paidPercent = (loan.amountPaid / loan.totalOwed * 100).toFixed(0);
+                            const isOverdue = new Date(loan.dueDate) < new Date();
+                            const statusClass = loan.status === 'defaulted' ? 'defaulted' : (isOverdue ? 'overdue' : 'active');
+                            
+                            return `
+                                <div class="loan-active-card">
+                                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                                        <div>
+                                            <h3 style="color: var(--gold);">${loan.type} Loan</h3>
+                                            <span class="loan-status ${statusClass}">${statusClass.toUpperCase()}</span>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--danger);">
+                                                $${loan.remaining.toLocaleString()}
+                                            </div>
+                                            <div style="font-size: 0.75rem; color: var(--text-muted);">remaining</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="loan-progress">
+                                        <div class="loan-progress-bar" style="width: ${paidPercent}%"></div>
+                                    </div>
+                                    
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; font-size: 0.75rem; margin-bottom: 1rem;">
+                                        <div>
+                                            <div style="color: var(--text-muted);">Original</div>
+                                            <div>$${loan.principal.toLocaleString()}</div>
+                                        </div>
+                                        <div>
+                                            <div style="color: var(--text-muted);">Interest</div>
+                                            <div>${(loan.interestRate * 100).toFixed(1)}%</div>
+                                        </div>
+                                        <div>
+                                            <div style="color: var(--text-muted);">Due Date</div>
+                                            <div style="color: ${isOverdue ? 'var(--danger)' : 'inherit'};">
+                                                ${new Date(loan.dueDate).toLocaleDateString()}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <button class="btn btn-success btn-sm" onclick="openPaymentModal('${loan.id}')" style="width: 100%;">
+                                        Make Payment
+                                    </button>
+                                </div>
+                            `;
+                        }).join('');
+                    } else {
+                        activeLoansDiv.innerHTML = '<div class="empty-state"><div class="empty-icon">💸</div><p>No active loans</p></div>';
+                    }
+                    
+                    // Loan history
+                    const historyDiv = document.getElementById('loanHistory');
+                    if (result.loanHistory?.length > 0) {
+                        historyDiv.innerHTML = result.loanHistory.map(loan => `
+                            <div class="transaction-item">
+                                <div>
+                                    <div style="font-weight: 700;">${loan.type} Loan</div>
+                                    <div style="color: var(--text-muted); font-size: 0.75rem;">
+                                        $${loan.principal.toLocaleString()} @ ${(loan.interestRate * 100).toFixed(1)}%
+                                    </div>
+                                </div>
+                                <span class="loan-status ${loan.status}">${loan.status.toUpperCase()}</span>
                             </div>
-                            <div style="font-size: 0.85rem; margin-bottom: 0.5rem;">
-                                <span style="color: var(--text-muted);">Remaining:</span> 
-                                <span style="color: var(--danger); font-weight: 700;">$${loan.remaining.toFixed(2)}</span>
-                                <span style="color: var(--text-muted); margin-left: 0.5rem;">of $${loan.totalOwed.toFixed(2)}</span>
-                            </div>
-                            <div class="progress-bar"><div class="progress-fill" style="width: ${progress}%"></div></div>
-                            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">
-                                <span>Daily: $${loan.dailyPayment}</span>
-                                <span>Late: ${loan.latePayments}</span>
-                                <span>Due: ${new Date(loan.dueDate).toLocaleDateString()}</span>
-                            </div>
-                            <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
-                                <button class="btn btn-sm btn-success" onclick="makePayment('${loan.id}', ${loan.dailyPayment})">Pay $${loan.dailyPayment}</button>
-                                <button class="btn btn-sm" onclick="payOffLoan('${loan.id}')">Pay Off ($${loan.remaining.toFixed(2)})</button>
-                            </div>
-                        </div>`;
-                    }).join('');
-                } else {
-                    activeContainer.innerHTML = '<div style="text-align: center; padding: 1rem; color: var(--text-muted);">No active loans</div>';
+                        `).join('');
+                    } else {
+                        historyDiv.innerHTML = '<div class="empty-state"><div class="empty-icon">📜</div><p>No loan history</p></div>';
+                    }
                 }
-
-                // Loan Types
-                const typesContainer = document.getElementById('loanTypesContainer');
-                typesContainer.innerHTML = loanInfo.loanTypes.map(type => `
-                    <div class="loan-type-card ${!type.available ? 'disabled' : ''}" onclick="${type.available ? `openLoanModal('${type.id}')` : ''}">
-                        <h3 style="color: var(--gold); font-size: 1rem;">${type.name}</h3>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0.5rem 0;">${type.description}</p>
-                        <div style="font-size: 0.8rem;">
-                            <div>Max: <strong style="color: var(--success);">$${type.maxAmount.toLocaleString()}</strong></div>
-                            <div>Term: <strong>${type.termDays} days</strong></div>
-                            <div>Interest: <strong style="color: var(--danger);">${(type.interestRate * 100).toFixed(1)}%</strong></div>
-                        </div>
-                        ${!type.available ? '<div style="color: var(--danger); font-size: 0.75rem; margin-top: 0.5rem;">Max loans reached or insufficient credit</div>' : ''}
-                    </div>
-                `).join('');
-
-                // Loan History
-                const historyLoans = loansData.loans?.filter(l => l.status !== 'active') || [];
-                const historyContainer = document.getElementById('loanHistoryContainer');
-                if (historyLoans.length > 0) {
-                    historyContainer.innerHTML = historyLoans.slice(-5).reverse().map(loan => `
-                        <div class="loan-card ${loan.status}">
-                            <div style="display: flex; justify-content: space-between;">
-                                <div><strong>${loan.type}</strong> - $${loan.principal.toLocaleString()}</div>
-                                <span class="badge" style="background: ${loan.status === 'paid' ? 'var(--success)' : loan.status === 'defaulted' ? 'var(--danger)' : 'var(--text-muted)'}; color: white;">${loan.status.toUpperCase()}</span>
-                            </div>
-                        </div>
-                    `).join('');
-                } else {
-                    historyContainer.innerHTML = '<div style="text-align: center; padding: 1rem; color: var(--text-muted);">No loan history</div>';
-                }
-            } catch (e) { console.error(e); }
+            } catch (e) {
+                console.error('Loans error:', e);
+            }
         }
 
-        function openLoanModal(typeId) {
-            selectedLoanType = typeId;
-            document.getElementById('loanModalTitle').textContent = 'Apply for Loan';
-            document.getElementById('loanModalContent').innerHTML = `
-                <div class="form-group">
-                    <label class="form-label">Loan Amount ($)</label>
-                    <input type="number" id="loanAmountInput" class="form-input" placeholder="Enter amount" min="100">
-                </div>
-                <div id="loanPreview" style="background: rgba(37,99,235,0.1); border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
-                    <div style="font-size: 0.8rem; color: var(--text-muted);">Enter an amount to see preview</div>
-                </div>
-                <button class="btn btn-success" onclick="submitLoanApplication()" style="width: 100%;">Apply for Loan</button>
-            `;
-            document.getElementById('loanAmountInput').addEventListener('input', updateLoanPreview);
-            document.getElementById('loanModal').classList.add('active');
+        function updateCreditScoreDisplay(score) {
+            document.getElementById('creditScoreMain').textContent = score;
+            
+            let label, colorClass;
+            if (score >= 750) { label = 'Excellent'; colorClass = 'credit-excellent'; }
+            else if (score >= 700) { label = 'Good'; colorClass = 'credit-good'; }
+            else if (score >= 650) { label = 'Fair'; colorClass = 'credit-fair'; }
+            else if (score >= 550) { label = 'Poor'; colorClass = 'credit-poor'; }
+            else { label = 'Bad'; colorClass = 'credit-bad'; }
+            
+            const labelEl = document.getElementById('creditScoreLabel');
+            labelEl.textContent = label;
+            labelEl.className = 'credit-score-label ' + colorClass;
+            document.getElementById('creditScoreMain').className = 'credit-score-value ' + colorClass;
+            
+            // Rotate needle (300-850 range maps to -90 to 90 degrees)
+            const needleRotation = ((score - 300) / (850 - 300)) * 180 - 90;
+            document.getElementById('creditNeedle').style.transform = `rotate(${needleRotation}deg)`;
         }
 
-        async function updateLoanPreview() {
-            const amount = parseFloat(document.getElementById('loanAmountInput').value);
-            if (!amount || amount <= 0) return;
+        function selectLoanType(type) {
+            selectedLoanType = type;
+            
+            // Update UI
+            document.querySelectorAll('.loan-type-card').forEach(card => card.classList.remove('selected'));
+            document.getElementById(`loanType_${type}`).classList.add('selected');
+            
+            // Show form
+            document.getElementById('loanApplicationForm').classList.remove('hidden');
+            
+            const config = LOAN_TYPES[type];
+            document.getElementById('selectedLoanType').textContent = config.name;
+            document.getElementById('loanMinAmount').textContent = config.min.toLocaleString();
+            document.getElementById('loanMaxAmount').textContent = config.max.toLocaleString();
+            
+            // Update term options
+            const termSelect = document.getElementById('loanTerm');
+            termSelect.innerHTML = config.terms.map(t => `<option value="${t}">${t} Days</option>`).join('');
+            
+            // Reset amount
+            document.getElementById('loanAmount').value = '';
+            document.getElementById('loanAmount').min = config.min;
+            document.getElementById('loanAmount').max = config.max;
+            
+            updateLoanPreview();
+        }
+
+        function updateLoanPreview() {
+            if (!selectedLoanType) return;
+            
+            const config = LOAN_TYPES[selectedLoanType];
+            const amount = parseFloat(document.getElementById('loanAmount').value) || 0;
+            const term = parseInt(document.getElementById('loanTerm').value) || 30;
+            
+            // Calculate interest rate based on credit score
+            const creditScore = currentUser?.creditScore || 650;
+            let rateMultiplier = 1;
+            if (creditScore >= 750) rateMultiplier = 0.6;
+            else if (creditScore >= 700) rateMultiplier = 0.8;
+            else if (creditScore >= 650) rateMultiplier = 1.0;
+            else if (creditScore >= 550) rateMultiplier = 1.5;
+            else rateMultiplier = 2.0;
+            
+            const interestRate = config.baseRate * rateMultiplier * (term / 30);
+            const interestAmount = amount * interestRate;
+            const totalRepayment = amount + interestAmount;
+            
+            const dueDate = new Date();
+            dueDate.setDate(dueDate.getDate() + term);
+            
+            document.getElementById('previewInterestRate').textContent = (interestRate * 100).toFixed(1) + '%';
+            document.getElementById('previewInterestAmount').textContent = '$' + interestAmount.toFixed(2);
+            document.getElementById('previewTotalRepayment').textContent = '$' + totalRepayment.toFixed(2);
+            document.getElementById('previewDueDate').textContent = dueDate.toLocaleDateString();
+        }
+
+        async function applyForLoan() {
+            if (!selectedLoanType) return showToast('Select a loan type', 'error');
+            
+            const config = LOAN_TYPES[selectedLoanType];
+            const amount = parseFloat(document.getElementById('loanAmount').value);
+            const term = parseInt(document.getElementById('loanTerm').value);
+            
+            if (!amount || amount < config.min || amount > config.max) {
+                return showToast(`Amount must be $${config.min.toLocaleString()} - $${config.max.toLocaleString()}`, 'error');
+            }
+            
+            // Check credit score requirement for business loans
+            if (selectedLoanType === 'business' && (currentUser.creditScore || 650) < 700) {
+                return showToast('Business loans require 700+ credit score', 'error');
+            }
 
             try {
-                const res = await fetch(`${SHEETS_URL}?action=getLoanInfo&email=${encodeURIComponent(currentUser.email)}`);
-                const info = await res.json();
-                const type = info.loanTypes.find(t => t.id === selectedLoanType);
-                if (!type) return;
-
-                const interest = amount * info.interestRate;
-                const total = amount + interest;
-                const daily = (total / type.termDays).toFixed(2);
-
-                document.getElementById('loanPreview').innerHTML = `
-                    <div style="font-size: 0.85rem;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
-                            <span style="color: var(--text-muted);">Principal:</span>
-                            <span style="color: var(--text-primary);">$${amount.toLocaleString()}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
-                            <span style="color: var(--text-muted);">Interest (${(info.interestRate * 100).toFixed(1)}%):</span>
-                            <span style="color: var(--danger);">+$${interest.toFixed(2)}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem; border-top: 1px solid var(--border); padding-top: 0.3rem;">
-                            <span style="color: var(--gold); font-weight: 700;">Total to Repay:</span>
-                            <span style="color: var(--gold); font-weight: 700;">$${total.toFixed(2)}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between;">
-                            <span style="color: var(--text-muted);">Daily Payment:</span>
-                            <span style="color: var(--text-primary);">$${daily}</span>
-                        </div>
-                    </div>
-                `;
-            } catch (e) { console.error(e); }
-        }
-
-        async function submitLoanApplication() {
-            const amount = parseFloat(document.getElementById('loanAmountInput').value);
-            if (!amount || amount <= 0) return showToast('Enter valid amount', 'error');
-
-            try {
-                const res = await fetch(SHEETS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'applyLoan', email: currentUser.email, loanType: selectedLoanType, amount }) });
-                const result = await res.json();
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'applyLoan',
+                        email: currentUser.email,
+                        type: selectedLoanType,
+                        amount,
+                        term
+                    })
+                });
+                const result = await response.json();
+                
                 if (result.success) {
                     showToast(`Loan approved! $${amount.toLocaleString()} deposited.`, 'success');
-                    closeLoanModal();
+                    document.getElementById('loanApplicationForm').classList.add('hidden');
+                    document.querySelectorAll('.loan-type-card').forEach(card => card.classList.remove('selected'));
+                    selectedLoanType = null;
                     loadLoans();
                     loadDashboard();
-                } else showToast(result.error, 'error');
-            } catch (e) { showToast('Network error', 'error'); }
+                } else {
+                    showToast(result.error, 'error');
+                }
+            } catch (e) {
+                showToast('Network error', 'error');
+            }
         }
 
-        function closeLoanModal() {
-            document.getElementById('loanModal').classList.remove('active');
-            selectedLoanType = null;
+        function openPaymentModal(loanId) {
+            currentPayingLoan = loanId;
+            document.getElementById('loanPaymentModal').classList.add('active');
+            
+            // Load loan details
+            loadLoanPaymentDetails(loanId);
         }
 
-        async function makePayment(loanId, amount) {
-            if (currentUser.balance < amount) return showToast('Insufficient funds', 'error');
+        function closeLoanPaymentModal() {
+            document.getElementById('loanPaymentModal').classList.remove('active');
+            currentPayingLoan = null;
+        }
 
+        async function loadLoanPaymentDetails(loanId) {
             try {
-                const res = await fetch(SHEETS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'payLoan', email: currentUser.email, loanId, amount }) });
-                const result = await res.json();
-                if (result.success) {
-                    showToast(`Payment made! ${result.payment.isOnTime ? '+5 credit' : '-15 credit (late)'}`, result.payment.isOnTime ? 'success' : 'error');
-                    loadLoans();
-                    loadDashboard();
-                } else showToast(result.error, 'error');
-            } catch (e) { showToast('Network error', 'error'); }
-        }
-
-        async function payOffLoan(loanId) {
-            if (!confirm('Pay off entire loan?')) return;
-
-            try {
-                const res = await fetch(SHEETS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'payOffLoan', email: currentUser.email, loanId }) });
-                const result = await res.json();
-                if (result.success) {
-                    showToast('Loan paid off! 🎉', 'success');
-                    loadLoans();
-                    loadDashboard();
-                } else showToast(result.error, 'error');
-            } catch (e) { showToast('Network error', 'error'); }
-        }
-
-        // ============ RESET ============
-        async function loadResetInfo() {
-            try {
-                const res = await fetch(`${SHEETS_URL}?action=getResetInfo&email=${encodeURIComponent(currentUser.email)}`);
-                const info = await res.json();
-
-                document.getElementById('resetAmountDisplay').textContent = '$' + info.resetAmount.total.toLocaleString();
-                document.getElementById('resetBonusDisplay').textContent = '$' + info.resetAmount.bonus.toLocaleString();
+                const response = await fetch(`${SHEETS_URL}?action=getLoanDetails&loanId=${loanId}`);
+                const loan = await response.json();
                 
-                document.getElementById('resetCooldown').classList.toggle('hidden', info.canReset);
-                document.getElementById('cooldownTime').textContent = info.cooldownHours;
-                document.getElementById('resetBtn').disabled = !info.canReset;
-
-                const stats = info.gamblingStats;
-                document.getElementById('statWagered').textContent = '$' + stats.totalWagered.toLocaleString();
-                document.getElementById('statWon').textContent = '$' + stats.totalWon.toLocaleString();
-                document.getElementById('statLost').textContent = '$' + stats.totalLost.toLocaleString();
-                document.getElementById('statNet').textContent = (stats.netResult >= 0 ? '+$' : '-$') + Math.abs(stats.netResult).toLocaleString();
-                document.getElementById('statNet').className = 'stat-value ' + (stats.netResult >= 0 ? 'positive' : 'negative');
-                document.getElementById('statGames').textContent = stats.gamesPlayed;
-                document.getElementById('statLossRate').textContent = stats.lossPercentage + '%';
-            } catch (e) { console.error(e); }
+                if (loan.success) {
+                    document.getElementById('loanPaymentDetails').innerHTML = `
+                        <div style="background: rgba(15, 23, 42, 0.6); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.875rem;">
+                                <span style="color: var(--text-muted);">Remaining:</span>
+                                <span style="color: var(--danger); font-weight: 700;">$${loan.remaining.toLocaleString()}</span>
+                                <span style="color: var(--text-muted);">Minimum Payment:</span>
+                                <span>$${loan.minimumPayment.toLocaleString()}</span>
+                                <span style="color: var(--text-muted);">Your Balance:</span>
+                                <span>$${(currentUser.balance || 0).toLocaleString()}</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Store for payment amount buttons
+                    window.currentLoanDetails = loan;
+                }
+            } catch (e) {
+                console.error('Loan details error:', e);
+            }
         }
 
-        async function resetAccount() {
-            if (!confirm('Are you sure? This will reset your balance, stocks, loans, and gambling stats. Emojis and passport are kept.')) return;
+        function setPaymentAmount(type) {
+            const loan = window.currentLoanDetails;
+            if (!loan) return;
+            
+            let amount;
+            if (type === 'minimum') amount = loan.minimumPayment;
+            else if (type === 'half') amount = loan.remaining / 2;
+            else amount = loan.remaining;
+            
+            document.getElementById('paymentAmount').value = Math.min(amount, currentUser.balance).toFixed(2);
+        }
+
+        async function makePayment() {
+            const amount = parseFloat(document.getElementById('paymentAmount').value);
+            if (!amount || amount <= 0) return showToast('Enter valid amount', 'error');
+            if (amount > currentUser.balance) return showToast('Insufficient funds', 'error');
 
             try {
-                const res = await fetch(SHEETS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'resetAccount', email: currentUser.email }) });
-                const result = await res.json();
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'makeLoanPayment',
+                        email: currentUser.email,
+                        loanId: currentPayingLoan,
+                        amount
+                    })
+                });
+                const result = await response.json();
+                
                 if (result.success) {
-                    showToast(`Account reset! New balance: $${result.newBalance.toLocaleString()}`, 'success');
-                    loadResetInfo();
+                    showToast(result.message, 'success');
+                    closeLoanPaymentModal();
+                    loadLoans();
                     loadDashboard();
-                } else showToast(result.error, 'error');
-            } catch (e) { showToast('Network error', 'error'); }
+                } else {
+                    showToast(result.error, 'error');
+                }
+            } catch (e) {
+                showToast('Network error', 'error');
+            }
         }
 
         // ============ STOCKS ============
         async function loadStocks() {
             try {
-                const res = await fetch(`${SHEETS_URL}?action=getStocks`);
-                const result = await res.json();
-                stocks = result.stocks || [];
-                document.getElementById('stocksList').innerHTML = stocks.length > 0 
-                    ? stocks.map(s => `<div class="service-card" style="cursor: pointer;" onclick="tradeStock('${s.symbol}')">
-                        <div style="display: flex; justify-content: space-between;">
-                            <div><strong style="color: var(--gold);">${s.symbol}</strong><div style="font-size: 0.75rem; color: var(--text-muted);">${s.name}</div></div>
-                            <div style="text-align: right;"><div style="font-weight: 700; color: var(--gold);">$${s.price.toFixed(2)}</div><div style="font-size: 0.7rem; color: var(--text-muted);">${s.shares.toLocaleString()} avail</div></div>
+                const response = await fetch(`${SHEETS_URL}?action=getStocks`);
+                const result = await response.json();
+                
+                if (result.stocks?.length > 0) {
+                    document.getElementById('stocksList').innerHTML = result.stocks.map(stock => `
+                        <div class="service-card" style="cursor: pointer;" onclick="tradeStock('${stock.symbol}')">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div>
+                                    <h3 style="color: var(--gold);">${stock.symbol}</h3>
+                                    <p style="color: var(--text-muted);">${stock.name}</p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--gold);">$${Number(stock.price).toFixed(2)}</div>
+                                    <div style="color: var(--text-muted); font-size: 0.8rem;">${stock.shares.toLocaleString()} available</div>
+                                </div>
+                            </div>
                         </div>
-                    </div>`).join('')
-                    : '<div class="empty-state"><p>No stocks</p></div>';
-            } catch (e) { console.error(e); }
+                    `).join('');
+                }
+            } catch (e) {
+                console.error('Stocks error:', e);
+            }
         }
 
         function tradeStock(symbol) {
-            const shares = prompt(`${symbol}: Enter shares to BUY (negative to SELL):`);
+            const shares = prompt(`Enter shares to BUY for ${symbol}:\n(Negative to SELL)`);
             if (!shares) return;
+            
             const num = parseInt(shares);
-            if (isNaN(num) || num === 0) return;
+            if (isNaN(num) || num === 0) return showToast('Invalid number', 'error');
+            
             if (num > 0) buyStock(symbol, num);
             else sellStock(symbol, Math.abs(num));
         }
 
         async function buyStock(symbol, shares) {
-            const stock = stocks.find(s => s.symbol === symbol);
             try {
-                const res = await fetch(SHEETS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'buyStock', email: currentUser.email, symbol, shares, price: stock.price }) });
-                const result = await res.json();
-                if (result.success) { showToast(`Bought ${shares} ${symbol}!`, 'success'); loadDashboard(); loadStocks(); }
-                else showToast(result.error, 'error');
-            } catch (e) { showToast('Network error', 'error'); }
+                const stocksRes = await fetch(`${SHEETS_URL}?action=getStocks`);
+                const stocksData = await stocksRes.json();
+                const stock = stocksData.stocks?.find(s => s.symbol === symbol);
+                if (!stock) return showToast('Stock not found', 'error');
+
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: 'buyStock', email: currentUser.email, symbol, shares, price: stock.price })
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`Bought ${shares} ${symbol}!`, 'success');
+                    loadDashboard();
+                    loadStocks();
+                } else {
+                    showToast(result.error, 'error');
+                }
+            } catch (e) {
+                showToast('Network error', 'error');
+            }
         }
 
         async function sellStock(symbol, shares) {
             try {
-                const res = await fetch(SHEETS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'sellStock', email: currentUser.email, symbol, shares }) });
-                const result = await res.json();
-                if (result.success) { showToast(`Sold for $${result.amount.toFixed(2)}!`, 'success'); loadDashboard(); loadStocks(); loadPortfolio(); }
-                else showToast(result.error, 'error');
-            } catch (e) { showToast('Network error', 'error'); }
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: 'sellStock', email: currentUser.email, symbol, shares })
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`Sold for $${result.amount.toFixed(2)}!`, 'success');
+                    loadDashboard();
+                    loadStocks();
+                    loadPortfolio();
+                } else {
+                    showToast(result.error, 'error');
+                }
+            } catch (e) {
+                showToast('Network error', 'error');
+            }
         }
 
         async function loadPortfolio() {
             try {
-                const res = await fetch(`${SHEETS_URL}?action=getPortfolio&email=${encodeURIComponent(currentUser.email)}`);
-                const result = await res.json();
-                document.getElementById('portfolioList').innerHTML = result.portfolio?.length > 0
-                    ? result.portfolio.map(p => `<div class="service-card" onclick="tradeStock('${p.symbol}')" style="cursor: pointer;">
-                        <div style="display: flex; justify-content: space-between;">
-                            <div><strong style="color: var(--gold);">${p.symbol}</strong><div style="font-size: 0.75rem; color: var(--text-muted);">${p.shares} shares @ $${p.avgPrice.toFixed(2)}</div></div>
-                            <div style="text-align: right;"><div style="font-weight: 700;">$${(p.shares * p.currentPrice).toFixed(2)}</div><div style="color: ${p.profit >= 0 ? 'var(--success)' : 'var(--danger)'};">${p.profit >= 0 ? '+' : ''}$${p.profit.toFixed(2)}</div></div>
+                const response = await fetch(`${SHEETS_URL}?action=getPortfolio&email=${encodeURIComponent(currentUser.email)}`);
+                const result = await response.json();
+                
+                const list = document.getElementById('portfolioList');
+                if (result.portfolio?.length > 0) {
+                    list.innerHTML = result.portfolio.map(item => `
+                        <div class="service-card" style="cursor: pointer;" onclick="tradeStock('${item.symbol}')">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div>
+                                    <h3 style="color: var(--gold);">${item.symbol}</h3>
+                                    <p style="color: var(--text-muted);">Shares: ${item.shares}</p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 1.5rem; font-weight: 700;">$${(item.shares * item.currentPrice).toFixed(2)}</div>
+                                    <div style="color: ${item.profit >= 0 ? 'var(--success)' : 'var(--danger)'};">
+                                        ${item.profit >= 0 ? '+' : ''}$${Number(item.profit).toFixed(2)}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>`).join('')
-                    : '<div class="empty-state"><p>No stocks owned</p></div>';
-            } catch (e) { console.error(e); }
-        }
-
-        // ============ PACKS & EMOJIS ============
-        function showChancesModal() { document.getElementById('chancesModal').classList.add('active'); }
-        function closeChancesModal() { document.getElementById('chancesModal').classList.remove('active'); }
-
-        async function loadPacks() {
-            try {
-                const res = await fetch(`${SHEETS_URL}?action=getPackInfo`);
-                const info = await res.json();
-                document.getElementById('packsList').innerHTML = info.packs?.map(p => `
-                    <div class="pack-card" onclick="buyPack('${p.id}')">
-                        <h3 style="color: var(--gold);">${p.name}</h3>
-                        <div class="pack-emojis">${p.emojis.map(e => e.emoji).join('')}</div>
-                        <p style="color: var(--gold); font-weight: 700;">$7,500</p>
-                    </div>
-                `).join('') || '<div class="empty-state"><p>No packs</p></div>';
-            } catch (e) { console.error(e); }
-        }
-
-        async function buyPack(packId) {
-            if (currentUser.balance < 7500) return showToast('Need $7,500!', 'error');
-            try {
-                const res = await fetch(SHEETS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'buyPack', email: currentUser.email, packId }) });
-                const result = await res.json();
-                if (result.success) {
-                    const colors = { common: '#fff', uncommon: '#22c55e', rare: '#3b82f6', epic: '#a855f7', legendary: '#fbbf24', mythic: '#ec4899', divine: '#06b6d4' };
-                    const modal = document.getElementById('packOpeningModal');
-                    modal.className = '';
-                    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,8,23,0.95);z-index:3000;display:flex;flex-direction:column;align-items:center;justify-content:center;';
-                    modal.innerHTML = `<div style="font-size:6rem;animation:pop 0.5s ease;">${result.emoji}</div><div style="font-size:1.5rem;font-weight:800;color:${colors[result.rarity]};margin-top:0.5rem;">${result.rarity.toUpperCase()}!</div><p style="color:var(--text-muted);">${result.isDuplicate ? 'Duplicate' : '+' + result.points + ' pts'}</p><button class="btn" onclick="document.getElementById('packOpeningModal').className='hidden'" style="margin-top:1rem;">Continue</button>`;
-                    loadDashboard();
-                } else showToast(result.error, 'error');
-            } catch (e) { showToast('Network error', 'error'); }
-        }
-
-        async function loadCollection() {
-            try {
-                const res = await fetch(`${SHEETS_URL}?action=getEmojis&email=${encodeURIComponent(currentUser.email)}`);
-                const result = await res.json();
-                document.getElementById('emojiScore').textContent = result.totalPoints + ' pts';
-                document.getElementById('emojiCollection').innerHTML = result.emojis?.length > 0
-                    ? `<div style="display:flex;flex-wrap:wrap;gap:0.3rem;">${result.emojis.map(e => `<div class="emoji-card ${e.rarity}" onclick="sellEmoji('${e.emoji}','${e.rarity}',${result.sellPrices[e.rarity]})"><div class="emoji">${e.emoji}</div><span class="rarity-badge ${e.rarity}">${e.rarity}</span>${e.count > 1 ? `<span style="font-size:0.6rem;">x${e.count}</span>` : ''}</div>`).join('')}</div>`
-                    : '<div class="empty-state"><p>No emojis</p></div>';
-            } catch (e) { console.error(e); }
-        }
-
-        async function sellEmoji(emoji, rarity, price) {
-            if (!confirm(`Sell ${emoji} for $${price.toLocaleString()}?`)) return;
-            try {
-                const res = await fetch(SHEETS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'sellEmoji', email: currentUser.email, emoji }) });
-                const result = await res.json();
-                if (result.success) { showToast(`Sold for $${result.sellPrice.toLocaleString()}!`, 'success'); loadDashboard(); loadCollection(); }
-                else showToast(result.error, 'error');
-            } catch (e) { showToast('Network error', 'error'); }
+                    `).join('');
+                } else {
+                    list.innerHTML = '<div class="empty-state"><div class="empty-icon">💼</div><p>No stocks owned</p></div>';
+                }
+            } catch (e) {
+                console.error('Portfolio error:', e);
+            }
         }
 
         // ============ CASINO ============
-        async function playGame(game, bet, extra = {}) {
-            const betInput = document.getElementById(game + 'Bet');
-            const betAmount = parseFloat(betInput?.value || bet);
-            if (!betAmount || betAmount <= 0 || betAmount > currentUser.balance) return showToast('Invalid bet', 'error');
-
+        async function loadCasinoStats() {
             try {
-                const res = await fetch(SHEETS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'play' + game.charAt(0).toUpperCase() + game.slice(1), email: currentUser.email, bet: betAmount, ...extra }) });
-                return await res.json();
-            } catch (e) { showToast('Network error', 'error'); return null; }
-        }
-
-        async function playRoulette(color) {
-            const result = await playGame('roulette', null, { color });
-            if (result?.success) {
-                const emoji = result.color === 'red' ? '🔴' : result.color === 'black' ? '⚫' : '🟢';
-                document.getElementById('rouletteResult').innerHTML = `<span style="color:${result.won ? 'var(--success)' : 'var(--danger)'}">${emoji} ${result.result} - ${result.won ? 'Won $' + result.winAmount.toFixed(2) : 'Lost'}</span>`;
-                document.getElementById('rouletteBet').value = '';
-                loadDashboard();
+                const response = await fetch(`${SHEETS_URL}?action=getGamblingStats&email=${encodeURIComponent(currentUser.email)}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('totalGambled').textContent = '$' + (result.totalWagered || 0).toLocaleString();
+                    document.getElementById('totalGamblingLosses').textContent = '$' + (result.netLosses || 0).toLocaleString();
+                    document.getElementById('gamblingWinRate').textContent = (result.winRate || 0).toFixed(1) + '%';
+                }
+                
+                // Initialize hi-lo game
+                document.getElementById('currentNumber').textContent = Math.floor(Math.random() * 100) + 1;
+            } catch (e) {
+                console.error('Casino stats error:', e);
             }
         }
 
         async function playDice() {
-            const result = await playGame('dice');
-            if (result?.success) {
-                const emojis = ['⚀','⚁','⚂','⚃','⚄','⚅'];
-                document.getElementById('diceResult').innerHTML = `<span style="color:${result.won ? 'var(--success)' : 'var(--danger)'}">${emojis[result.roll-1]} ${result.won ? 'Won $' + result.winAmount.toFixed(2) : 'Lost'}</span>`;
+            const bet = parseFloat(document.getElementById('diceBet').value);
+            if (!bet || bet <= 0 || bet > currentUser.balance) return showToast('Invalid bet', 'error');
+
+            document.getElementById('diceBtn').disabled = true;
+            document.getElementById('diceResult').innerHTML = '<span style="color: var(--gold);">Rolling...</span>';
+            
+            // Animate dice
+            const diceEmojis = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+            let animCount = 0;
+            const animInterval = setInterval(() => {
+                document.getElementById('diceDisplay').textContent = diceEmojis[Math.floor(Math.random() * 6)];
+                animCount++;
+                if (animCount > 10) clearInterval(animInterval);
+            }, 100);
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: 'playDice', email: currentUser.email, bet })
+                });
+                const result = await response.json();
+                
+                await new Promise(r => setTimeout(r, 1000));
+                clearInterval(animInterval);
+                
+                const diceEmoji = diceEmojis[result.roll - 1];
+                document.getElementById('diceDisplay').textContent = diceEmoji;
+                
+                document.getElementById('diceResult').innerHTML = result.won
+                    ? `<span style="color: var(--success);">🎉 Won $${result.winAmount.toFixed(2)}!</span>`
+                    : `<span style="color: var(--danger);">💔 Lost $${bet.toFixed(2)}</span>`;
+                
                 document.getElementById('diceBet').value = '';
                 loadDashboard();
+                loadCasinoStats();
+            } catch (e) {
+                showToast('Network error', 'error');
             }
+            
+            document.getElementById('diceBtn').disabled = false;
         }
 
         async function playSlots() {
-            const result = await playGame('slots');
-            if (result?.success) {
-                document.getElementById('slotsResult').innerHTML = `<div>${result.symbols.join(' ')}</div><span style="color:${result.won ? 'var(--success)' : 'var(--danger)'}">${result.won ? result.multiplier + 'x - Won $' + result.winAmount.toFixed(2) : 'Lost'}</span>`;
+            const bet = parseFloat(document.getElementById('slotsBet').value);
+            if (!bet || bet <= 0 || bet > currentUser.balance) return showToast('Invalid bet', 'error');
+
+            document.getElementById('slotsBtn').disabled = true;
+            document.getElementById('slotsResult').innerHTML = '<span style="color: var(--gold);">Spinning...</span>';
+            
+            const symbols = ['🍒', '🍋', '🍊', '🍇', '💎', '🎰', '💰'];
+            const reels = ['reel1', 'reel2', 'reel3'];
+            
+            // Animate reels
+            const intervals = reels.map(reelId => {
+                return setInterval(() => {
+                    document.getElementById(reelId).textContent = symbols[Math.floor(Math.random() * 7)];
+                }, 100);
+            });
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: 'playSlots', email: currentUser.email, bet })
+                });
+                const result = await response.json();
+                
+                // Stop reels one by one
+                await new Promise(r => setTimeout(r, 800));
+                clearInterval(intervals[0]);
+                document.getElementById('reel1').textContent = result.symbols[0];
+                
+                await new Promise(r => setTimeout(r, 400));
+                clearInterval(intervals[1]);
+                document.getElementById('reel2').textContent = result.symbols[1];
+                
+                await new Promise(r => setTimeout(r, 400));
+                clearInterval(intervals[2]);
+                document.getElementById('reel3').textContent = result.symbols[2];
+                
+                document.getElementById('slotsResult').innerHTML = result.won
+                    ? `<span style="color: var(--success);">🎉 ${result.multiplier}x - Won $${result.winAmount.toFixed(2)}!</span>`
+                    : `<span style="color: var(--danger);">No match - Lost!</span>`;
+                
                 document.getElementById('slotsBet').value = '';
                 loadDashboard();
+                loadCasinoStats();
+            } catch (e) {
+                intervals.forEach(i => clearInterval(i));
+                showToast('Network error', 'error');
             }
+            
+            document.getElementById('slotsBtn').disabled = false;
         }
 
-        async function playPlinko() {
-            const result = await playGame('plinko');
-            if (result?.success) {
-                document.getElementById('plinkoResult').innerHTML = `<span style="color:${result.profit >= 0 ? 'var(--success)' : 'var(--danger)'}">${result.multiplier}x - ${result.profit >= 0 ? '+' : ''}$${result.profit.toFixed(2)}</span>`;
-                document.getElementById('plinkoBet').value = '';
+        async function playCoinFlip(choice) {
+            const bet = parseFloat(document.getElementById('coinBet').value);
+            if (!bet || bet <= 0 || bet > currentUser.balance) return showToast('Invalid bet', 'error');
+
+            document.getElementById('headsBtn').disabled = true;
+            document.getElementById('tailsBtn').disabled = true;
+            document.getElementById('coinResult').innerHTML = '<span style="color: var(--gold);">Flipping...</span>';
+            
+            // Animate coin flip
+            const coinEl = document.getElementById('coinDisplay');
+            coinEl.style.animation = 'coinFlip 0.5s ease-in-out 3';
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: 'playCoinFlip', email: currentUser.email, bet, choice })
+                });
+                const result = await response.json();
+                
+                await new Promise(r => setTimeout(r, 1500));
+                coinEl.style.animation = '';
+                coinEl.textContent = result.result === 'heads' ? '👤' : '🦅';
+                
+                document.getElementById('coinResult').innerHTML = result.won
+                    ? `<span style="color: var(--success);">🎉 ${result.result.toUpperCase()} - Won $${result.winAmount.toFixed(2)}!</span>`
+                    : `<span style="color: var(--danger);">${result.result.toUpperCase()} - Lost!</span>`;
+                
+                document.getElementById('coinBet').value = '';
                 loadDashboard();
+                loadCasinoStats();
+            } catch (e) {
+                showToast('Network error', 'error');
             }
+            
+            document.getElementById('headsBtn').disabled = false;
+            document.getElementById('tailsBtn').disabled = false;
         }
 
-        async function playWheel() {
-            const result = await playGame('wheel');
-            if (result?.success) {
-                document.getElementById('wheelResult').innerHTML = `<span style="color:${result.profit >= 0 ? 'var(--success)' : 'var(--danger)'}">${result.segment} - ${result.profit >= 0 ? '+' : ''}$${result.profit.toFixed(2)}</span>`;
-                document.getElementById('wheelBet').value = '';
+        async function playRoulette(color) {
+            const bet = parseFloat(document.getElementById('rouletteBet').value);
+            if (!bet || bet <= 0 || bet > currentUser.balance) return showToast('Invalid bet', 'error');
+
+            document.getElementById('rouletteRedBtn').disabled = true;
+            document.getElementById('rouletteBlackBtn').disabled = true;
+            document.getElementById('rouletteGreenBtn').disabled = true;
+            document.getElementById('rouletteResult').innerHTML = '<span style="color: var(--gold);">Spinning...</span>';
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: 'playRoulette', email: currentUser.email, bet, color })
+                });
+                const result = await response.json();
+                
+                // Animate
+                const display = document.getElementById('rouletteDisplay');
+                const colors = ['🔴', '⚫', '🟢'];
+                let count = 0;
+                const anim = setInterval(() => {
+                    display.textContent = colors[count % 3];
+                    count++;
+                    if (count > 15) {
+                        clearInterval(anim);
+                        const colorEmoji = result.color === 'red' ? '🔴' : result.color === 'black' ? '⚫' : '🟢';
+                        display.textContent = colorEmoji;
+                    }
+                }, 150);
+                
+                await new Promise(r => setTimeout(r, 2500));
+                
+                document.getElementById('rouletteResult').innerHTML = result.won
+                    ? `<span style="color: var(--success);">🎉 ${result.result} - Won $${result.winAmount.toFixed(2)}!</span>`
+                    : `<span style="color: var(--danger);">${result.result} - Lost!</span>`;
+                
+                document.getElementById('rouletteBet').value = '';
                 loadDashboard();
+                loadCasinoStats();
+            } catch (e) {
+                showToast('Network error', 'error');
             }
+            
+            document.getElementById('rouletteRedBtn').disabled = false;
+            document.getElementById('rouletteBlackBtn').disabled = false;
+            document.getElementById('rouletteGreenBtn').disabled = false;
         }
 
         async function playBlackjack() {
-            const result = await playGame('blackjack');
-            if (result?.success) {
-                document.getElementById('blackjackResult').innerHTML = `<div>You: ${result.playerTotal} | Dealer: ${result.dealerTotal}</div><span style="color:${result.won ? 'var(--success)' : 'var(--danger)'}">${result.result}${result.won ? ' - Won $' + result.winAmount.toFixed(2) : ''}</span>`;
+            const bet = parseFloat(document.getElementById('blackjackBet').value);
+            if (!bet || bet <= 0 || bet > currentUser.balance) return showToast('Invalid bet', 'error');
+
+            document.getElementById('blackjackBtn').disabled = true;
+            document.getElementById('blackjackResult').innerHTML = '<span style="color: var(--gold);">Dealing...</span>';
+            document.getElementById('dealerHand').innerHTML = '';
+            document.getElementById('playerHand').innerHTML = '';
+
+            try {
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: 'playBlackjack', email: currentUser.email, bet })
+                });
+                const result = await response.json();
+                
+                // Animate dealing
+                const playerHand = document.getElementById('playerHand');
+                const dealerHand = document.getElementById('dealerHand');
+                
+                for (let i = 0; i < result.playerCards.length; i++) {
+                    await new Promise(r => setTimeout(r, 300));
+                    playerHand.innerHTML += createCardHTML(result.playerCards[i]);
+                }
+                
+                for (let i = 0; i < result.dealerCards.length; i++) {
+                    await new Promise(r => setTimeout(r, 300));
+                    dealerHand.innerHTML += createCardHTML(result.dealerCards[i]);
+                }
+                
+                await new Promise(r => setTimeout(r, 500));
+                
+                document.getElementById('blackjackResult').innerHTML = `
+                    <div style="font-size: 0.875rem;">You: ${result.playerTotal} | Dealer: ${result.dealerTotal}</div>
+                    <div style="color: ${result.won ? 'var(--success)' : 'var(--danger)'}; font-size: 1rem; margin-top: 0.25rem;">
+                        ${result.result}${result.won ? ` - Won $${result.winAmount.toFixed(2)}!` : ''}
+                    </div>
+                `;
+                
                 document.getElementById('blackjackBet').value = '';
                 loadDashboard();
+                loadCasinoStats();
+            } catch (e) {
+                showToast('Network error', 'error');
+            }
+            
+            document.getElementById('blackjackBtn').disabled = false;
+        }
+
+        function createCardHTML(card) {
+            const suit = card.slice(-1);
+            const isRed = suit === '♥' || suit === '♦';
+            return `<div style="width: 40px; height: 56px; background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 700; color: ${isRed ? '#dc2626' : '#1f2937'}; box-shadow: 0 2px 4px rgba(0,0,0,0.3); animation: dealCard 0.3s ease-out;">${card}</div>`;
+        }
+
+        async function playHiLo(guess) {
+            const bet = parseFloat(document.getElementById('hiLoBet').value);
+            if (!bet || bet <= 0 || bet > currentUser.balance) return showToast('Invalid bet', 'error');
+
+            document.getElementById('higherBtn').disabled = true;
+            document.getElementById('lowerBtn').disabled = true;
+            document.getElementById('hiLoResult').innerHTML = '<span style="color: var(--gold);">Generating...</span>';
+
+            try {
+                const currentNum = parseInt(document.getElementById('currentNumber').textContent);
+                
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: 'playHiLo', email: currentUser.email, bet, guess, currentNumber: currentNum })
+                });
+                const result = await response.json();
+                
+                await new Promise(r => setTimeout(r, 500));
+                
+                // Update display with new number
+                const numEl = document.getElementById('currentNumber');
+                numEl.style.color = result.won ? 'var(--success)' : 'var(--danger)';
+                numEl.textContent = result.newNumber;
+                
+                setTimeout(() => { numEl.style.color = 'var(--gold)'; }, 2000);
+                
+                document.getElementById('hiLoResult').innerHTML = result.won
+                    ? `<span style="color: var(--success);">🎉 ${currentNum} → ${result.newNumber} - Won $${result.winAmount.toFixed(2)}!</span>`
+                    : `<span style="color: var(--danger);">${currentNum} → ${result.newNumber} - Wrong!</span>`;
+                
+                document.getElementById('hiLoBet').value = '';
+                loadDashboard();
+                loadCasinoStats();
+            } catch (e) {
+                showToast('Network error', 'error');
+            }
+            
+            document.getElementById('higherBtn').disabled = false;
+            document.getElementById('lowerBtn').disabled = false;
+        }
+
+        // ============ LEADERBOARD ============
+        async function loadLeaderboards() {
+            try {
+                const [wealthRes, creditRes] = await Promise.all([
+                    fetch(`${SHEETS_URL}?action=getLeaderboard`),
+                    fetch(`${SHEETS_URL}?action=getCreditLeaderboard`)
+                ]);
+                
+                const wealth = await wealthRes.json();
+                const credit = await creditRes.json();
+                
+                const medals = ['👑', '🥈', '🥉'];
+                
+                document.getElementById('wealthLeaderboard').innerHTML = wealth.users?.slice(0, 10).map((u, i) => `
+                    <div class="transaction-item">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span style="font-size: 1.5rem; font-weight: 700; color: ${i < 3 ? 'var(--gold)' : 'var(--text-muted)'};">
+                                ${i < 3 ? medals[i] : '#' + (i + 1)}
+                            </span>
+                            <span style="font-weight: 600;">${u.name}</span>
+                        </div>
+                        <span style="color: var(--gold); font-weight: 700;">$${Number(u.balance).toLocaleString()}</span>
+                    </div>
+                `).join('') || '<p style="text-align: center; color: var(--text-muted);">No data</p>';
+
+                document.getElementById('creditLeaderboard').innerHTML = credit.users?.slice(0, 10).map((u, i) => `
+                    <div class="transaction-item">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span style="font-size: 1.5rem; font-weight: 700; color: ${i < 3 ? 'var(--gold)' : 'var(--text-muted)'};">
+                                ${i < 3 ? medals[i] : '#' + (i + 1)}
+                            </span>
+                            <span style="font-weight: 600;">${u.name}</span>
+                        </div>
+                        <span style="color: var(--success); font-weight: 700;">${u.creditScore}</span>
+                    </div>
+                `).join('') || '<p style="text-align: center; color: var(--text-muted);">No data</p>';
+            } catch (e) {
+                console.error('Leaderboard error:', e);
             }
         }
 
-        // ============ CHAT ============
-        async function loadChat() {
+        // ============ SETTINGS & RESET ============
+        async function showSettingsModal() {
+            document.getElementById('settingsModal').classList.add('active');
+            
+            // Load reset calculation
             try {
-                const res = await fetch(`${SHEETS_URL}?action=getChat&limit=30`);
-                const result = await res.json();
-                const container = document.getElementById('chatMessages');
-                container.innerHTML = result.messages?.length > 0
-                    ? result.messages.map(m => `<div class="chat-message"><div class="chat-username">${m.username}</div><div class="chat-text">${m.message}</div><div class="chat-time">${new Date(m.timestamp).toLocaleString()}</div></div>`).join('')
-                    : '<div class="empty-state"><p>No messages</p></div>';
-                container.scrollTop = container.scrollHeight;
-            } catch (e) { console.error(e); }
+                const response = await fetch(`${SHEETS_URL}?action=getResetPreview&email=${encodeURIComponent(currentUser.email)}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('settingsCreatedAt').textContent = new Date(result.createdAt).toLocaleDateString();
+                    document.getElementById('settingsTotalEarned').textContent = '$' + (result.totalEarned || 0).toLocaleString();
+                    document.getElementById('settingsTotalGambled').textContent = '$' + (result.totalGambled || 0).toLocaleString();
+                    document.getElementById('settingsGamblingLosses').textContent = '$' + (result.gamblingLosses || 0).toLocaleString();
+                    
+                    document.getElementById('resetGamblingPenalty').textContent = '-$' + (result.gamblingPenalty || 0).toLocaleString();
+                    document.getElementById('resetLoanPenalty').textContent = '-$' + (result.loanPenalty || 0).toLocaleString();
+                    
+                    const creditAdjust = result.creditAdjustment || 0;
+                    const creditAdjustEl = document.getElementById('resetCreditAdjust');
+                    creditAdjustEl.textContent = (creditAdjust >= 0 ? '+' : '') + '$' + creditAdjust.toLocaleString();
+                    creditAdjustEl.style.color = creditAdjust >= 0 ? 'var(--success)' : 'var(--danger)';
+                    
+                    document.getElementById('resetNewBalance').textContent = '$' + (result.newStartingBalance || 100000).toLocaleString();
+                }
+            } catch (e) {
+                console.error('Reset preview error:', e);
+            }
         }
 
-        async function sendChat() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            if (!message) return;
-            try {
-                const res = await fetch(SHEETS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'sendChat', email: currentUser.email, username: currentUser.name, message }) });
-                const result = await res.json();
-                if (result.success) { input.value = ''; loadChat(); }
-                else showToast(result.error, 'error');
-            } catch (e) { showToast('Network error', 'error'); }
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').classList.remove('active');
         }
 
-        // ============ LEADERBOARDS ============
-        async function loadLeaderboards() {
+        async function confirmResetAccount() {
+            const confirm1 = confirm('⚠️ Are you sure you want to reset your account?\n\nThis will DELETE all your data including:\n- Balance\n- Loans\n- Stocks\n- Transactions\n- Credit History\n\nThis CANNOT be undone!');
+            if (!confirm1) return;
+            
+            const confirm2 = prompt('Type "RESET" to confirm:');
+            if (confirm2 !== 'RESET') return showToast('Reset cancelled', 'error');
+
             try {
-                const [wealth, emoji] = await Promise.all([
-                    fetch(`${SHEETS_URL}?action=getLeaderboard`).then(r => r.json()),
-                    fetch(`${SHEETS_URL}?action=getEmojiLeaderboard`).then(r => r.json())
-                ]);
-                const medals = ['👑', '🥈', '🥉'];
-                document.getElementById('wealthLeaderboard').innerHTML = wealth.users?.slice(0, 10).map((u, i) => `<div class="transaction-item"><span>${i < 3 ? medals[i] : '#' + (i+1)} ${u.name}</span><span style="color:var(--gold);font-weight:700;">$${Number(u.balance).toLocaleString()}</span></div>`).join('') || '<p>No data</p>';
-                document.getElementById('emojiLeaderboard').innerHTML = emoji.leaderboard?.slice(0, 10).map((u, i) => `<div class="transaction-item"><span>${i < 3 ? medals[i] : '#' + (i+1)} ${u.name}</span><span style="color:var(--gold);font-weight:700;">${u.score.toLocaleString()} pts</span></div>`).join('') || '<p>No data</p>';
-            } catch (e) { console.error(e); }
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: 'resetAccount', email: currentUser.email })
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast(`Account reset! New balance: $${result.newBalance.toLocaleString()}`, 'success');
+                    closeSettingsModal();
+                    loadDashboard();
+                } else {
+                    showToast(result.error, 'error');
+                }
+            } catch (e) {
+                showToast('Network error', 'error');
+            }
         }
 
         // ============ ADMIN ============
         async function loadAdminPanel() {
             if (currentUser.email !== MASTER_ADMIN) return;
+
             try {
-                const res = await fetch(`${SHEETS_URL}?action=getAllUsers`);
-                const result = await res.json();
+                const response = await fetch(`${SHEETS_URL}?action=getAllUsers`);
+                const result = await response.json();
+                
                 document.getElementById('userCount').textContent = result.users?.length + ' users';
-                document.getElementById('adminUsersList').innerHTML = result.users?.map((u, i) => `<div class="service-card"><div style="display:flex;justify-content:space-between;"><div><strong>${u.name}</strong><div style="font-size:0.75rem;color:var(--text-muted);">${u.email}</div></div><div style="text-align:right;"><div style="color:var(--gold);font-weight:700;">$${Number(u.balance).toFixed(2)}</div><div style="font-size:0.75rem;">Credit: ${u.creditScore}</div></div></div><div style="display:flex;gap:0.5rem;margin-top:0.75rem;"><input type="number" id="amt${i}" class="form-input" placeholder="+/- amount" style="flex:1;"><button class="btn btn-sm btn-success" onclick="adminUpdate('${u.email}',${i})">Update</button></div></div>`).join('') || '<p>No users</p>';
-            } catch (e) { console.error(e); }
+                document.getElementById('adminUsersList').innerHTML = result.users?.map((u, i) => `
+                    <div class="service-card">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div>
+                                <h3>${u.name}</h3>
+                                <p style="color: var(--text-muted);">${u.email}</p>
+                                <p style="color: var(--text-muted); font-size: 0.75rem;">Credit: ${u.creditScore || 650}</p>
+                            </div>
+                            <p style="font-size: 1.5rem; color: var(--gold);">$${Number(u.balance).toFixed(2)}</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                            <input type="number" id="adminAmt_${i}" class="form-input" placeholder="Amount (+/-)">
+                            <button class="btn btn-success btn-sm" onclick="adminUpdateBalance('${u.email}', ${i})">Update</button>
+                        </div>
+                    </div>
+                `).join('') || '<p>No users</p>';
+            } catch (e) {
+                console.error('Admin error:', e);
+            }
         }
 
-        async function adminUpdate(email, idx) {
-            const amount = parseFloat(document.getElementById('amt' + idx).value);
+        async function adminUpdateBalance(email, idx) {
+            const amount = parseFloat(document.getElementById(`adminAmt_${idx}`).value);
             if (isNaN(amount)) return showToast('Enter amount', 'error');
+
             try {
-                const res = await fetch(SHEETS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'adminUpdateBalance', adminEmail: currentUser.email, targetEmail: email, amount }) });
-                const result = await res.json();
-                if (result.success) { showToast('Updated!', 'success'); loadAdminPanel(); }
-                else showToast(result.error, 'error');
-            } catch (e) { showToast('Network error', 'error'); }
+                const response = await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: 'adminUpdateBalance', adminEmail: currentUser.email, targetEmail: email, amount })
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Updated!', 'success');
+                    document.getElementById(`adminAmt_${idx}`).value = '';
+                    loadAdminPanel();
+                } else {
+                    showToast(result.error, 'error');
+                }
+            } catch (e) {
+                showToast('Network error', 'error');
+            }
         }
 
         // ============ UTILS ============
@@ -1298,8 +2618,14 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        document.getElementById('chancesModal')?.addEventListener('click', e => { if (e.target.classList.contains('modal-overlay')) closeChancesModal(); });
-        document.getElementById('loanModal')?.addEventListener('click', e => { if (e.target.classList.contains('modal-overlay')) closeLoanModal(); });
+        // Close modals on click outside
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal-overlay')) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
     </script>
 </body>
 </html>
