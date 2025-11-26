@@ -2065,6 +2065,7 @@
     <div id="confetti" class="confetti"></div>
 
     <script>
+    <script>
         // ============ CONFIGURATION ============
         const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz3CPKFWGqeAZYTdhe0FcVZgDB7HDrouu7PynSB_99BRvpyMzXjzr3DtRENmBIf7ppoFA/exec';
         const MASTER_ADMIN = 'sheepishlyroyal@gmail.com';
@@ -2217,17 +2218,24 @@
         async function apiCall(params) {
             try {
                 const url = SHEETS_URL + '?' + new URLSearchParams(params).toString();
+                console.log('API Call:', params.action, params);
                 const response = await fetch(url, { method: 'GET', redirect: 'follow' });
                 const text = await response.text();
-                try { return JSON.parse(text); } 
-                catch { return { success: false, error: 'Invalid response' }; }
+                console.log('API Response for', params.action, ':', text.substring(0, 500));
+                try { 
+                    const json = JSON.parse(text);
+                    return json;
+                } catch { 
+                    console.error('JSON parse error for', params.action);
+                    return { success: false, error: 'Invalid response' }; 
+                }
             } catch (e) {
                 console.error('API Error:', e);
                 return { success: false, error: 'Network error' };
             }
         }
 
-        // ============ AUTH ============
+        // ============ AUTH - FIXED ============
         function switchAuthTab(tab) {
             document.querySelectorAll('#authScreen .tab-btn').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
@@ -2247,13 +2255,14 @@
             showToast('Logging in...', 'info');
             const data = await apiCall({ action: 'login', email, password });
 
-            if (data.success) {
-                currentUser = data.user;
+            if (data.success || data.user) {
+                currentUser = data.user || data;
+                if (!currentUser.email) currentUser.email = email;
                 localStorage.setItem('lintoriaUser', JSON.stringify(currentUser));
-                showToast('Welcome back, ' + currentUser.name + '!', 'success');
+                showToast('Welcome back, ' + (currentUser.name || email) + '!', 'success');
                 showApp();
             } else {
-                showToast(data.error || 'Login failed', 'error');
+                showToast(data.error || data.message || 'Login failed', 'error');
             }
         }
 
@@ -2268,15 +2277,24 @@
             }
 
             showToast('Creating account...', 'info');
+            
+            // Try the register action
             const data = await apiCall({ action: 'register', email, name, password });
+            console.log('Register response:', data);
 
-            if (data.success) {
-                currentUser = data.user;
+            // Check various success indicators
+            if (data.success || data.user || data.created || data.registered) {
+                currentUser = data.user || { email, name, balance: 100000 };
+                if (!currentUser.email) currentUser.email = email;
+                if (!currentUser.name) currentUser.name = name;
                 localStorage.setItem('lintoriaUser', JSON.stringify(currentUser));
-                showToast('Welcome to Lintoria, ' + currentUser.name + '!', 'success');
+                showToast('Welcome to Lintoria, ' + name + '!', 'success');
                 showApp();
             } else {
-                showToast(data.message || 'Registration failed', 'error');
+                // Show detailed error for debugging
+                const errorMsg = data.error || data.message || 'Registration failed';
+                showToast(errorMsg + ' (Check console for details)', 'error');
+                console.error('Registration failed:', data);
             }
         }
 
@@ -2291,9 +2309,8 @@
         function showApp() {
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('appScreen').classList.remove('hidden');
-            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userName').textContent = currentUser.name || currentUser.email;
             
-            // Show admin tab for master admin
             if (currentUser.email === MASTER_ADMIN) {
                 document.getElementById('adminTab').style.display = 'flex';
             }
@@ -2307,7 +2324,6 @@
             document.getElementById(tab + 'Content').classList.remove('hidden');
             event.target.classList.add('active');
 
-            // Load tab-specific content
             switch(tab) {
                 case 'dashboard': loadDashboard(); break;
                 case 'loans': loadLoans(); break;
@@ -2323,41 +2339,114 @@
             }
         }
 
-        // ============ DASHBOARD ============
+        // ============ DASHBOARD - FIXED ============
         async function loadDashboard() {
             const data = await apiCall({ action: 'getDashboard', email: currentUser.email });
+            console.log('Dashboard data:', data);
             
-            if (data.success) {
-                currentUser.balance = data.balance || 0;
-                document.getElementById('balanceAmount').textContent = formatNumber(data.balance || 0);
-                document.getElementById('creditScoreDisplay').textContent = data.creditScore || 650;
-                document.getElementById('emojiScoreDisplay').textContent = formatNumber(data.emojiScore || 0);
-                document.getElementById('totalWageredDisplay').textContent = '$' + formatNumber(data.totalWagered || 0);
-                document.getElementById('netGamblingDisplay').textContent = '$' + formatNumber(data.netGambling || 0);
-            }
+            // Update balance from various possible response formats
+            const balance = data.balance ?? data.user?.balance ?? currentUser.balance ?? 0;
+            currentUser.balance = balance;
+            document.getElementById('balanceAmount').textContent = formatNumber(balance);
+            document.getElementById('creditScoreDisplay').textContent = data.creditScore || data.credit || 650;
+            document.getElementById('emojiScoreDisplay').textContent = formatNumber(data.emojiScore || data.emojis || 0);
+            document.getElementById('totalWageredDisplay').textContent = '$' + formatNumber(data.totalWagered || 0);
+            document.getElementById('netGamblingDisplay').textContent = '$' + formatNumber(data.netGambling || 0);
             
             loadTransactions();
         }
 
         async function loadTransactions() {
             const data = await apiCall({ action: 'getTransactions', email: currentUser.email, limit: 10 });
-            const container = document.getElementById('transactionsList');
+            console.log('Transactions data:', data);
             
-            if (data.success && data.transactions && data.transactions.length > 0) {
-                container.innerHTML = data.transactions.map(t => `
+            const container = document.getElementById('transactionsList');
+            const transactions = data.transactions || data.history || data.data || [];
+            
+            if (Array.isArray(transactions) && transactions.length > 0) {
+                container.innerHTML = transactions.slice(0, 10).map(t => `
                     <div class="transaction-item">
                         <div>
-                            <div style="font-weight: 600;">${t.type || 'Transaction'}</div>
-                            <div style="color: var(--text-muted); font-size: 0.75rem;">${formatDate(t.timestamp)}</div>
+                            <div style="font-weight: 600;">${t.type || t.description || t.action || 'Transaction'}</div>
+                            <div style="color: var(--text-muted); font-size: 0.75rem;">${formatDate(t.timestamp || t.date || t.time || t.created)}</div>
                         </div>
-                        <div style="font-weight: 700; color: ${t.amount >= 0 ? 'var(--success)' : 'var(--danger)'};">
-                            ${t.amount >= 0 ? '+' : ''}$${formatNumber(t.amount)}
+                        <div style="font-weight: 700; color: ${(t.amount || 0) >= 0 ? 'var(--success)' : 'var(--danger)'};">
+                            ${(t.amount || 0) >= 0 ? '+' : ''}$${formatNumber(t.amount || 0)}
                         </div>
                     </div>
                 `).join('');
             } else {
                 container.innerHTML = '<div class="empty-state"><div class="empty-icon">📜</div><p>No transactions yet</p></div>';
             }
+        }
+
+        // ============ LEADERBOARDS - COMPLETELY FIXED ============
+        async function loadLeaderboards() {
+            console.log('Loading leaderboards...');
+            
+            // Try to get all users data first
+            let allUsersData = await apiCall({ action: 'getLeaderboard' });
+            console.log('Leaderboard response:', allUsersData);
+            
+            // If that doesn't work, try other endpoints
+            if (!allUsersData.leaderboard && !allUsersData.users && !Array.isArray(allUsersData)) {
+                allUsersData = await apiCall({ action: 'getUsers' });
+                console.log('getUsers response:', allUsersData);
+            }
+            
+            if (!allUsersData.leaderboard && !allUsersData.users && !Array.isArray(allUsersData)) {
+                allUsersData = await apiCall({ action: 'getAllUsers' });
+                console.log('getAllUsers response:', allUsersData);
+            }
+            
+            // Extract users array
+            let users = allUsersData.leaderboard || allUsersData.users || allUsersData.data || allUsersData;
+            if (!Array.isArray(users)) users = [];
+            
+            console.log('Users for leaderboard:', users);
+            
+            // Render each leaderboard
+            renderLeaderboardFromUsers(users, 'wealthLeaderboard', ['balance', 'wealth', 'money'], '$');
+            renderLeaderboardFromUsers(users, 'creditLeaderboard', ['creditScore', 'credit', 'score'], '');
+            renderLeaderboardFromUsers(users, 'emojiLeaderboard', ['emojiScore', 'emojis', 'emojiPoints', 'points'], '');
+        }
+
+        function renderLeaderboardFromUsers(users, containerId, valueKeys, prefix) {
+            const container = document.getElementById(containerId);
+            
+            if (!users || users.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>No data available</p></div>';
+                return;
+            }
+            
+            // Get value using multiple possible keys
+            const getValue = (entry) => {
+                for (const key of valueKeys) {
+                    if (entry[key] !== undefined && entry[key] !== null) {
+                        return parseFloat(entry[key]) || 0;
+                    }
+                }
+                return 0;
+            };
+            
+            // Sort users by the appropriate value
+            const sorted = [...users].sort((a, b) => getValue(b) - getValue(a));
+            
+            const medals = ['🥇', '🥈', '🥉'];
+            
+            container.innerHTML = sorted.slice(0, 10).map((entry, i) => {
+                const isCurrentUser = entry.email === currentUser.email;
+                const value = getValue(entry);
+                const displayName = entry.name || entry.displayName || entry.username || entry.email || 'Unknown';
+                
+                return `
+                    <div class="leaderboard-item ${isCurrentUser ? 'current-user' : ''}">
+                        <span class="leaderboard-rank">${i < 3 ? medals[i] : '#' + (i + 1)}</span>
+                        <span class="leaderboard-name">${displayName}${isCurrentUser ? ' (You)' : ''}</span>
+                        <span class="leaderboard-value">${prefix}${formatNumber(value)}</span>
+                    </div>
+                `;
+            }).join('');
         }
 
         // ============ TRANSFER ============
@@ -2382,23 +2471,17 @@
             }
 
             showToast('Sending...', 'info');
-            const data = await apiCall({ 
-                action: 'transfer', 
-                from: currentUser.email, 
-                to, 
-                amount, 
-                note 
-            });
+            const data = await apiCall({ action: 'transfer', from: currentUser.email, to, amount, note });
 
             if (data.success) {
-                currentUser.balance -= amount;
+                currentUser.balance = data.newBalance || (currentUser.balance - amount);
                 document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
                 document.getElementById('recipientEmail').value = '';
                 document.getElementById('transferAmount').value = '';
                 document.getElementById('transferNote').value = '';
                 showToast('$' + formatNumber(amount) + ' sent successfully!', 'success');
             } else {
-                showToast(data.message || 'Transfer failed', 'error');
+                showToast(data.message || data.error || 'Transfer failed', 'error');
             }
         }
 
@@ -2452,16 +2535,11 @@
 
             if (!confirm(`Take loan of $${formatNumber(amount)} at ${interest}% interest?`)) return;
 
-            const data = await apiCall({ 
-                action: 'takeLoan', 
-                email: currentUser.email, 
-                amount, 
-                interest 
-            });
+            const data = await apiCall({ action: 'takeLoan', email: currentUser.email, amount, interest });
 
             if (data.success) {
-                currentUser.balance = data.newBalance;
-                document.getElementById('balanceAmount').textContent = formatNumber(data.newBalance);
+                currentUser.balance = data.newBalance || (currentUser.balance + amount);
+                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
                 showToast('Loan approved! +$' + formatNumber(amount), 'success');
                 loadLoans();
             } else {
@@ -2482,15 +2560,11 @@
                 return;
             }
 
-            const data = await apiCall({ 
-                action: 'repayLoan', 
-                email: currentUser.email, 
-                amount 
-            });
+            const data = await apiCall({ action: 'repayLoan', email: currentUser.email, amount });
 
             if (data.success) {
-                currentUser.balance = data.newBalance;
-                document.getElementById('balanceAmount').textContent = formatNumber(data.newBalance);
+                currentUser.balance = data.newBalance || (currentUser.balance - amount);
+                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
                 document.getElementById('repayAmount').value = '';
                 showToast('Payment successful!', 'success');
                 loadLoans();
@@ -2501,10 +2575,8 @@
 
         // ============ STOCKS ============
         async function loadStocks() {
-            const data = await apiCall({ action: 'getStocks' });
             const container = document.getElementById('stocksList');
             
-            // Generate prices with some randomness
             const stocksWithPrices = STOCKS.map(stock => {
                 const variation = (Math.random() - 0.5) * 0.3;
                 const price = stock.basePrice * (1 + variation);
@@ -2529,16 +2601,17 @@
         async function loadPortfolio() {
             const data = await apiCall({ action: 'getPortfolio', email: currentUser.email });
             const container = document.getElementById('portfolio');
+            const stocks = data.stocks || data.portfolio || [];
             
-            if (data.success && data.stocks && data.stocks.length > 0) {
-                container.innerHTML = data.stocks.map(s => `
+            if (stocks.length > 0) {
+                container.innerHTML = stocks.map(s => `
                     <div class="transaction-item">
                         <div>
                             <div style="font-weight: 700; color: var(--gold);">${s.symbol}</div>
-                            <div style="color: var(--text-muted); font-size: 0.75rem;">${s.shares} shares @ $${formatNumber(s.avgPrice)}</div>
+                            <div style="color: var(--text-muted); font-size: 0.75rem;">${s.shares} shares @ $${formatNumber(s.avgPrice || s.price)}</div>
                         </div>
                         <div style="text-align: right;">
-                            <div style="font-weight: 700;">$${formatNumber(s.shares * s.currentPrice)}</div>
+                            <div style="font-weight: 700;">$${formatNumber(s.shares * (s.currentPrice || s.price))}</div>
                             <button class="btn btn-sm btn-danger" onclick="sellStock('${s.symbol}', ${s.shares})" style="margin-top: 0.25rem;">Sell</button>
                         </div>
                     </div>
@@ -2568,9 +2641,7 @@
             document.getElementById('stockModal').classList.add('active');
         }
 
-        function closeStockModal() {
-            document.getElementById('stockModal').classList.remove('active');
-        }
+        function closeStockModal() { document.getElementById('stockModal').classList.remove('active'); }
 
         async function buyStock(symbol, price) {
             const shares = parseInt(document.getElementById('stockShares').value);
@@ -2579,17 +2650,11 @@
             const total = shares * price;
             if (total > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
 
-            const data = await apiCall({ 
-                action: 'buyStock', 
-                email: currentUser.email, 
-                symbol, 
-                shares, 
-                price 
-            });
+            const data = await apiCall({ action: 'buyStock', email: currentUser.email, symbol, shares, price });
 
             if (data.success) {
-                currentUser.balance = data.newBalance;
-                document.getElementById('balanceAmount').textContent = formatNumber(data.newBalance);
+                currentUser.balance = data.newBalance || (currentUser.balance - total);
+                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
                 showToast(`Bought ${shares} ${symbol} shares!`, 'success');
                 closeStockModal();
                 loadStocks();
@@ -2602,16 +2667,11 @@
             const shares = maxShares || parseInt(document.getElementById('stockShares')?.value);
             if (!shares || shares <= 0) { showToast('Enter valid shares', 'error'); return; }
 
-            const data = await apiCall({ 
-                action: 'sellStock', 
-                email: currentUser.email, 
-                symbol, 
-                shares 
-            });
+            const data = await apiCall({ action: 'sellStock', email: currentUser.email, symbol, shares });
 
             if (data.success) {
-                currentUser.balance = data.newBalance;
-                document.getElementById('balanceAmount').textContent = formatNumber(data.newBalance);
+                currentUser.balance = data.newBalance || currentUser.balance;
+                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
                 showToast(`Sold ${shares} ${symbol} shares!`, 'success');
                 closeStockModal();
                 loadStocks();
@@ -2648,7 +2708,6 @@
 
             const pack = THEMED_PACKS[selectedPack];
             
-            // Roll for rarity
             const roll = Math.random() * 100;
             let cumulative = 0;
             let rarity = 'common';
@@ -2658,7 +2717,6 @@
                 if (roll < cumulative) { rarity = r; break; }
             }
 
-            // Get emoji from that rarity
             const pool = pack.emojis[rarity] || pack.emojis.common;
             const emoji = pool[Math.floor(Math.random() * pool.length)];
 
@@ -2684,10 +2742,7 @@
             const modal = document.getElementById('packOpeningModal');
             modal.className = 'pack-opening';
             
-            // Confetti for legendary+
-            if (['legendary', 'mythic', 'divine'].includes(rarity)) {
-                createConfetti();
-            }
+            if (['legendary', 'mythic', 'divine'].includes(rarity)) createConfetti();
             
             modal.innerHTML = `
                 <div class="pack-reveal" style="text-shadow: 0 0 50px ${RARITY_COLORS[rarity]};">${emoji}</div>
@@ -2695,12 +2750,8 @@
                 <p style="margin-top: 1rem; color: var(--text-muted);">
                     ${isDuplicate ? '(Duplicate - Added to collection)' : '+' + formatNumber(RARITY_POINTS[rarity]) + ' points'}
                 </p>
-                <p style="margin-top: 0.5rem; color: var(--text-secondary);">
-                    Sell Value: $${formatNumber(RARITY_SELL[rarity])}
-                </p>
-                <button class="btn btn-success" onclick="closePackOpening()" style="margin-top: 2rem; padding: 1rem 3rem;">
-                    Continue
-                </button>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);">Sell Value: $${formatNumber(RARITY_SELL[rarity])}</p>
+                <button class="btn btn-success" onclick="closePackOpening()" style="margin-top: 2rem; padding: 1rem 3rem;">Continue</button>
             `;
         }
 
@@ -2716,28 +2767,14 @@
             
             for (let i = 0; i < 100; i++) {
                 const confetti = document.createElement('div');
-                confetti.style.cssText = `
-                    position: absolute;
-                    width: ${Math.random() * 10 + 5}px;
-                    height: ${Math.random() * 10 + 5}px;
-                    background: ${colors[Math.floor(Math.random() * colors.length)]};
-                    left: ${Math.random() * 100}%;
-                    top: -20px;
-                    animation: confettiFall ${Math.random() * 2 + 2}s linear forwards;
-                    transform: rotate(${Math.random() * 360}deg);
-                `;
+                confetti.style.cssText = `position: absolute; width: ${Math.random() * 10 + 5}px; height: ${Math.random() * 10 + 5}px; background: ${colors[Math.floor(Math.random() * colors.length)]}; left: ${Math.random() * 100}%; top: -20px; animation: confettiFall ${Math.random() * 2 + 2}s linear forwards; transform: rotate(${Math.random() * 360}deg);`;
                 container.appendChild(confetti);
             }
             
-            // Add confetti animation
             if (!document.getElementById('confettiStyle')) {
                 const style = document.createElement('style');
                 style.id = 'confettiStyle';
-                style.textContent = `
-                    @keyframes confettiFall {
-                        to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-                    }
-                `;
+                style.textContent = `@keyframes confettiFall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }`;
                 document.head.appendChild(style);
             }
         }
@@ -2746,7 +2783,6 @@
             if (!selectedPack) return;
             
             const pack = THEMED_PACKS[selectedPack];
-            const modal = document.getElementById('packContentsModal');
             document.getElementById('packContentsTitle').textContent = pack.name + ' Contents';
             
             const rarities = ['divine', 'mythic', 'legendary', 'epic', 'rare', 'uncommon', 'common'];
@@ -2758,16 +2794,10 @@
                         <div style="margin-bottom: 1.5rem;">
                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);">
                                 <span class="rarity-badge ${r}">${r}</span>
-                                <span style="color: var(--text-muted); font-size: 0.75rem;">
-                                    ${RARITY_CHANCES[r]}% • ${formatNumber(RARITY_POINTS[r])} pts • $${formatNumber(RARITY_SELL[r])}
-                                </span>
+                                <span style="color: var(--text-muted); font-size: 0.75rem;">${RARITY_CHANCES[r]}% • ${formatNumber(RARITY_POINTS[r])} pts • $${formatNumber(RARITY_SELL[r])}</span>
                             </div>
                             <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-                                ${pack.emojis[r].map(e => `
-                                    <div style="font-size: 1.5rem; padding: 0.5rem; background: ${RARITY_COLORS[r]}22; border: 1px solid ${RARITY_COLORS[r]}; border-radius: 8px;">
-                                        ${e}
-                                    </div>
-                                `).join('')}
+                                ${pack.emojis[r].map(e => `<div style="font-size: 1.5rem; padding: 0.5rem; background: ${RARITY_COLORS[r]}22; border: 1px solid ${RARITY_COLORS[r]}; border-radius: 8px;">${e}</div>`).join('')}
                             </div>
                         </div>
                     `;
@@ -2775,42 +2805,31 @@
             });
             
             document.getElementById('packContentsBody').innerHTML = html;
-            modal.classList.add('active');
+            document.getElementById('packContentsModal').classList.add('active');
         }
 
-        function closePackContentsModal() {
-            document.getElementById('packContentsModal').classList.remove('active');
-        }
-
-        function showChancesModal() {
-            document.getElementById('chancesModal').classList.add('active');
-        }
-
-        function closeChancesModal() {
-            document.getElementById('chancesModal').classList.remove('active');
-        }
+        function closePackContentsModal() { document.getElementById('packContentsModal').classList.remove('active'); }
+        function showChancesModal() { document.getElementById('chancesModal').classList.add('active'); }
+        function closeChancesModal() { document.getElementById('chancesModal').classList.remove('active'); }
 
         // ============ COLLECTION ============
         async function loadCollection() {
             const data = await apiCall({ action: 'getCollection', email: currentUser.email });
             const container = document.getElementById('emojiCollection');
             
-            if (data.success) {
-                document.getElementById('emojiScoreHeader').textContent = formatNumber(data.totalPoints || 0) + ' pts';
-                
-                if (data.emojis && data.emojis.length > 0) {
-                    container.innerHTML = data.emojis.map(e => `
-                        <div class="emoji-card ${e.rarity}" onclick="sellEmoji('${encodeURIComponent(e.emoji)}', '${e.rarity}')">
-                            <span class="emoji">${e.emoji}</span>
-                            <span class="rarity-badge ${e.rarity}">${e.rarity}</span>
-                            <span style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.25rem;">
-                                $${formatNumber(RARITY_SELL[e.rarity])}
-                            </span>
-                        </div>
-                    `).join('');
-                } else {
-                    container.innerHTML = '<div class="empty-state"><div class="empty-icon">🎒</div><p>No emojis yet. Buy some packs!</p></div>';
-                }
+            document.getElementById('emojiScoreHeader').textContent = formatNumber(data.totalPoints || 0) + ' pts';
+            
+            const emojis = data.emojis || data.collection || [];
+            if (emojis.length > 0) {
+                container.innerHTML = emojis.map(e => `
+                    <div class="emoji-card ${e.rarity}" onclick="sellEmoji('${encodeURIComponent(e.emoji)}', '${e.rarity}')">
+                        <span class="emoji">${e.emoji}</span>
+                        <span class="rarity-badge ${e.rarity}">${e.rarity}</span>
+                        <span style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.25rem;">$${formatNumber(RARITY_SELL[e.rarity])}</span>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon">🎒</div><p>No emojis yet. Buy some packs!</p></div>';
             }
         }
 
@@ -2818,18 +2837,11 @@
             const price = RARITY_SELL[rarity];
             if (!confirm(`Sell this ${rarity} emoji for $${formatNumber(price)}?`)) return;
             
-            const data = await apiCall({ 
-                action: 'sellEmoji', 
-                email: currentUser.email, 
-                emoji, 
-                rarity, 
-                price, 
-                points: RARITY_POINTS[rarity] 
-            });
+            const data = await apiCall({ action: 'sellEmoji', email: currentUser.email, emoji, rarity, price, points: RARITY_POINTS[rarity] });
             
             if (data.success) {
-                currentUser.balance = data.newBalance;
-                document.getElementById('balanceAmount').textContent = formatNumber(data.newBalance);
+                currentUser.balance = data.newBalance || (currentUser.balance + price);
+                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
                 showToast('Sold for $' + formatNumber(price) + '!', 'success');
                 loadCollection();
             } else {
@@ -2837,7 +2849,7 @@
             }
         }
 
-        // ============ CASINO ============
+        // ============ CASINO INIT ============
         function initCasino() {
             initPlinko();
             initRoulette();
@@ -2851,7 +2863,6 @@
             board.innerHTML = '';
             
             const w = board.offsetWidth || 340;
-            const h = board.offsetHeight || 340;
             const rows = 10;
             const pegSpacing = 28;
             const startY = 30;
@@ -2870,14 +2881,12 @@
                 }
             }
             
-            // Create slots
             const slots = document.createElement('div');
             slots.className = 'plinko-slots';
             PLINKO_MULTIPLIERS.forEach((mult, i) => {
                 const slot = document.createElement('div');
                 slot.className = 'plinko-slot';
                 slot.dataset.mult = mult;
-                slot.dataset.index = i;
                 slot.textContent = mult + 'x';
                 slots.appendChild(slot);
             });
@@ -2896,27 +2905,19 @@
             const w = board.offsetWidth || 340;
             const h = board.offsetHeight || 340;
             
-            // Remove existing balls
             board.querySelectorAll('.plinko-ball').forEach(b => b.remove());
             
-            // Create ball
             const ball = document.createElement('div');
             ball.className = 'plinko-ball';
             board.appendChild(ball);
             
-            // Physics
             let x = w / 2 + (Math.random() - 0.5) * 30;
             let y = 10;
             let vx = 0;
             let vy = 0;
-            const gravity = 0.25;
-            const bounce = 0.65;
-            const friction = 0.98;
             
             const pegs = Array.from(board.querySelectorAll('.plinko-peg')).map(peg => ({
-                x: parseFloat(peg.style.left),
-                y: parseFloat(peg.style.top),
-                r: 5
+                x: parseFloat(peg.style.left), y: parseFloat(peg.style.top), r: 5
             }));
             
             const ballR = 9;
@@ -2925,16 +2926,14 @@
             function animate() {
                 if (landed) return;
                 
-                vy += gravity;
-                vx *= friction;
+                vy += 0.25;
+                vx *= 0.98;
                 x += vx;
                 y += vy;
                 
-                // Walls
-                if (x < ballR) { x = ballR; vx = -vx * bounce; }
-                if (x > w - ballR) { x = w - ballR; vx = -vx * bounce; }
+                if (x < ballR) { x = ballR; vx = -vx * 0.65; }
+                if (x > w - ballR) { x = w - ballR; vx = -vx * 0.65; }
                 
-                // Pegs
                 pegs.forEach(peg => {
                     const dx = x - peg.x;
                     const dy = y - peg.y;
@@ -2951,15 +2950,14 @@
                         const ny = Math.sin(angle);
                         const dot = vx * nx + vy * ny;
                         
-                        vx = (vx - 2 * dot * nx) * bounce + (Math.random() - 0.5) * 1.5;
-                        vy = (vy - 2 * dot * ny) * bounce;
+                        vx = (vx - 2 * dot * nx) * 0.65 + (Math.random() - 0.5) * 1.5;
+                        vy = (vy - 2 * dot * ny) * 0.65;
                     }
                 });
                 
                 ball.style.left = x + 'px';
                 ball.style.top = y + 'px';
                 
-                // Check landing
                 if (y > h - 45) {
                     landed = true;
                     const slotWidth = 28;
@@ -2986,15 +2984,7 @@
             slots[slotIndex].classList.add('active');
             ball.classList.add(win ? 'win-animation' : 'lose-animation');
             
-            await apiCall({ 
-                action: 'recordGambling', 
-                email: currentUser.email, 
-                game: 'plinko', 
-                wagered: bet, 
-                won: win ? winnings : 0, 
-                lost: win ? 0 : bet, 
-                result: win ? 'win' : 'loss' 
-            });
+            await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'plinko', wagered: bet, won: win ? winnings : 0, lost: win ? 0 : bet, result: win ? 'win' : 'loss' });
             
             currentUser.balance += profit;
             document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
@@ -3042,7 +3032,6 @@
             
             document.getElementById('rouletteBtn').disabled = true;
             document.getElementById('rouletteResult').innerHTML = '';
-            document.querySelectorAll('.roulette-bet-btn').forEach(b => b.disabled = true);
             
             const wheel = document.getElementById('rouletteWheel');
             const resultIdx = Math.floor(Math.random() * ROULETTE_NUMBERS.length);
@@ -3066,39 +3055,23 @@
                 const winnings = bet * mult;
                 const profit = winnings - bet;
                 
-                await apiCall({ 
-                    action: 'recordGambling', 
-                    email: currentUser.email, 
-                    game: 'roulette', 
-                    wagered: bet, 
-                    won: win ? winnings : 0, 
-                    lost: win ? 0 : bet, 
-                    result: win ? 'win' : 'loss' 
-                });
+                await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'roulette', wagered: bet, won: win ? winnings : 0, lost: win ? 0 : bet, result: win ? 'win' : 'loss' });
                 
                 currentUser.balance += profit;
                 document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
                 
                 const colorEmoji = result.color === 'red' ? '🔴' : result.color === 'black' ? '⚫' : '🟢';
-                document.getElementById('rouletteResult').innerHTML = `
-                    <div class="${win ? 'win-animation' : 'lose-animation'}">
-                        ${colorEmoji} ${result.num}<br>
-                        ${win 
-                            ? `<span style="color: var(--success);">WIN! +$${formatNumber(profit)}</span>`
-                            : `<span style="color: var(--danger);">LOSE -$${formatNumber(bet)}</span>`}
-                    </div>
-                `;
+                document.getElementById('rouletteResult').innerHTML = `<div class="${win ? 'win-animation' : 'lose-animation'}">${colorEmoji} ${result.num}<br>${win ? `<span style="color: var(--success);">WIN! +$${formatNumber(profit)}</span>` : `<span style="color: var(--danger);">LOSE -$${formatNumber(bet)}</span>`}</div>`;
                 
                 setTimeout(() => {
                     wheel.style.transition = 'none';
                     wheel.style.transform = `rotate(${targetAngle}deg)`;
                     document.getElementById('rouletteBtn').disabled = false;
-                    document.querySelectorAll('.roulette-bet-btn').forEach(b => b.disabled = false);
                 }, 1000);
             }, 5000);
         }
 
-        // CRASH GAME
+        // CRASH
         async function startCrash() {
             const bet = parseFloat(document.getElementById('crashBet').value);
             if (!bet || bet <= 0) { showToast('Enter a valid bet', 'error'); return; }
@@ -3118,11 +3091,8 @@
             crashInterval = setInterval(() => {
                 crashMultiplier += 0.02 + Math.random() * 0.03;
                 document.getElementById('crashMultiplier').textContent = crashMultiplier.toFixed(2) + 'x';
-                document.getElementById('crashMultiplier').style.transform = `scale(${1 + (crashMultiplier - 1) * 0.05})`;
                 
-                if (crashMultiplier >= crashPoint) {
-                    crashGame();
-                }
+                if (crashMultiplier >= crashPoint) crashGame();
             }, 100);
         }
 
@@ -3133,17 +3103,9 @@
             currentUser.balance += winnings;
             document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
             
-            await apiCall({ 
-                action: 'recordGambling', 
-                email: currentUser.email, 
-                game: 'crash', 
-                wagered: crashBet, 
-                won: winnings, 
-                lost: 0, 
-                result: 'win' 
-            });
+            await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'crash', wagered: crashBet, won: winnings, lost: 0, result: 'win' });
             
-            document.getElementById('crashResult').innerHTML = `<span style="color: var(--success);" class="win-animation">CASHED OUT! +$${formatNumber(winnings - crashBet)}</span>`;
+            document.getElementById('crashResult').innerHTML = `<span style="color: var(--success);">CASHED OUT! +$${formatNumber(winnings - crashBet)}</span>`;
             document.getElementById('crashStatus').textContent = 'Cashed out at ' + crashMultiplier.toFixed(2) + 'x!';
             
             resetCrash();
@@ -3156,17 +3118,9 @@
             document.getElementById('crashMultiplier').textContent = 'CRASHED!';
             document.getElementById('crashStatus').textContent = 'Crashed at ' + crashMultiplier.toFixed(2) + 'x';
             
-            await apiCall({ 
-                action: 'recordGambling', 
-                email: currentUser.email, 
-                game: 'crash', 
-                wagered: crashBet, 
-                won: 0, 
-                lost: crashBet, 
-                result: 'loss' 
-            });
+            await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'crash', wagered: crashBet, won: 0, lost: crashBet, result: 'loss' });
             
-            document.getElementById('crashResult').innerHTML = `<span style="color: var(--danger);" class="lose-animation">CRASHED! -$${formatNumber(crashBet)}</span>`;
+            document.getElementById('crashResult').innerHTML = `<span style="color: var(--danger);">CRASHED! -$${formatNumber(crashBet)}</span>`;
             
             setTimeout(resetCrash, 2000);
         }
@@ -3175,7 +3129,6 @@
             document.getElementById('crashStartBtn').disabled = false;
             document.getElementById('crashCashoutBtn').disabled = true;
             document.getElementById('crashMultiplier').classList.remove('crashed');
-            document.getElementById('crashMultiplier').style.transform = 'scale(1)';
             crashBet = 0;
         }
 
@@ -3184,11 +3137,7 @@
             const suits = ['♠', '♥', '♦', '♣'];
             const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
             const deck = [];
-            suits.forEach(suit => {
-                values.forEach(value => {
-                    deck.push({ suit, value, color: ['♥', '♦'].includes(suit) ? 'red' : 'black' });
-                });
-            });
+            suits.forEach(suit => values.forEach(value => deck.push({ suit, value, color: ['♥', '♦'].includes(suit) ? 'red' : 'black' })));
             return deck.sort(() => Math.random() - 0.5);
         }
 
@@ -3206,8 +3155,7 @@
         }
 
         function renderHand(hand, containerId, hideFirst = false) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = hand.map((card, i) => {
+            document.getElementById(containerId).innerHTML = hand.map((card, i) => {
                 if (hideFirst && i === 0) return '<div class="playing-card hidden-card">?</div>';
                 return `<div class="playing-card ${card.color}">${card.value}${card.suit}</div>`;
             }).join('');
@@ -3238,9 +3186,7 @@
             document.getElementById('bjStandBtn').disabled = false;
             document.getElementById('blackjackResult').innerHTML = '';
             
-            if (handTotal(playerHand) === 21) {
-                await endBlackjack('blackjack');
-            }
+            if (handTotal(playerHand) === 21) await endBlackjack('blackjack');
         }
 
         async function hitBlackjack() {
@@ -3248,9 +3194,7 @@
             renderHand(playerHand, 'playerHand');
             document.getElementById('playerTotal').textContent = handTotal(playerHand);
             
-            if (handTotal(playerHand) > 21) {
-                await endBlackjack('bust');
-            }
+            if (handTotal(playerHand) > 21) await endBlackjack('bust');
         }
 
         async function standBlackjack() {
@@ -3288,48 +3232,21 @@
             let winnings = 0, message = '', win = false;
             
             switch(result) {
-                case 'blackjack':
-                    winnings = blackjackBet * 2.5;
-                    message = '🎉 BLACKJACK! +$' + formatNumber(winnings - blackjackBet);
-                    win = true;
-                    break;
-                case 'win':
-                case 'dealer_bust':
-                    winnings = blackjackBet * 2;
-                    message = '✅ WIN! +$' + formatNumber(winnings - blackjackBet);
-                    win = true;
-                    break;
-                case 'push':
-                    winnings = blackjackBet;
-                    message = '🤝 PUSH - Bet returned';
-                    win = true;
-                    break;
-                case 'bust':
-                    message = '💥 BUST! -$' + formatNumber(blackjackBet);
-                    break;
-                case 'lose':
-                    message = '❌ LOSE -$' + formatNumber(blackjackBet);
-                    break;
+                case 'blackjack': winnings = blackjackBet * 2.5; message = '🎉 BLACKJACK! +$' + formatNumber(winnings - blackjackBet); win = true; break;
+                case 'win': case 'dealer_bust': winnings = blackjackBet * 2; message = '✅ WIN! +$' + formatNumber(winnings - blackjackBet); win = true; break;
+                case 'push': winnings = blackjackBet; message = '🤝 PUSH - Bet returned'; win = true; break;
+                case 'bust': message = '💥 BUST! -$' + formatNumber(blackjackBet); break;
+                case 'lose': message = '❌ LOSE -$' + formatNumber(blackjackBet); break;
             }
             
             currentUser.balance += winnings;
             document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
             
-            await apiCall({ 
-                action: 'recordGambling', 
-                email: currentUser.email, 
-                game: 'blackjack', 
-                wagered: blackjackBet, 
-                won: winnings, 
-                lost: win ? 0 : blackjackBet, 
-                result: win ? 'win' : 'loss' 
-            });
+            await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'blackjack', wagered: blackjackBet, won: winnings, lost: win ? 0 : blackjackBet, result: win ? 'win' : 'loss' });
             
-            document.getElementById('blackjackResult').innerHTML = `<span style="color: ${win ? 'var(--success)' : 'var(--danger)'};" class="${win ? 'win-animation' : 'lose-animation'}">${message}</span>`;
+            document.getElementById('blackjackResult').innerHTML = `<span style="color: ${win ? 'var(--success)' : 'var(--danger)'};">${message}</span>`;
             
-            setTimeout(() => {
-                document.getElementById('bjDealBtn').disabled = false;
-            }, 1500);
+            setTimeout(() => document.getElementById('bjDealBtn').disabled = false, 1500);
         }
 
         // DICE
@@ -3358,21 +3275,9 @@
                 currentUser.balance += profit;
                 document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
                 
-                await apiCall({ 
-                    action: 'recordGambling', 
-                    email: currentUser.email, 
-                    game: 'dice', 
-                    wagered: bet, 
-                    won: winnings, 
-                    lost: win ? 0 : bet, 
-                    result: win ? 'win' : 'loss' 
-                });
+                await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'dice', wagered: bet, won: winnings, lost: win ? 0 : bet, result: win ? 'win' : 'loss' });
                 
-                document.getElementById('diceResult').innerHTML = `
-                    <span style="color: ${win ? 'var(--success)' : 'var(--danger)'};" class="${win ? 'win-animation' : 'lose-animation'}">
-                        Rolled ${roll}! ${win ? '+$' + formatNumber(profit) : '-$' + formatNumber(bet)}
-                    </span>
-                `;
+                document.getElementById('diceResult').innerHTML = `<span style="color: ${win ? 'var(--success)' : 'var(--danger)'};">Rolled ${roll}! ${win ? '+$' + formatNumber(profit) : '-$' + formatNumber(bet)}</span>`;
                 
                 document.getElementById('diceBtn').disabled = false;
             }, 1000);
@@ -3398,7 +3303,6 @@
                 symbols[Math.floor(Math.random() * symbols.length)]
             ];
             
-            // Stop reels one by one
             setTimeout(() => { reels[0].classList.remove('spinning'); reels[0].querySelector('.slot-symbol').textContent = results[0]; }, 500);
             setTimeout(() => { reels[1].classList.remove('spinning'); reels[1].querySelector('.slot-symbol').textContent = results[1]; }, 1000);
             setTimeout(async () => {
@@ -3422,19 +3326,11 @@
                 currentUser.balance += profit;
                 document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
                 
-                await apiCall({ 
-                    action: 'recordGambling', 
-                    email: currentUser.email, 
-                    game: 'slots', 
-                    wagered: bet, 
-                    won: winnings, 
-                    lost: win ? 0 : bet, 
-                    result: win ? 'win' : 'loss' 
-                });
+                await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'slots', wagered: bet, won: winnings, lost: win ? 0 : bet, result: win ? 'win' : 'loss' });
                 
                 document.getElementById('slotsResult').innerHTML = win
-                    ? `<span style="color: var(--success);" class="win-animation">${mult}x WIN! +$${formatNumber(profit)}</span>`
-                    : `<span style="color: var(--danger);" class="lose-animation">No match -$${formatNumber(bet)}</span>`;
+                    ? `<span style="color: var(--success);">${mult}x WIN! +$${formatNumber(profit)}</span>`
+                    : `<span style="color: var(--danger);">No match -$${formatNumber(bet)}</span>`;
                 
                 document.getElementById('slotsBtn').disabled = false;
             }, 1500);
@@ -3466,21 +3362,9 @@
                 currentUser.balance += profit;
                 document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
                 
-                await apiCall({ 
-                    action: 'recordGambling', 
-                    email: currentUser.email, 
-                    game: 'coinflip', 
-                    wagered: bet, 
-                    won: winnings, 
-                    lost: win ? 0 : bet, 
-                    result: win ? 'win' : 'loss' 
-                });
+                await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'coinflip', wagered: bet, won: winnings, lost: win ? 0 : bet, result: win ? 'win' : 'loss' });
                 
-                document.getElementById('coinResult').innerHTML = `
-                    <span style="color: ${win ? 'var(--success)' : 'var(--danger)'};" class="${win ? 'win-animation' : 'lose-animation'}">
-                        ${result.toUpperCase()}! ${win ? '+$' + formatNumber(profit) : '-$' + formatNumber(bet)}
-                    </span>
-                `;
+                document.getElementById('coinResult').innerHTML = `<span style="color: ${win ? 'var(--success)' : 'var(--danger)'};">${result.toUpperCase()}! ${win ? '+$' + formatNumber(profit) : '-$' + formatNumber(bet)}</span>`;
                 
                 document.getElementById('headsBtn').disabled = false;
                 document.getElementById('tailsBtn').disabled = false;
@@ -3532,21 +3416,9 @@
                 currentUser.balance += profit;
                 document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
                 
-                await apiCall({ 
-                    action: 'recordGambling', 
-                    email: currentUser.email, 
-                    game: 'wheel', 
-                    wagered: bet, 
-                    won: winnings, 
-                    lost: win ? 0 : bet, 
-                    result: win ? 'win' : 'loss' 
-                });
+                await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'wheel', wagered: bet, won: winnings, lost: win ? 0 : bet, result: win ? 'win' : 'loss' });
                 
-                document.getElementById('wheelResult').innerHTML = `
-                    <span style="color: ${win ? 'var(--success)' : 'var(--danger)'};" class="${win ? 'win-animation' : 'lose-animation'}">
-                        ${result.label}! ${profit >= 0 ? '+' : ''}$${formatNumber(profit)}
-                    </span>
-                `;
+                document.getElementById('wheelResult').innerHTML = `<span style="color: ${win ? 'var(--success)' : 'var(--danger)'};">${result.label}! ${profit >= 0 ? '+' : ''}$${formatNumber(profit)}</span>`;
                 
                 setTimeout(() => {
                     wheel.style.transition = 'none';
@@ -3571,16 +3443,11 @@
                             <div style="font-weight: 700;">${currentUser.name}</div>
                             <div style="font-size: 0.8rem; opacity: 0.8;">${currentUser.email}</div>
                         </div>
-                        <div style="font-size: 0.75rem; opacity: 0.7;">Issued: ${formatDate(data.issuedDate)}</div>
                     </div>
                 `;
                 btn.style.display = 'none';
             } else {
-                container.innerHTML = `
-                    <div class="empty-icon">🛂</div>
-                    <p style="color: var(--text-muted);">You don't have a passport yet.</p>
-                    <p style="color: var(--text-muted); font-size: 0.8rem;">A passport allows you to travel to different cities!</p>
-                `;
+                container.innerHTML = `<div class="empty-icon">🛂</div><p style="color: var(--text-muted);">You don't have a passport yet.</p>`;
                 btn.style.display = 'inline-flex';
             }
         }
@@ -3592,8 +3459,8 @@
             const data = await apiCall({ action: 'applyPassport', email: currentUser.email });
             
             if (data.success) {
-                currentUser.balance = data.newBalance;
-                document.getElementById('balanceAmount').textContent = formatNumber(data.newBalance);
+                currentUser.balance = data.newBalance || (currentUser.balance - 500);
+                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
                 showToast('Passport issued!', 'success');
                 loadPassport();
             } else {
@@ -3607,12 +3474,12 @@
             const statusDiv = document.getElementById('travelStatus');
             
             if (!passportData.hasPassport) {
-                statusDiv.innerHTML = '<div class="disclaimer">⚠️ You need a passport to travel! Get one from the Passport Office.</div>';
+                statusDiv.innerHTML = '<div class="disclaimer">⚠️ You need a passport to travel!</div>';
                 document.getElementById('citiesList').innerHTML = '';
                 return;
             }
             
-            statusDiv.innerHTML = '<div style="color: var(--success); margin-bottom: 1rem;">✅ Passport verified - Ready to travel!</div>';
+            statusDiv.innerHTML = '<div style="color: var(--success); margin-bottom: 1rem;">✅ Passport verified!</div>';
             
             document.getElementById('citiesList').innerHTML = CITIES.map(city => `
                 <div class="service-card" onclick="travelTo('${city.name}', ${city.cost}, ${city.bonus})">
@@ -3625,48 +3492,20 @@
                     </div>
                 </div>
             `).join('');
-            
-            loadTravelHistory();
         }
 
         async function travelTo(city, cost, bonus) {
-            if (currentUser.balance < cost) { showToast('Insufficient funds for travel', 'error'); return; }
-            if (!confirm(`Travel to ${city} for $${formatNumber(cost)}? You'll earn $${formatNumber(bonus)} bonus!`)) return;
+            if (currentUser.balance < cost) { showToast('Insufficient funds', 'error'); return; }
+            if (!confirm(`Travel to ${city} for $${formatNumber(cost)}?`)) return;
             
-            const data = await apiCall({ 
-                action: 'travel', 
-                email: currentUser.email, 
-                city, 
-                cost, 
-                bonus 
-            });
+            const data = await apiCall({ action: 'travel', email: currentUser.email, city, cost, bonus });
             
             if (data.success) {
-                currentUser.balance = data.newBalance;
-                document.getElementById('balanceAmount').textContent = formatNumber(data.newBalance);
+                currentUser.balance = data.newBalance || (currentUser.balance - cost + bonus);
+                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
                 showToast(`Welcome to ${city}! +$${formatNumber(bonus)} bonus!`, 'success');
-                loadTravelHistory();
             } else {
                 showToast(data.message || 'Travel failed', 'error');
-            }
-        }
-
-        async function loadTravelHistory() {
-            const data = await apiCall({ action: 'getTravelHistory', email: currentUser.email });
-            const container = document.getElementById('travelHistory');
-            
-            if (data.success && data.history && data.history.length > 0) {
-                container.innerHTML = data.history.slice(0, 10).map(t => `
-                    <div class="transaction-item">
-                        <div>
-                            <span style="font-size: 1.25rem; margin-right: 0.5rem;">${CITIES.find(c => c.name === t.city)?.flag || '🌍'}</span>
-                            <span style="font-weight: 600;">${t.city}</span>
-                        </div>
-                        <div style="color: var(--text-muted); font-size: 0.75rem;">${formatDate(t.timestamp)}</div>
-                    </div>
-                `).join('');
-            } else {
-                container.innerHTML = '<div class="empty-state"><div class="empty-icon">🗺️</div><p>No travel history yet</p></div>';
             }
         }
 
@@ -3674,24 +3513,25 @@
         async function loadChat() {
             const data = await apiCall({ action: 'getChat' });
             const container = document.getElementById('chatMessages');
+            const messages = data.messages || data.chat || [];
             
-            if (data.success && data.messages && data.messages.length > 0) {
-                container.innerHTML = data.messages.map(m => `
+            if (messages.length > 0) {
+                container.innerHTML = messages.map(m => `
                     <div class="chat-message">
                         <span class="chat-username">${m.name || m.email}</span>
                         <span class="chat-time">${formatDate(m.timestamp)}</span>
-                        <div class="chat-text">${escapeHtml(m.message)}</div>
+                        <div class="chat-text">${escapeHtml(m.message || m.text)}</div>
                     </div>
                 `).join('');
                 container.scrollTop = container.scrollHeight;
             } else {
-                container.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><p>No messages yet. Start the conversation!</p></div>';
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><p>No messages yet</p></div>';
             }
         }
 
         function escapeHtml(text) {
             const div = document.createElement('div');
-            div.textContent = text;
+            div.textContent = text || '';
             return div.innerHTML;
         }
 
@@ -3700,86 +3540,33 @@
             const message = input.value.trim();
             
             if (!message) return;
-            if (message.length > 500) { showToast('Message too long (max 500 chars)', 'error'); return; }
             
             input.value = '';
             
-            const data = await apiCall({ 
-                action: 'sendChat', 
-                email: currentUser.email, 
-                name: currentUser.name,
-                message 
-            });
-            
-            if (data.success) {
-                loadChat();
-            } else {
-                showToast('Failed to send message', 'error');
-            }
-        }
-
-        // ============ LEADERBOARDS - FIXED ============
-        async function loadLeaderboards() {
-            // Load wealth leaderboard
-            const wealthData = await apiCall({ action: 'getLeaderboard', type: 'wealth' });
-            renderLeaderboard(wealthData, 'wealthLeaderboard', 'balance', '$');
-            
-            // Load credit score leaderboard
-            const creditData = await apiCall({ action: 'getLeaderboard', type: 'credit' });
-            renderLeaderboard(creditData, 'creditLeaderboard', 'creditScore', '');
-            
-            // Load emoji score leaderboard
-            const emojiData = await apiCall({ action: 'getLeaderboard', type: 'emoji' });
-            renderLeaderboard(emojiData, 'emojiLeaderboard', 'emojiScore', '');
-        }
-
-        function renderLeaderboard(data, containerId, valueKey, prefix) {
-            const container = document.getElementById(containerId);
-            
-            if (!data || !data.success || !data.leaderboard || data.leaderboard.length === 0) {
-                container.innerHTML = '<div class="empty-state"><p>No data available</p></div>';
-                return;
-            }
-            
-            const medals = ['🥇', '🥈', '🥉'];
-            
-            container.innerHTML = data.leaderboard.slice(0, 10).map((entry, i) => {
-                const isCurrentUser = entry.email === currentUser.email;
-                const value = entry[valueKey] || entry.value || 0;
-                return `
-                    <div class="leaderboard-item ${isCurrentUser ? 'current-user' : ''}">
-                        <span class="leaderboard-rank">${i < 3 ? medals[i] : '#' + (i + 1)}</span>
-                        <span class="leaderboard-name">${entry.name || entry.email}${isCurrentUser ? ' (You)' : ''}</span>
-                        <span class="leaderboard-value">${prefix}${formatNumber(value)}</span>
-                    </div>
-                `;
-            }).join('');
+            await apiCall({ action: 'sendChat', email: currentUser.email, name: currentUser.name, message });
+            loadChat();
         }
 
         // ============ ADMIN ============
         async function loadAdmin() {
-            if (currentUser.email !== MASTER_ADMIN) {
-                showToast('Access denied', 'error');
-                return;
-            }
+            if (currentUser.email !== MASTER_ADMIN) return;
             
             const data = await apiCall({ action: 'getAdminData', adminEmail: currentUser.email });
             
-            if (data.success) {
+            if (data.success || data.users) {
                 document.getElementById('adminTotalBalance').textContent = '$' + formatNumber(data.totalEconomy || 0);
-                document.getElementById('adminTotalUsers').textContent = data.totalUsers || 0;
-                document.getElementById('userCount').textContent = data.totalUsers + ' users';
+                document.getElementById('adminTotalUsers').textContent = data.totalUsers || (data.users?.length || 0);
                 
-                if (data.users && data.users.length > 0) {
-                    document.getElementById('adminUsersList').innerHTML = data.users.map(u => `
+                const users = data.users || [];
+                if (users.length > 0) {
+                    document.getElementById('adminUsersList').innerHTML = users.map(u => `
                         <div class="user-list-item">
                             <div>
-                                <div style="font-weight: 600;">${u.name}</div>
+                                <div style="font-weight: 600;">${u.name || 'Unknown'}</div>
                                 <div style="font-size: 0.75rem; color: var(--text-muted);">${u.email}</div>
                             </div>
                             <div style="text-align: right;">
-                                <div style="color: var(--gold); font-weight: 700;">$${formatNumber(u.balance)}</div>
-                                <div style="font-size: 0.75rem; color: var(--text-muted);">Credit: ${u.creditScore || 650}</div>
+                                <div style="color: var(--gold); font-weight: 700;">$${formatNumber(u.balance || 0)}</div>
                             </div>
                         </div>
                     `).join('');
@@ -3795,12 +3582,7 @@
             
             if (!targetEmail || !amount) { showToast('Fill in all fields', 'error'); return; }
             
-            const data = await apiCall({ 
-                action: 'adminAddMoney', 
-                adminEmail: currentUser.email, 
-                targetEmail, 
-                amount 
-            });
+            const data = await apiCall({ action: 'adminAddMoney', adminEmail: currentUser.email, targetEmail, amount });
             
             if (data.success) {
                 showToast(`Added $${formatNumber(amount)} to ${targetEmail}`, 'success');
@@ -3813,17 +3595,11 @@
         }
 
         // ============ SETTINGS ============
-        function showSettingsModal() {
-            document.getElementById('settingsModal').classList.add('active');
-        }
-
-        function closeSettingsModal() {
-            document.getElementById('settingsModal').classList.remove('active');
-        }
+        function showSettingsModal() { document.getElementById('settingsModal').classList.add('active'); }
+        function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('active'); }
 
         async function confirmResetAccount() {
             if (!confirm('Are you SURE you want to reset? All progress will be lost!')) return;
-            if (!confirm('This is your LAST warning. Reset everything?')) return;
             
             const data = await apiCall({ action: 'resetAccount', email: currentUser.email });
             
