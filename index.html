@@ -1248,23 +1248,33 @@
         }
 
         .cheat-card {
-            width: 40px;
-            height: 55px;
+            width: 45px;
+            height: 62px;
             background: white;
-            border-radius: 4px;
+            border-radius: 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
-            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            border: 2px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .cheat-card:hover { transform: translateY(-5px); }
-        .cheat-card.selected { border-color: var(--gold); box-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
+        .cheat-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .cheat-card.selected { 
+            border-color: var(--gold); 
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
+            transform: translateY(-8px);
+        }
+        
         .cheat-card.red { color: #dc2626; }
         .cheat-card.black { color: #1f2937; }
 
@@ -2000,56 +2010,79 @@
                         </div>
                         
                         <!-- CHEAT (Multiplayer) -->
+                        <!-- CHEAT (Multiplayer) -->
                         <div class="casino-game">
-                            <h3>🎭 THIS DOESNT WORK - Cheat</h3>
+                            <h3>🎭 Cheat</h3>
                             <p class="game-desc">Bluff your way to victory! (2+ players)</p>
                             <div class="cheat-game-area">
+                                <!-- Status Area -->
                                 <div id="cheatStatus" style="text-align: center; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px; margin-bottom: 1rem;">
                                     <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🎴 Waiting for players...</div>
                                     <div id="cheatPlayers" style="color: var(--text-muted);">0 players in lobby</div>
                                 </div>
-                                <div id="cheatCards" class="cheat-cards" style="display: none;"></div>
-                                <div id="cheatPile" style="text-align: center; margin: 1rem 0;">
-                                    <div style="font-size: 0.8rem; color: var(--text-muted);">Pile: <span id="cheatPileCount">0</span> cards</div>
-                                    <div style="font-size: 0.75rem; color: var(--gold);">Current claim: <span id="cheatCurrentClaim">-</span></div>
+                                
+                                <!-- Your Cards Area -->
+                                <div id="cheatCardsContainer" style="display: none;">
+                                    <div style="font-size: 0.8rem; color: var(--gold); margin-bottom: 0.5rem; text-align: center;">🃏 Your Cards (click to select):</div>
+                                    <div id="cheatCards" class="cheat-cards"></div>
+                                    <div id="cheatSelectedInfo" style="text-align: center; margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted);">
+                                        Selected: <span id="cheatSelectedCount">0</span> cards
+                                    </div>
+                                </div>
+                                
+                                <!-- Pile Info -->
+                                <div id="cheatPileArea" style="text-align: center; margin: 1rem 0; padding: 0.75rem; background: rgba(251, 191, 36, 0.1); border-radius: 8px; display: none;">
+                                    <div style="font-size: 0.9rem; color: var(--text-muted);">📚 Pile: <span id="cheatPileCount" style="color: var(--gold); font-weight: 700;">0</span> cards</div>
+                                    <div style="font-size: 0.85rem; color: var(--gold); margin-top: 0.25rem;">Last claim: <span id="cheatCurrentClaim" style="font-weight: 700;">-</span></div>
+                                </div>
+                                
+                                <!-- Last Play Info (what bot played) -->
+                                <div id="cheatLastPlayInfo" style="display: none; background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem;">
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">🤖 Last play:</div>
+                                    <div id="cheatLastPlayDetails" style="font-size: 0.9rem; color: var(--gold);"></div>
                                 </div>
                             </div>
-                            <input type="number" id="cheatBet" class="form-input" placeholder="Buy-in amount" min="100" style="margin: 0.75rem 0;">
+                            
+                            <!-- Buy-in Input -->
+                            <input type="number" id="cheatBet" class="form-input" placeholder="Buy-in amount ($100 min)" min="100" value="100" style="margin: 0.75rem 0;">
+                            
+                            <!-- Lobby Controls -->
                             <div id="cheatLobbyControls">
                                 <button class="btn btn-success" onclick="joinCheatGame()" id="cheatJoinBtn" style="width: 100%;">🎭 Join Game ($100+ buy-in)</button>
-                                <div id="cheatMidwayInfo" style="display: none; margin-top: 0.5rem; padding: 0.5rem; background: rgba(251, 191, 36, 0.1); border-radius: 8px; font-size: 0.75rem; color: var(--gold); text-align: center;">
-                                    🎮 Game in progress! Click to join midway
-                                </div>
                             </div>
+                            
+                            <!-- Game Controls (hidden until game starts) -->
                             <div id="cheatGameControls" style="display: none;">
-                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 0.5rem;">
-                                    <select id="cheatClaimRank" class="form-input">
-                                        <option value="A">Aces</option>
-                                        <option value="2">2s</option>
-                                        <option value="3">3s</option>
-                                        <option value="4">4s</option>
-                                        <option value="5">5s</option>
-                                        <option value="6">6s</option>
-                                        <option value="7">7s</option>
-                                        <option value="8">8s</option>
-                                        <option value="9">9s</option>
-                                        <option value="10">10s</option>
-                                        <option value="J">Jacks</option>
-                                        <option value="Q">Queens</option>
-                                        <option value="K">Kings</option>
-                                    </select>
-                                    <input type="number" id="cheatClaimCount" class="form-input" placeholder="# cards" min="1" max="4">
+                                <div style="background: rgba(37, 99, 235, 0.1); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem;">
+                                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Make your claim:</div>
+                                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 0.5rem;">
+                                        <select id="cheatClaimRank" class="form-input" style="font-size: 0.85rem;">
+                                            <option value="A">Aces</option>
+                                            <option value="2">Twos</option>
+                                            <option value="3">Threes</option>
+                                            <option value="4">Fours</option>
+                                            <option value="5">Fives</option>
+                                            <option value="6">Sixes</option>
+                                            <option value="7">Sevens</option>
+                                            <option value="8">Eights</option>
+                                            <option value="9">Nines</option>
+                                            <option value="10">Tens</option>
+                                            <option value="J">Jacks</option>
+                                            <option value="Q">Queens</option>
+                                            <option value="K">Kings</option>
+                                        </select>
+                                        <input type="number" id="cheatClaimCount" class="form-input" placeholder="#" min="1" max="4" value="1" style="font-size: 0.85rem;">
+                                    </div>
                                 </div>
-                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
-                                    <button class="btn btn-success" onclick="cheatPlayCards()">🎴 Play Cards</button>
-                                    <button class="btn btn-danger" onclick="cheatCallBluff()">🚨 Call Bluff!</button>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                    <button class="btn btn-success" onclick="cheatPlayCards()" id="cheatPlayBtn">🎴 Play Cards</button>
+                                    <button class="btn btn-danger" onclick="cheatCallBluff()" id="cheatBluffBtn">🚨 Call Bluff!</button>
                                 </div>
                             </div>
+                            
+                            <!-- Result Area -->
                             <div class="game-result" id="cheatResult"></div>
                         </div>
-                    </div>
-                </div>
-            </div>
 
             <!-- CHAT -->
             <div id="chatContent" class="tab-content hidden">
@@ -2336,11 +2369,30 @@
             showToast('Logged out', 'info');
         }
 
-        function showApp() {
+        async function showApp() {
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('appScreen').classList.remove('hidden');
             document.getElementById('userName').textContent = currentUser.name || currentUser.email;
-            if (currentUser.email === MASTER_ADMIN) document.getElementById('adminTab').style.display = 'flex';
+            // Case-insensitive admin check
+            if (currentUser.email && currentUser.email.toLowerCase().trim() === MASTER_ADMIN.toLowerCase()) {
+                document.getElementById('adminTab').style.display = 'flex';
+            }
+            
+            // Pre-load holdings in background so they're ready
+            try {
+                const data = await apiCall({ action: 'getPortfolio', email: currentUser.email });
+                const holdings = data.holdings || data.stocks || data.portfolio || [];
+                userHoldings = {};
+                holdings.forEach(h => {
+                    if (h.symbol && (h.shares || h.quantity)) {
+                        userHoldings[h.symbol] = parseInt(h.shares) || parseInt(h.quantity) || 0;
+                    }
+                });
+                console.log('Holdings pre-loaded:', userHoldings);
+            } catch (e) {
+                console.log('Could not pre-load holdings:', e);
+            }
+            
             loadDashboard();
         }
 
@@ -2846,8 +2898,8 @@
             setTimeout(async () => {
                 let mult = 0, win = false;
                 if (selectedRouletteBet === 'green' && result.color === 'green') { mult = 14; win = true; }
-                else if (selectedRouletteBet === 'red' && result.color === 'red') { mult = 1.8; win = true; }
-                else if (selectedRouletteBet === 'black' && result.color === 'black') { mult = 1.8; win = true; }
+                else if (selectedRouletteBet === 'red' && result.color === 'red') { mult = 2.8; win = true; }
+                else if (selectedRouletteBet === 'black' && result.color === 'black') { mult = 2.8; win = true; }
                 
                 const winnings = bet * mult;
                 const profit = winnings - bet;
@@ -3218,7 +3270,7 @@
             document.getElementById('bjGameControls').style.display = 'none';
         }
 
-        // CHEAT GAME (Multiplayer)
+// CHEAT GAME VARIABLES
         let cheatPlayers = [];
         let cheatGameActive = false;
         let cheatBuyIn = 0;
@@ -3228,347 +3280,39 @@
         let cheatCurrentClaim = null;
         let cheatMyTurn = false;
         let cheatBotCount = 0;
-        let cheatLastPlay = null; // Stores the last play info for display when bluff is called
+        let cheatLastPlay = null;
+        let cheatTotalPot = 0;
         
-        function joinCheatGame() {
-            const buyIn = parseFloat(document.getElementById('cheatBet').value);
-            if (!buyIn || buyIn < 100) { showToast('Minimum buy-in is $100', 'error'); return; }
-            if (buyIn > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
-            
-            // Check if game is already in progress - allow joining midway
-            if (cheatGameActive && cheatPlayers.length > 0) {
-                joinCheatMidway(buyIn);
-                return;
-            }
-            
-            cheatBuyIn = buyIn;
-            currentUser.balance -= buyIn;
-            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-            
-            // Add player to game
-            cheatPlayers = [{ name: currentUser.name || 'You', isPlayer: true, cards: [] }];
-            
-            // Simulate waiting then add bots (since no real multiplayer)
-            document.getElementById('cheatPlayers').textContent = '1 player in lobby... waiting for others';
-            
-            setTimeout(() => {
-                // Add 1-3 bot players
-                cheatBotCount = 1 + Math.floor(Math.random() * 3);
-                const botNames = ['🤖 Bot Alex', '🤖 Bot Sam', '🤖 Bot Jordan', '🤖 Bot Riley'];
-                for (let i = 0; i < cheatBotCount; i++) {
-                    cheatPlayers.push({ name: botNames[i], isPlayer: false, cards: [] });
-                }
-                document.getElementById('cheatPlayers').textContent = cheatPlayers.length + ' players ready!';
-                
-                setTimeout(startCheatGame, 1500);
-            }, 2000);
+        .cheat-card {
+            width: 45px;
+            height: 62px;
+            background: white;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .cheat-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         
-        function joinCheatMidway(buyIn) {
-            // Join an existing game midway
-            cheatBuyIn += buyIn; // Add to pot
-            currentUser.balance -= buyIn;
-            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-            
-            // Deal new cards from a fresh mini-deck to the new player
-            const miniDeck = [];
-            for (const suit of SUITS) {
-                for (const rank of RANKS) {
-                    miniDeck.push({ suit, rank });
-                }
-            }
-            // Shuffle mini deck
-            for (let i = miniDeck.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [miniDeck[i], miniDeck[j]] = [miniDeck[j], miniDeck[i]];
-            }
-            
-            // Give player 5-7 new cards
-            const newCardCount = 5 + Math.floor(Math.random() * 3);
-            for (let i = 0; i < newCardCount && miniDeck.length > 0; i++) {
-                cheatMyCards.push(miniDeck.pop());
-            }
-            
-            // Also add a new bot to balance
-            const botNames = ['🤖 Bot Casey', '🤖 Bot Morgan', '🤖 Bot Taylor', '🤖 Bot Quinn'];
-            const newBotName = botNames[Math.floor(Math.random() * botNames.length)];
-            const newBot = { name: newBotName, isPlayer: false, cards: [] };
-            
-            // Give bot some cards too
-            const botCardCount = 5 + Math.floor(Math.random() * 3);
-            for (let i = 0; i < botCardCount && miniDeck.length > 0; i++) {
-                newBot.cards.push(miniDeck.pop());
-            }
-            
-            function updateCheatLobbyUI() {
-            const joinBtn = document.getElementById('cheatJoinBtn');
-            const midwayInfo = document.getElementById('cheatMidwayInfo');
-            
-            if (cheatGameActive && joinBtn && midwayInfo) {
-                joinBtn.textContent = '🎭 Join Midway ($100+ buy-in)';
-                midwayInfo.style.display = 'block';
-            } else if (joinBtn && midwayInfo) {
-                joinBtn.textContent = '🎭 Join Game ($100+ buy-in)';
-                midwayInfo.style.display = 'none';
-            }
-        }
-            
-            cheatPlayers.push(newBot);
-            cheatBotCount++;
-            
-            showToast(`Joined game! Got ${newCardCount} cards. ${newBotName} also joined!`, 'success');
-            renderCheatCards();
-            
-            document.getElementById('cheatStatus').innerHTML = `
-                <div style="color: var(--success); font-size: 1.1rem; margin-bottom: 0.5rem;">🎴 Joined midway!</div>
-                <div style="font-size: 0.85rem; color: var(--text-muted);">You received ${newCardCount} cards. Pot increased!</div>
-                <div style="color: var(--gold); margin-top: 0.5rem;">${cheatMyTurn ? 'Your turn!' : 'Wait for your turn...'}</div>
-            `;
+        .cheat-card.selected { 
+            border-color: var(--gold); 
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
+            transform: translateY(-8px);
         }
         
-        function startCheatGame() {
-            cheatGameActive = true;
-            updateCheatLobbyUI();
-            cheatPile = [];
-            cheatCurrentClaim = null;
-            
-            // Create and deal deck
-            const deck = [];
-            for (const suit of SUITS) {
-                for (const rank of RANKS) {
-                    deck.push({ suit, rank });
-                }
-            }
-            // Shuffle
-            for (let i = deck.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [deck[i], deck[j]] = [deck[j], deck[i]];
-            }
-            
-            // Deal cards
-            let cardIdx = 0;
-            while (cardIdx < deck.length) {
-                for (const player of cheatPlayers) {
-                    if (cardIdx < deck.length) {
-                        player.cards.push(deck[cardIdx++]);
-                    }
-                }
-            }
-            
-            cheatMyCards = cheatPlayers[0].cards;
-            cheatSelectedCards = [];
-            
-            document.getElementById('cheatLobbyControls').style.display = 'none';
-            document.getElementById('cheatGameControls').style.display = 'block';
-            document.getElementById('cheatCards').style.display = 'flex';
-            
-            renderCheatCards();
-            cheatMyTurn = true;
-            document.getElementById('cheatStatus').innerHTML = '<div style="color: var(--gold);">🎴 Your turn! Select cards and make a claim.</div>';
-        }
-        
-        function renderCheatCards() {
-            const container = document.getElementById('cheatCards');
-            container.innerHTML = cheatMyCards.map((card, idx) => {
-                const isRed = ['♥', '♦'].includes(card.suit);
-                const isSelected = cheatSelectedCards.includes(idx);
-                return `<div class="cheat-card ${isRed ? 'red' : 'black'} ${isSelected ? 'selected' : ''}" onclick="toggleCheatCard(${idx})">
-                    <div>${card.rank}</div><div>${card.suit}</div>
-                </div>`;
-            }).join('');
-            
-            document.getElementById('cheatPileCount').textContent = cheatPile.length;
-            document.getElementById('cheatCurrentClaim').textContent = cheatCurrentClaim ? cheatCurrentClaim.count + 'x ' + cheatCurrentClaim.rank : '-';
-        }
-        
-        function toggleCheatCard(idx) {
-            if (!cheatMyTurn) return;
-            const pos = cheatSelectedCards.indexOf(idx);
-            if (pos >= 0) cheatSelectedCards.splice(pos, 1);
-            else if (cheatSelectedCards.length < 4) cheatSelectedCards.push(idx);
-            renderCheatCards();
-        }
-        
-        function cheatPlayCards() {
-            if (!cheatMyTurn || cheatSelectedCards.length === 0) { showToast('Select cards to play', 'error'); return; }
-            
-            const claimRank = document.getElementById('cheatClaimRank').value;
-            const claimCount = parseInt(document.getElementById('cheatClaimCount').value) || cheatSelectedCards.length;
-            
-            if (claimCount < 1 || claimCount > cheatSelectedCards.length) { showToast('Invalid claim count', 'error'); return; }
-            
-            // Move selected cards to pile
-            const playedCards = cheatSelectedCards.sort((a, b) => b - a).map(idx => cheatMyCards.splice(idx, 1)[0]);
-            cheatPile.push(...playedCards);
-            
-            cheatCurrentClaim = { rank: claimRank, count: claimCount, actualCards: playedCards };
-            cheatSelectedCards = [];
-            cheatMyTurn = false;
-            
-            renderCheatCards();
-            
-            // Check if player won
-            if (cheatMyCards.length === 0) {
-                endCheatGame(true);
-                return;
-            }
-            
-            document.getElementById('cheatStatus').innerHTML = '<div>🤔 Bots are thinking...</div>';
-            
-            // Bot responds
-            setTimeout(botCheatTurn, 1500);
-        }
-        
-        function cheatCallBluff() {
-            if (cheatMyTurn || !cheatCurrentClaim) { showToast('Cannot call bluff now', 'error'); return; }
-            
-            // Check if last claim was a bluff
-            const wasBluff = !cheatCurrentClaim.actualCards.every(c => c.rank === cheatCurrentClaim.rank);
-            const rankNames = { 'A': 'Aces', '2': 'Twos', '3': 'Threes', '4': 'Fours', '5': 'Fives', '6': 'Sixes', '7': 'Sevens', '8': 'Eights', '9': 'Nines', '10': 'Tens', 'J': 'Jacks', 'Q': 'Queens', 'K': 'Kings' };
-            
-            // Reveal what was actually played
-            const actualCardsDisplay = cheatCurrentClaim.actualCards.map(c => {
-                const isRed = ['♥', '♦'].includes(c.suit);
-                return `<span style="color: ${isRed ? '#ef4444' : '#1f2937'}; background: white; padding: 0.25rem 0.5rem; border-radius: 4px; margin: 0.1rem; display: inline-block; font-weight: bold;">${c.rank}${c.suit}</span>`;
-            }).join(' ');
-            
-            if (wasBluff) {
-                // Bluff caught! Bot takes pile
-                showToast('🎉 Bluff caught! Bot takes the pile!', 'success');
-                document.getElementById('cheatResult').innerHTML = `
-                    <div style="background: rgba(34, 197, 94, 0.2); border: 2px solid var(--success); border-radius: 12px; padding: 1rem; margin-top: 0.5rem;">
-                        <div style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">🎉 BLUFF CAUGHT!</div>
-                        <div style="font-size: 0.85rem; margin-bottom: 0.5rem;">They claimed: <strong>${cheatCurrentClaim.count}x ${rankNames[cheatCurrentClaim.rank] || cheatCurrentClaim.rank}</strong></div>
-                        <div style="font-size: 0.85rem;">Actually played: ${actualCardsDisplay}</div>
-                        <div style="color: var(--success); margin-top: 0.5rem; font-weight: 600;">Bot takes the ${cheatPile.length} card pile!</div>
-                    </div>
-                `;
-                cheatPile = [];
-            } else {
-                // Wrong call, player takes pile
-                const pileSize = cheatPile.length;
-                cheatMyCards.push(...cheatPile);
-                cheatPile = [];
-                showToast('😬 They were honest! You take the pile.', 'error');
-                document.getElementById('cheatResult').innerHTML = `
-                    <div style="background: rgba(239, 68, 68, 0.2); border: 2px solid var(--danger); border-radius: 12px; padding: 1rem; margin-top: 0.5rem;">
-                        <div style="color: var(--danger); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">😬 WRONG CALL!</div>
-                        <div style="font-size: 0.85rem; margin-bottom: 0.5rem;">They claimed: <strong>${cheatCurrentClaim.count}x ${rankNames[cheatCurrentClaim.rank] || cheatCurrentClaim.rank}</strong></div>
-                        <div style="font-size: 0.85rem;">Actually played: ${actualCardsDisplay}</div>
-                        <div style="color: var(--danger); margin-top: 0.5rem; font-weight: 600;">They were honest! You take ${pileSize} cards.</div>
-                    </div>
-                `;
-            }
-            
-            cheatCurrentClaim = null;
-            cheatLastPlay = null;
-            cheatMyTurn = true;
-            renderCheatCards();
-            
-            setTimeout(() => {
-                document.getElementById('cheatStatus').innerHTML = '<div style="color: var(--gold);">🎴 Your turn! Select cards and make a claim.</div>';
-            }, 3000);
-        }
-        
-        function botCheatTurn() {
-            // Random chance bot calls bluff on player
-            if (cheatCurrentClaim && Math.random() < 0.25) {
-                const wasBluff = !cheatCurrentClaim.actualCards.every(c => c.rank === cheatCurrentClaim.rank);
-                if (wasBluff) {
-                    cheatMyCards.push(...cheatPile);
-                    cheatPile = [];
-                    showToast('🤖 Bot caught your bluff! You take the pile.', 'error');
-                } else {
-                    showToast('🤖 Bot wrongly called bluff!', 'success');
-                    cheatPile = [];
-                }
-                cheatCurrentClaim = null;
-                cheatMyTurn = true;
-                renderCheatCards();
-                document.getElementById('cheatStatus').innerHTML = '<div style="color: var(--gold);">🎴 Your turn!</div><div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Last claim: None (pile cleared)</div>';
-                return;
-            }
-            
-            // Bot plays cards
-            const botIdx = 1 + Math.floor(Math.random() * cheatBotCount);
-            const bot = cheatPlayers[botIdx];
-            if (!bot || bot.cards.length === 0) {
-                cheatMyTurn = true;
-                document.getElementById('cheatStatus').innerHTML = '<div style="color: var(--gold);">🎴 Your turn!</div>';
-                return;
-            }
-            
-            const playCount = Math.min(1 + Math.floor(Math.random() * 2), bot.cards.length);
-            const playedCards = bot.cards.splice(0, playCount);
-            cheatPile.push(...playedCards);
-            
-            const claimRank = RANKS[Math.floor(Math.random() * RANKS.length)];
-            cheatCurrentClaim = { rank: claimRank, count: playCount, actualCards: playedCards, player: bot.name };
-            
-            // Store last play info for display
-            cheatLastPlay = {
-                player: bot.name,
-                count: playCount,
-                claimedRank: claimRank,
-                actualCards: playedCards.map(c => c.rank + c.suit)
-            };
-            
-            renderCheatCards();
-            
-            // Show detailed claim information with what bot actually put down (hidden until bluff called)
-            const rankNames = { 'A': 'Aces', '2': 'Twos', '3': 'Threes', '4': 'Fours', '5': 'Fives', '6': 'Sixes', '7': 'Sevens', '8': 'Eights', '9': 'Nines', '10': 'Tens', 'J': 'Jacks', 'Q': 'Queens', 'K': 'Kings' };
-            document.getElementById('cheatStatus').innerHTML = `
-                <div style="font-size: 1.1rem; color: var(--gold); margin-bottom: 0.75rem;">🤖 ${bot.name}'s Turn Complete</div>
-                <div style="background: rgba(139, 92, 246, 0.2); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem;">
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">Cards played face-down:</div>
-                    <div style="font-size: 1.5rem; margin: 0.5rem 0;">${'🂠 '.repeat(playCount)}</div>
-                    <div style="font-size: 1.1rem; color: var(--gold); font-weight: 700;">Claims: ${playCount}x ${rankNames[claimRank] || claimRank}</div>
-                </div>
-                <div style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem;">
-                    <div style="font-size: 0.8rem; color: var(--text-muted);">📜 Current pile: ${cheatPile.length} cards</div>
-                    <div style="font-size: 0.8rem; color: var(--gold); margin-top: 0.25rem;">Last claim on pile: ${playCount}x ${rankNames[claimRank] || claimRank}</div>
-                </div>
-                <div style="color: var(--success); font-weight: 600;">🎴 Your turn! Play cards or 🚨 Call their bluff!</div>
-            `;
-            
-            // Check if bot won
-            if (bot.cards.length === 0) {
-                endCheatGame(false);
-                return;
-            }
-            
-            cheatMyTurn = true;
-        }
-        
-        async function endCheatGame(playerWon) {
-            cheatGameActive = false;
-            
-            let winnings = 0;
-            if (playerWon) {
-                winnings = cheatBuyIn * (1 + cheatBotCount); // Win all buy-ins
-                showToast('🎉 You win the pot of $' + formatNumber(winnings) + '!', 'success');
-                document.getElementById('cheatResult').innerHTML = '<span style="color: var(--success);">🏆 You win $' + formatNumber(winnings) + '!</span>';
-            } else {
-                showToast('😔 A bot won this round.', 'error');
-                document.getElementById('cheatResult').innerHTML = '<span style="color: var(--danger);">Bot wins! You lose $' + formatNumber(cheatBuyIn) + '</span>';
-            }
-            
-            currentUser.balance += winnings;
-            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-            
-            const profit = winnings - cheatBuyIn;
-            await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'cheat', wagered: cheatBuyIn, won: profit > 0 ? profit : 0, lost: profit < 0 ? Math.abs(profit) : 0, result: playerWon ? 'win' : 'loss' });
-            
-            // Reset
-            document.getElementById('cheatLobbyControls').style.display = 'block';
-            document.getElementById('cheatGameControls').style.display = 'none';
-            document.getElementById('cheatCards').style.display = 'none';
-            document.getElementById('cheatStatus').innerHTML = '<div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🎴 Waiting for players...</div><div id="cheatPlayers" style="color: var(--text-muted);">0 players in lobby</div>';
-            cheatPlayers = [];
-            cheatMyCards = [];
-            cheatSelectedCards = [];
-            cheatPile = [];
-        }
+        .cheat-card.red { color: #dc2626; }
+        .cheat-card.black { color: #1f2937; }
 
         // LOANS
         let userLoans = [];
@@ -3854,10 +3598,10 @@
             drawStockChart();
         }
         
-        function loadStocks() {
+        async function loadStocks() {
             initStocks();
             renderStocks();
-            loadHoldings();
+            await loadHoldingsFromBackend(); // Load from backend, not local
             drawStockChart();
         }
         
@@ -3887,74 +3631,189 @@
             }).join('');
         }
         
-        function loadHoldings() {
+    async function loadHoldingsFromBackend() {
             const container = document.getElementById('holdingsList');
-            const holdings = Object.entries(userHoldings).filter(([_, qty]) => qty > 0);
+            container.innerHTML = '<div class="empty-state"><p>Loading holdings...</p></div>';
             
-            if (holdings.length === 0) {
+            try {
+                // Fetch holdings from backend
+                const data = await apiCall({ action: 'getPortfolio', email: currentUser.email });
+                console.log('Portfolio data:', data);
+                
+                const holdings = data.holdings || data.stocks || data.portfolio || [];
+                
+                // Update local userHoldings from backend data
+                userHoldings = {};
+                holdings.forEach(h => {
+                    if (h.symbol && (h.shares || h.quantity)) {
+                        userHoldings[h.symbol] = parseInt(h.shares) || parseInt(h.quantity) || 0;
+                    }
+                });
+                
+                console.log('User holdings loaded:', userHoldings);
+                
+                // Render holdings
+                renderHoldings(holdings);
+            } catch (error) {
+                console.error('Error loading holdings:', error);
+                container.innerHTML = '<div class="empty-state"><p>Error loading holdings</p></div>';
+            }
+        }
+        
+        function renderHoldings(holdings) {
+            const container = document.getElementById('holdingsList');
+            
+            // Filter out zero holdings
+            const validHoldings = holdings.filter(h => (h.shares || h.quantity || 0) > 0);
+            
+            if (validHoldings.length === 0) {
                 container.innerHTML = '<div class="empty-state"><p>No stocks owned</p></div>';
                 return;
             }
             
-            container.innerHTML = holdings.map(([symbol, qty]) => {
+            container.innerHTML = validHoldings.map(h => {
+                const symbol = h.symbol;
+                const qty = parseInt(h.shares) || parseInt(h.quantity) || 0;
+                const avgPrice = parseFloat(h.avgPrice) || parseFloat(h.price) || 0;
                 const stock = stocks.find(s => s.symbol === symbol);
-                if (!stock) return '';
-                const value = stock.price * qty;
+                const currentPrice = stock ? stock.price : avgPrice;
+                const value = currentPrice * qty;
+                const profit = (currentPrice - avgPrice) * qty;
+                const profitPercent = avgPrice > 0 ? ((currentPrice - avgPrice) / avgPrice * 100) : 0;
+                const isProfit = profit >= 0;
+                
                 return `
-                    <div class="holding-card">
+                    <div class="holding-card" style="position: relative;">
                         <div class="stock-symbol">${symbol}</div>
-                        <div style="font-size: 0.8rem; color: var(--text-muted);">${qty} shares</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">${qty} shares @ $${formatNumber(avgPrice)}</div>
                         <div style="font-size: 1.1rem; font-weight: 600; color: var(--gold);">$${formatNumber(value)}</div>
+                        <div style="font-size: 0.7rem; color: ${isProfit ? 'var(--success)' : 'var(--danger)'};">
+                            ${isProfit ? '▲' : '▼'} $${formatNumber(Math.abs(profit))} (${profitPercent.toFixed(1)}%)
+                        </div>
+                        <div style="margin-top: 0.5rem; display: flex; gap: 0.25rem;">
+                            <button class="btn btn-sm btn-danger" onclick="quickSellStock('${symbol}', ${qty})" style="font-size: 0.65rem; padding: 0.25rem 0.5rem;">Sell All</button>
+                        </div>
                     </div>
                 `;
             }).join('');
         }
         
-        async function buyStock(symbol) {
-            const qty = parseInt(document.getElementById(`qty_${symbol}`).value);
-            if (!qty || qty <= 0) { showToast('Enter a valid quantity', 'error'); return; }
-            
-            const stock = stocks.find(s => s.symbol === symbol);
-            if (!stock) { showToast('Stock not found', 'error'); return; }
-            
-            const cost = stock.price * qty;
-            if (cost > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
-            
-            currentUser.balance -= cost;
-            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-            
-            userHoldings[symbol] = (userHoldings[symbol] || 0) + qty;
-            
-            // Save to backend
-            await apiCall({ action: 'buyStock', email: currentUser.email, symbol, shares: qty, price: stock.price, cost });
-            
-            showToast(`Bought ${qty} ${symbol} for $${formatNumber(cost)}`, 'success');
-            loadHoldings();
-            document.getElementById(`qty_${symbol}`).value = '';
+        // Legacy function for backwards compatibility
+        function loadHoldings() {
+            loadHoldingsFromBackend();
         }
         
-        async function sellStock(symbol) {
-            const qty = parseInt(document.getElementById(`qty_${symbol}`).value);
-            if (!qty || qty <= 0) { showToast('Enter a valid quantity', 'error'); return; }
-            
-            const owned = userHoldings[symbol] || 0;
-            if (qty > owned) { showToast(`You only own ${owned} shares`, 'error'); return; }
+        async function buyStock(symbol) {
+            const qtyInput = document.getElementById(`qty_${symbol}`);
+            const qty = parseInt(qtyInput?.value);
+            if (!qty || qty <= 0) { 
+                showToast('Enter a valid quantity', 'error'); 
+                return; 
+            }
             
             const stock = stocks.find(s => s.symbol === symbol);
-            if (!stock) { showToast('Stock not found', 'error'); return; }
+            if (!stock) { 
+                showToast('Stock not found', 'error'); 
+                return; 
+            }
+            
+            const cost = stock.price * qty;
+            if (cost > currentUser.balance) { 
+                showToast('Insufficient balance', 'error'); 
+                return; 
+            }
+            
+            showToast(`Buying ${qty} ${symbol}...`, 'info');
+            
+            // Save to backend first
+            const result = await apiCall({ 
+                action: 'buyStock', 
+                email: currentUser.email, 
+                symbol, 
+                shares: qty, 
+                price: stock.price, 
+                cost 
+            });
+            
+            console.log('Buy result:', result);
+            
+            if (result.success || result.newBalance !== undefined) {
+                // Update balance from backend response or calculate locally
+                currentUser.balance = result.newBalance !== undefined ? result.newBalance : (currentUser.balance - cost);
+                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+                
+                // Update local holdings
+                userHoldings[symbol] = (userHoldings[symbol] || 0) + qty;
+                
+                showToast(`Bought ${qty} ${symbol} for $${formatNumber(cost)}`, 'success');
+                
+                // Reload holdings from backend to ensure sync
+                await loadHoldingsFromBackend();
+                
+                // Clear input
+                if (qtyInput) qtyInput.value = '';
+            } else {
+                showToast(result.message || result.error || 'Purchase failed', 'error');
+            }
+        }
+        async function sellStock(symbol) {
+            const qtyInput = document.getElementById(`qty_${symbol}`);
+            const qty = parseInt(qtyInput?.value);
+            if (!qty || qty <= 0) { 
+                showToast('Enter a valid quantity', 'error'); 
+                return; 
+            }
+            
+            // Check local holdings first, but also verify with what we know
+            const owned = userHoldings[symbol] || 0;
+            if (qty > owned && owned > 0) { 
+                showToast(`You only own ${owned} shares`, 'error'); 
+                return; 
+            }
+            
+            const stock = stocks.find(s => s.symbol === symbol);
+            if (!stock) { 
+                showToast('Stock not found', 'error'); 
+                return; 
+            }
             
             const revenue = stock.price * qty;
-            currentUser.balance += revenue;
-            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
             
-            userHoldings[symbol] -= qty;
+            showToast(`Selling ${qty} ${symbol}...`, 'info');
             
-            // Save to backend
-            await apiCall({ action: 'sellStock', email: currentUser.email, symbol, shares: qty, price: stock.price, revenue });
+            // Save to backend first
+            const result = await apiCall({ 
+                action: 'sellStock', 
+                email: currentUser.email, 
+                symbol, 
+                shares: qty, 
+                price: stock.price, 
+                revenue 
+            });
             
-            showToast(`Sold ${qty} ${symbol} for $${formatNumber(revenue)}`, 'success');
-            loadHoldings();
-            document.getElementById(`qty_${symbol}`).value = '';
+            console.log('Sell result:', result);
+            
+            if (result.success || result.newBalance !== undefined) {
+                // Update balance from backend response or calculate locally
+                currentUser.balance = result.newBalance !== undefined ? result.newBalance : (currentUser.balance + revenue);
+                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+                
+                // Update local holdings
+                userHoldings[symbol] = Math.max(0, (userHoldings[symbol] || 0) - qty);
+                if (userHoldings[symbol] === 0) {
+                    delete userHoldings[symbol];
+                }
+                
+                showToast(`Sold ${qty} ${symbol} for $${formatNumber(revenue)}`, 'success');
+                
+                // Reload holdings from backend to ensure sync
+                await loadHoldingsFromBackend();
+                
+                // Clear input
+                if (qtyInput) qtyInput.value = '';
+            } else {
+                showToast(result.message || result.error || 'Sale failed', 'error');
+            }
         }
         
         function setChartTimeframe(tf) {
