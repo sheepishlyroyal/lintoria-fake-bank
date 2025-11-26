@@ -580,7 +580,7 @@
         .plinko-container {
             position: relative;
             width: 100%;
-            max-width: 360px;
+            max-width: 420px;
             margin: 0.5rem auto;
             background: linear-gradient(180deg, #0a0a1a, #151530);
             border-radius: 16px;
@@ -592,7 +592,7 @@
         .plinko-board {
             position: relative;
             width: 100%;
-            height: 360px;
+            height: 380px;
             overflow: hidden;
         }
 
@@ -630,31 +630,29 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            gap: 2px;
+            gap: 1px;
         }
 
         .plinko-slot {
-            width: 28px;
-            height: 35px;
+            width: 30px;
+            height: 42px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.5rem;
+            font-size: 0.55rem;
             font-weight: 800;
             border-radius: 4px 4px 0 0;
             color: white;
             transition: all 0.3s ease;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
 
-        .plinko-slot[data-mult="0.2"] { background: linear-gradient(180deg, #374151, #1f2937); }
-        .plinko-slot[data-mult="0.5"] { background: linear-gradient(180deg, #6366f1, #4f46e5); }
-        .plinko-slot[data-mult="1"] { background: linear-gradient(180deg, #3b82f6, #2563eb); }
-        .plinko-slot[data-mult="2"] { background: linear-gradient(180deg, #06b6d4, #0891b2); }
-        .plinko-slot[data-mult="5"] { background: linear-gradient(180deg, #22c55e, #16a34a); }
-        .plinko-slot[data-mult="10"] { background: linear-gradient(180deg, #84cc16, #65a30d); }
-        .plinko-slot[data-mult="25"] { background: linear-gradient(180deg, #eab308, #ca8a04); }
-        .plinko-slot[data-mult="50"] { background: linear-gradient(180deg, #f97316, #ea580c); }
-        .plinko-slot[data-mult="100"] { background: linear-gradient(180deg, #ef4444, #dc2626); }
+        .plinko-slot[data-mult="0.2"] { background: linear-gradient(180deg, #dc2626, #991b1b); }
+        .plinko-slot[data-mult="0.5"] { background: linear-gradient(180deg, #f97316, #ea580c); }
+        .plinko-slot[data-mult="1"] { background: linear-gradient(180deg, #eab308, #ca8a04); }
+        .plinko-slot[data-mult="1.5"] { background: linear-gradient(180deg, #84cc16, #65a30d); }
+        .plinko-slot[data-mult="2"] { background: linear-gradient(180deg, #22c55e, #16a34a); }
+        .plinko-slot[data-mult="5"] { background: linear-gradient(180deg, #06b6d4, #0891b2); }
 
         .plinko-slot.active { transform: scaleY(1.2); box-shadow: 0 0 20px currentColor; }
 
@@ -669,6 +667,136 @@
         }
 
         .plinko-stats span { color: var(--gold); font-weight: 600; }
+
+        /* STOCKS */
+        .stock-chart-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stock-chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .chart-timeframe-btns {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .timeframe-btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.7rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .timeframe-btn:hover, .timeframe-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        #stockChart {
+            width: 100%;
+            height: 200px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .stocks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .stock-card {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(59, 130, 246, 0.05));
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            transition: all 0.3s;
+        }
+
+        .stock-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
+        }
+
+        .stock-card.up { border-color: rgba(34, 197, 94, 0.5); }
+        .stock-card.down { border-color: rgba(239, 68, 68, 0.5); }
+
+        .stock-symbol {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .stock-name {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .stock-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .stock-change {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .stock-change.up { color: #22c55e; }
+        .stock-change.down { color: #ef4444; }
+
+        .stock-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .stock-actions input {
+            grid-column: 1 / -1;
+            padding: 0.4rem;
+            font-size: 0.75rem;
+        }
+
+        .stock-actions button {
+            padding: 0.4rem;
+            font-size: 0.7rem;
+        }
+
+        .holdings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .holding-card {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.05));
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .stock-admin-panel {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(168, 85, 247, 0.05));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
 
         /* ROULETTE */
         .roulette-container {
@@ -1337,6 +1465,7 @@
             <div class="tab-container">
                 <button class="tab-btn active" onclick="switchTab('dashboard')">🏦 Bank</button>
                 <button class="tab-btn" onclick="switchTab('transfer')">💸 Transfer</button>
+                <button class="tab-btn" onclick="switchTab('stocks')">📈 Stocks</button>
                 <button class="tab-btn" onclick="switchTab('packs')">🎁 Packs</button>
                 <button class="tab-btn" onclick="switchTab('collection')">🎒 Collection</button>
                 <button class="tab-btn" onclick="switchTab('casino')">🎰 Casino</button>
@@ -1408,6 +1537,58 @@
                 </div>
             </div>
 
+            <!-- STOCKS -->
+            <div id="stocksContent" class="tab-content hidden">
+                <div class="glass-card">
+                    <div class="section-header">
+                        <h2>📈 Stock Market</h2>
+                        <button class="btn btn-sm" onclick="loadStocks()">🔄 Refresh</button>
+                    </div>
+                    
+                    <!-- Stock Chart -->
+                    <div class="stock-chart-container">
+                        <div class="stock-chart-header">
+                            <span style="font-weight: 600;">Price History</span>
+                            <div class="chart-timeframe-btns">
+                                <button class="timeframe-btn active" onclick="setChartTimeframe('1d')">1D</button>
+                                <button class="timeframe-btn" onclick="setChartTimeframe('2w')">2W</button>
+                                <button class="timeframe-btn" onclick="setChartTimeframe('1m')">1M</button>
+                                <button class="timeframe-btn" onclick="setChartTimeframe('6m')">6M</button>
+                            </div>
+                        </div>
+                        <canvas id="stockChart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <!-- Stock Admin Panel -->
+                    <div id="stockAdminPanel" class="stock-admin-panel" style="display: none;">
+                        <h3 style="color: var(--gold); margin-bottom: 1rem;">🔧 Stock Admin</h3>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 1rem;">
+                            <input type="text" id="newStockSymbol" class="form-input" placeholder="Symbol (e.g. DRAG)">
+                            <input type="text" id="newStockName" class="form-input" placeholder="Company Name">
+                            <input type="number" id="newStockPrice" class="form-input" placeholder="Initial Price">
+                            <input type="number" id="newStockShares" class="form-input" placeholder="Total Shares">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                            <button class="btn btn-success" onclick="createNewStock()">➕ Add Stock</button>
+                            <button class="btn btn-danger" onclick="removeStock()">🗑️ Remove Stock</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Stock List -->
+                    <div id="stocksList" class="stocks-grid">
+                        <div class="empty-state"><p>Loading stocks...</p></div>
+                    </div>
+                    
+                    <!-- Your Holdings -->
+                    <div class="section-header" style="margin-top: 1.5rem;">
+                        <h2>💼 Your Holdings</h2>
+                    </div>
+                    <div id="holdingsList" class="holdings-grid">
+                        <div class="empty-state"><p>No stocks owned</p></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- PACKS -->
             <div id="packsContent" class="tab-content hidden">
                 <div class="glass-card">
@@ -1455,23 +1636,19 @@
                     </div>
 
                     <div class="casino-grid">
-                        <!-- PLINKO - MULTI-BALL -->
+                        <!-- PLINKO - Infinite Balls -->
                         <div class="casino-game">
-                            <h3>📍 Plinko (Multi-Ball!)</h3>
-                            <p class="game-desc">Drop multiple balls at once! Win up to 100x per ball!</p>
+                            <h3>📍 Plinko</h3>
+                            <p class="game-desc">Drop balls and win up to 5x! Click to drop.</p>
                             <div class="plinko-container">
                                 <div class="plinko-board" id="plinkoBoard"></div>
                             </div>
                             <div class="plinko-stats">
-                                <div>Balls: <span id="plinkoBallCount">0</span>/5</div>
+                                <div>Active: <span id="plinkoBallCount">0</span></div>
                                 <div>Total Won: <span id="plinkoTotalWon">$0</span></div>
                             </div>
                             <input type="number" id="plinkoBet" class="form-input" placeholder="Bet per ball" min="1" style="margin: 0.75rem 0;">
-                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
-                                <button class="btn btn-success" onclick="playPlinko(1)" id="plinkoBtn1">🎱 x1</button>
-                                <button class="btn" onclick="playPlinko(3)" id="plinkoBtn3">🎱 x3</button>
-                                <button class="btn btn-danger" onclick="playPlinko(5)" id="plinkoBtn5">🎱 x5</button>
-                            </div>
+                            <button class="btn btn-success" onclick="dropPlinkoBall()" id="plinkoDropBtn" style="width: 100%;">🎱 Drop Ball</button>
                             <div class="game-result" id="plinkoResult"></div>
                         </div>
 
@@ -1670,7 +1847,7 @@
     <div id="confetti" class="confetti"></div>
 
     <script>
-        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycby4N8zpCoJK7ldEXrwWJAkt-Jimcps0b1i7oxgslcFveJiOheoQR7KJ4ljPeMIl-tgpCQ/exec';
+        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzJH_jyOreJtTuAS7Aml4aivxkU2yuHfEnxrYXwSBxaqxL8hDhwMYKh4ACV2c4qjvvzKQ/exec';
         const MASTER_ADMIN = 'sheepishlyroyal@gmail.com';
         const STOCK_ADMINS = ['sheepishlyroyal@gmail.com'];
         
@@ -1688,7 +1865,22 @@
             space: { name: '🚀 Space', emojis: { common: ['⭐','✨','💫','🌟'], uncommon: ['🌑','🌒','🌙'], rare: ['🪐','☄️','💥'], epic: ['🛸','🚀','🔭'], legendary: ['👽','👾','🌌'], mythic: ['🌍','🌎'], divine: ['🔱','⚜️'] }},
             ocean: { name: '🌊 Ocean', emojis: { common: ['🌊','💧','💦','🫧'], uncommon: ['🐟','🐠','🐬','🐳'], rare: ['🐙','🦑','🦀'], epic: ['⚓','🚢','⛵'], legendary: ['🧜‍♀️','🔱'], mythic: ['🏝️','🌅'], divine: ['🔱','👑'] }},
             food: { name: '🍕 Food', emojis: { common: ['🍎','🍐','🍊','🍋','🍌'], uncommon: ['🥐','🥯','🍞','🧀'], rare: ['🍔','🍟','🍕','🌭'], epic: ['🍦','🧁','🍰','🎂'], legendary: ['🍾','🥂','🏆'], mythic: ['🍶','🍷'], divine: ['🍾','🏆'] }},
-            gaming: { name: '🎮 Gaming', emojis: { common: ['🎮','🕹️','👾','🎲'], uncommon: ['🏆','🥇','⚔️','🗡️'], rare: ['🤖','👽','💣'], epic: ['💎','👑','🔮'], legendary: ['🎮','🕹️','👾','🏆'], mythic: ['🌟','✨','💫'], divine: ['🎮','👑'] }}
+            gaming: { name: '🎮 Gaming', emojis: { common: ['🎮','🕹️','👾','🎲'], uncommon: ['🏆','🥇','⚔️','🗡️'], rare: ['🤖','👽','💣'], epic: ['💎','👑','🔮'], legendary: ['🎮','🕹️'], mythic: ['🌟','✨'], divine: ['🎮','👑'] }},
+            fantasy: { name: '🧙 Fantasy', emojis: { common: ['🧙','🧝','🧚','🧜'], uncommon: ['🦄','🐲','🏰','⚔️'], rare: ['🔮','📜','🗝️'], epic: ['👑','💍','🛡️'], legendary: ['🐉','🦅'], mythic: ['⚡','🌙'], divine: ['✨','🌟'] }},
+            animals: { name: '🦁 Animals', emojis: { common: ['🐶','🐱','🐭','🐹','🐰'], uncommon: ['🦊','🐻','🐼','🐨'], rare: ['🦁','🐯','🐺'], epic: ['🦅','🦉','🦇'], legendary: ['🦄','🐉'], mythic: ['🦋','🐝'], divine: ['🦚','🦩'] }},
+            sports: { name: '⚽ Sports', emojis: { common: ['⚽','🏀','🏈','⚾','🎾'], uncommon: ['🏐','🏉','🎱','🏓'], rare: ['🏆','🥇','🥈','🥉'], epic: ['🎿','🏂','🏄'], legendary: ['🏅','🎖️'], mythic: ['🏟️','🎪'], divine: ['👑','🏆'] }},
+            weather: { name: '🌤️ Weather', emojis: { common: ['☀️','⛅','☁️','🌥️'], uncommon: ['🌦️','🌧️','⛈️','🌩️'], rare: ['❄️','🌨️','💨'], epic: ['🌪️','🌈','⚡'], legendary: ['🌊','🔥'], mythic: ['☄️','🌠'], divine: ['🌍','💫'] }},
+            music: { name: '🎵 Music', emojis: { common: ['🎵','🎶','🎼','🎹'], uncommon: ['🎸','🥁','🎺','🎻'], rare: ['🎤','🎧','🎙️'], epic: ['📻','💿','📀'], legendary: ['🎷','🪗'], mythic: ['🎭','🎪'], divine: ['🌟','✨'] }},
+            tech: { name: '💻 Tech', emojis: { common: ['💻','🖥️','⌨️','🖱️'], uncommon: ['📱','📲','💾','💿'], rare: ['🤖','🔌','📡'], epic: ['🛰️','🔬','🔭'], legendary: ['⚡','💡'], mythic: ['🧬','⚛️'], divine: ['🌐','💎'] }},
+            love: { name: '💕 Love', emojis: { common: ['❤️','🧡','💛','💚','💙'], uncommon: ['💜','🖤','🤍','💗'], rare: ['💖','💝','💘'], epic: ['💞','💓','💕'], legendary: ['💑','👩‍❤️‍👨'], mythic: ['💒','🌹'], divine: ['💎','👑'] }},
+            halloween: { name: '🎃 Halloween', emojis: { common: ['🎃','👻','💀','☠️'], uncommon: ['🕷️','🕸️','🦇','🌙'], rare: ['🧛','🧟','🧙'], epic: ['👹','👺','😈'], legendary: ['💀','⚰️'], mythic: ['🔮','🌑'], divine: ['👻','🎃'] }},
+            christmas: { name: '🎄 Christmas', emojis: { common: ['🎄','🎅','🤶','⛄'], uncommon: ['🎁','🔔','❄️','🌟'], rare: ['🦌','🛷','🧦'], epic: ['🎿','⛷️','🏂'], legendary: ['✨','🌠'], mythic: ['🌌','💫'], divine: ['👑','🎄'] }},
+            summer: { name: '☀️ Summer', emojis: { common: ['☀️','🌴','🏖️','🌊'], uncommon: ['🍦','🍹','🥥','🍉'], rare: ['🏄','🚤','⛵'], epic: ['🌅','🌇','🎆'], legendary: ['🏝️','🌺'], mythic: ['🌈','🌅'], divine: ['💎','🌟'] }},
+            money: { name: '💰 Money', emojis: { common: ['💵','💴','💶','💷'], uncommon: ['💰','💳','🏦','🏧'], rare: ['💎','💍','👑'], epic: ['🏆','🥇','📈'], legendary: ['💎','👑'], mythic: ['🏰','🎰'], divine: ['💎','💰'] }},
+            travel: { name: '✈️ Travel', emojis: { common: ['✈️','🚗','🚕','🚌'], uncommon: ['🚂','🚢','🚁','🚀'], rare: ['🗼','🗽','🏰'], epic: ['🌍','🌎','🌏'], legendary: ['🛸','🚀'], mythic: ['🌌','✨'], divine: ['🌍','💫'] }},
+            flowers: { name: '🌸 Flowers', emojis: { common: ['🌸','🌹','🌷','🌺'], uncommon: ['🌻','🌼','💐','🌾'], rare: ['🍀','🌿','🌵'], epic: ['🌴','🌲','🎋'], legendary: ['🌈','🌅'], mythic: ['🌙','⭐'], divine: ['🌟','✨'] }},
+            magic: { name: '✨ Magic', emojis: { common: ['✨','💫','⭐','🌟'], uncommon: ['🔮','🪄','📿','🧿'], rare: ['🎭','🎪','🃏'], epic: ['👁️','🌀','💠'], legendary: ['⚡','🔥'], mythic: ['🌙','☀️'], divine: ['💎','👑'] }},
+            royal: { name: '👑 Royal', emojis: { common: ['👑','💍','💎','🏰'], uncommon: ['⚔️','🛡️','🗡️','🏹'], rare: ['🦁','🦅','🐉'], epic: ['📜','🔱','⚜️'], legendary: ['👸','🤴'], mythic: ['🌟','✨'], divine: ['👑','💎'] }}
         };
 
         const RARITY_CHANCES = { common: 50, uncommon: 30, rare: 12, epic: 5, legendary: 2, mythic: 0.8, divine: 0.2 };
@@ -1845,6 +2037,7 @@
             event.target.classList.add('active');
             switch(tab) {
                 case 'dashboard': loadDashboard(); break;
+                case 'stocks': loadStocks(); break;
                 case 'packs': loadPacks(); break;
                 case 'collection': loadCollection(); break;
                 case 'casino': initCasino(); break;
@@ -2102,13 +2295,29 @@
             document.getElementById('plinkoTotalWon').textContent = '$' + formatNumber(plinkoTotalWon);
         }
 
+        async function dropPlinkoBall() {
+            const bet = parseFloat(document.getElementById('plinkoBet').value);
+            if (!bet || bet <= 0) { showToast('Enter a valid bet', 'error'); return; }
+            if (bet > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
+            
+            // Deduct bet immediately
+            currentUser.balance -= bet;
+            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+            
+            const board = document.getElementById('plinkoBoard');
+            const w = board.offsetWidth || 400;
+            
+            activePlinkoBalls++;
+            updatePlinkoStats();
+            launchPlinkoBall(board, w, bet);
+        }
+
         async function playPlinko(count = 1) {
             const bet = parseFloat(document.getElementById('plinkoBet').value);
             if (!bet || bet <= 0) { showToast('Enter a valid bet', 'error'); return; }
             
             const totalBet = bet * count;
             if (totalBet > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
-            if (activePlinkoBalls + count > 5) { showToast('Max 5 balls at once!', 'error'); return; }
             
             // Deduct bet immediately
             currentUser.balance -= totalBet;
@@ -2117,7 +2326,7 @@
             document.getElementById('plinkoResult').innerHTML = '';
             
             const board = document.getElementById('plinkoBoard');
-            const w = board.offsetWidth || 340;
+            const w = board.offsetWidth || 400;
             
             // Launch balls with slight delays
             for (let i = 0; i < count; i++) {
@@ -2468,6 +2677,326 @@
             document.getElementById('crashStatus').textContent = 'Place your bet!';
             crashBet = 0;
             crashActive = false;
+        }
+
+        // STOCKS
+        const BASE_STOCKS = [
+            { symbol: 'DRAG', name: 'Dragon Industries', price: 150, shares: 10000, category: 'fantasy' },
+            { symbol: 'PHXR', name: 'Phoenix Rising Corp', price: 85, shares: 15000, category: 'fantasy' },
+            { symbol: 'GRFN', name: 'Griffin Airways', price: 220, shares: 8000, category: 'fantasy' },
+            { symbol: 'MAGE', name: 'Mage Technologies', price: 175, shares: 12000, category: 'fantasy' },
+            { symbol: 'ELFS', name: 'Elven Forests Inc', price: 95, shares: 20000, category: 'fantasy' },
+            { symbol: 'DWRF', name: 'Dwarven Mining Co', price: 310, shares: 5000, category: 'fantasy' },
+            { symbol: 'UNCRN', name: 'Unicorn Ventures', price: 420, shares: 3000, category: 'fantasy' },
+            { symbol: 'WIZD', name: 'Wizard Labs', price: 195, shares: 10000, category: 'fantasy' },
+            { symbol: 'NXAI', name: 'NexGen AI', price: 380, shares: 7500, category: 'tech' },
+            { symbol: 'QNTM', name: 'Quantum Computing Inc', price: 520, shares: 4000, category: 'tech' },
+            { symbol: 'CYBR', name: 'CyberShield Security', price: 145, shares: 18000, category: 'tech' },
+            { symbol: 'ROBO', name: 'RoboTech Industries', price: 265, shares: 9000, category: 'tech' },
+            { symbol: 'NURO', name: 'NeuroLink Systems', price: 340, shares: 6000, category: 'tech' },
+            { symbol: 'SOLR', name: 'Solar Dynamics', price: 125, shares: 22000, category: 'tech' },
+            { symbol: 'SPCE', name: 'SpaceX Ventures', price: 890, shares: 2000, category: 'tech' },
+            { symbol: 'BLKC', name: 'BlockChain Corp', price: 205, shares: 11000, category: 'tech' }
+        ];
+        
+        let stocks = [...BASE_STOCKS];
+        let stockHistory = {}; // { symbol: { '1d': [], '2w': [], '1m': [], '6m': [] } }
+        let userHoldings = {}; // { symbol: shares }
+        let chartTimeframe = '1d';
+        let stockUpdateInterval = null;
+        
+        function initStocks() {
+            // Initialize price history for all stocks
+            stocks.forEach(s => {
+                if (!stockHistory[s.symbol]) {
+                    stockHistory[s.symbol] = {
+                        '1d': generateHistoricalPrices(s.price, 24),
+                        '2w': generateHistoricalPrices(s.price, 14),
+                        '1m': generateHistoricalPrices(s.price, 30),
+                        '6m': generateHistoricalPrices(s.price, 180)
+                    };
+                }
+            });
+            
+            // Show admin panel if stock admin
+            if (STOCK_ADMINS.includes(currentUser.email)) {
+                document.getElementById('stockAdminPanel').style.display = 'block';
+            }
+            
+            // Start price updates every minute
+            if (stockUpdateInterval) clearInterval(stockUpdateInterval);
+            stockUpdateInterval = setInterval(updateStockPrices, 60000);
+        }
+        
+        function generateHistoricalPrices(currentPrice, points) {
+            const prices = [];
+            let price = currentPrice * (0.7 + Math.random() * 0.4); // Start 70-110% of current
+            for (let i = 0; i < points; i++) {
+                prices.push(price);
+                // Smooth random walk toward current price
+                const drift = (currentPrice - price) * 0.02;
+                const volatility = price * 0.03 * (Math.random() - 0.5);
+                price = Math.max(1, price + drift + volatility);
+            }
+            prices.push(currentPrice);
+            return prices;
+        }
+        
+        function updateStockPrices() {
+            stocks.forEach(stock => {
+                const oldPrice = stock.price;
+                // Smooth price movement - not too random
+                const trend = (Math.random() - 0.48) * 0.04; // Slight upward bias
+                const volatility = stock.price * trend;
+                const meanReversion = (stock.price > 1000 ? -0.01 : stock.price < 10 ? 0.01 : 0) * stock.price;
+                
+                stock.price = Math.max(1, stock.price + volatility + meanReversion);
+                stock.price = Math.round(stock.price * 100) / 100;
+                stock.change = ((stock.price - oldPrice) / oldPrice * 100).toFixed(2);
+                
+                // Update history
+                if (stockHistory[stock.symbol]) {
+                    Object.keys(stockHistory[stock.symbol]).forEach(tf => {
+                        stockHistory[stock.symbol][tf].push(stock.price);
+                        // Keep appropriate length
+                        const maxLen = tf === '1d' ? 24 : tf === '2w' ? 14 : tf === '1m' ? 30 : 180;
+                        if (stockHistory[stock.symbol][tf].length > maxLen + 10) {
+                            stockHistory[stock.symbol][tf].shift();
+                        }
+                    });
+                }
+            });
+            
+            renderStocks();
+            drawStockChart();
+        }
+        
+        function loadStocks() {
+            initStocks();
+            renderStocks();
+            loadHoldings();
+            drawStockChart();
+        }
+        
+        function renderStocks() {
+            const container = document.getElementById('stocksList');
+            if (stocks.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>No stocks available</p></div>';
+                return;
+            }
+            
+            container.innerHTML = stocks.map(s => {
+                const change = s.change || 0;
+                const isUp = change >= 0;
+                return `
+                    <div class="stock-card ${isUp ? 'up' : 'down'}">
+                        <div class="stock-symbol">${s.symbol}</div>
+                        <div class="stock-name">${s.name}</div>
+                        <div class="stock-price">$${formatNumber(s.price)}</div>
+                        <div class="stock-change ${isUp ? 'up' : 'down'}">${isUp ? '▲' : '▼'} ${Math.abs(change)}%</div>
+                        <div class="stock-actions">
+                            <input type="number" id="qty_${s.symbol}" class="form-input" placeholder="Qty" min="1">
+                            <button class="btn btn-success btn-sm" onclick="buyStock('${s.symbol}')">Buy</button>
+                            <button class="btn btn-danger btn-sm" onclick="sellStock('${s.symbol}')">Sell</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function loadHoldings() {
+            const container = document.getElementById('holdingsList');
+            const holdings = Object.entries(userHoldings).filter(([_, qty]) => qty > 0);
+            
+            if (holdings.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>No stocks owned</p></div>';
+                return;
+            }
+            
+            container.innerHTML = holdings.map(([symbol, qty]) => {
+                const stock = stocks.find(s => s.symbol === symbol);
+                if (!stock) return '';
+                const value = stock.price * qty;
+                return `
+                    <div class="holding-card">
+                        <div class="stock-symbol">${symbol}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">${qty} shares</div>
+                        <div style="font-size: 1.1rem; font-weight: 600; color: var(--gold);">$${formatNumber(value)}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        async function buyStock(symbol) {
+            const qty = parseInt(document.getElementById(`qty_${symbol}`).value);
+            if (!qty || qty <= 0) { showToast('Enter a valid quantity', 'error'); return; }
+            
+            const stock = stocks.find(s => s.symbol === symbol);
+            if (!stock) { showToast('Stock not found', 'error'); return; }
+            
+            const cost = stock.price * qty;
+            if (cost > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
+            
+            currentUser.balance -= cost;
+            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+            
+            userHoldings[symbol] = (userHoldings[symbol] || 0) + qty;
+            
+            // Save to backend
+            await apiCall({ action: 'buyStock', email: currentUser.email, symbol, shares: qty, price: stock.price, cost });
+            
+            showToast(`Bought ${qty} ${symbol} for $${formatNumber(cost)}`, 'success');
+            loadHoldings();
+            document.getElementById(`qty_${symbol}`).value = '';
+        }
+        
+        async function sellStock(symbol) {
+            const qty = parseInt(document.getElementById(`qty_${symbol}`).value);
+            if (!qty || qty <= 0) { showToast('Enter a valid quantity', 'error'); return; }
+            
+            const owned = userHoldings[symbol] || 0;
+            if (qty > owned) { showToast(`You only own ${owned} shares`, 'error'); return; }
+            
+            const stock = stocks.find(s => s.symbol === symbol);
+            if (!stock) { showToast('Stock not found', 'error'); return; }
+            
+            const revenue = stock.price * qty;
+            currentUser.balance += revenue;
+            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+            
+            userHoldings[symbol] -= qty;
+            
+            // Save to backend
+            await apiCall({ action: 'sellStock', email: currentUser.email, symbol, shares: qty, price: stock.price, revenue });
+            
+            showToast(`Sold ${qty} ${symbol} for $${formatNumber(revenue)}`, 'success');
+            loadHoldings();
+            document.getElementById(`qty_${symbol}`).value = '';
+        }
+        
+        function setChartTimeframe(tf) {
+            chartTimeframe = tf;
+            document.querySelectorAll('.timeframe-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            drawStockChart();
+        }
+        
+        function drawStockChart() {
+            const canvas = document.getElementById('stockChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.offsetWidth || 400;
+            const h = canvas.height = 200;
+            
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.fillRect(0, 0, w, h);
+            
+            // Get all price data for the timeframe
+            const colors = ['#fbbf24', '#3b82f6', '#22c55e', '#ef4444', '#a855f7', '#06b6d4', '#f97316', '#ec4899'];
+            let allPrices = [];
+            
+            stocks.slice(0, 8).forEach(stock => {
+                const history = stockHistory[stock.symbol]?.[chartTimeframe] || [];
+                allPrices = allPrices.concat(history);
+            });
+            
+            if (allPrices.length === 0) return;
+            
+            const minPrice = Math.min(...allPrices) * 0.95;
+            const maxPrice = Math.max(...allPrices) * 1.05;
+            const priceRange = maxPrice - minPrice || 1;
+            
+            // Draw grid
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = (h / 4) * i;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+                ctx.stroke();
+            }
+            
+            // Draw lines for each stock
+            stocks.slice(0, 8).forEach((stock, idx) => {
+                const history = stockHistory[stock.symbol]?.[chartTimeframe] || [];
+                if (history.length < 2) return;
+                
+                ctx.strokeStyle = colors[idx % colors.length];
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                
+                history.forEach((price, i) => {
+                    const x = (i / (history.length - 1)) * w;
+                    const y = h - ((price - minPrice) / priceRange) * h;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                });
+                
+                ctx.stroke();
+            });
+            
+            // Draw legend
+            ctx.font = '10px Inter, sans-serif';
+            stocks.slice(0, 8).forEach((stock, idx) => {
+                ctx.fillStyle = colors[idx % colors.length];
+                const x = 10 + (idx % 4) * 95;
+                const y = 15 + Math.floor(idx / 4) * 15;
+                ctx.fillText(stock.symbol, x, y);
+            });
+        }
+        
+        async function createNewStock() {
+            if (!STOCK_ADMINS.includes(currentUser.email)) { showToast('Not authorized', 'error'); return; }
+            
+            const symbol = document.getElementById('newStockSymbol').value.toUpperCase().trim();
+            const name = document.getElementById('newStockName').value.trim();
+            const price = parseFloat(document.getElementById('newStockPrice').value);
+            const shares = parseInt(document.getElementById('newStockShares').value);
+            
+            if (!symbol || !name || !price || !shares) { showToast('Fill all fields', 'error'); return; }
+            if (stocks.find(s => s.symbol === symbol)) { showToast('Symbol already exists', 'error'); return; }
+            
+            const newStock = { symbol, name, price, shares, category: 'custom', change: 0 };
+            stocks.push(newStock);
+            
+            stockHistory[symbol] = {
+                '1d': generateHistoricalPrices(price, 24),
+                '2w': generateHistoricalPrices(price, 14),
+                '1m': generateHistoricalPrices(price, 30),
+                '6m': generateHistoricalPrices(price, 180)
+            };
+            
+            await apiCall({ action: 'createStock', adminEmail: currentUser.email, symbol, name, price, shares });
+            
+            showToast(`Created ${symbol}`, 'success');
+            document.getElementById('newStockSymbol').value = '';
+            document.getElementById('newStockName').value = '';
+            document.getElementById('newStockPrice').value = '';
+            document.getElementById('newStockShares').value = '';
+            renderStocks();
+            drawStockChart();
+        }
+        
+        async function removeStock() {
+            if (!STOCK_ADMINS.includes(currentUser.email)) { showToast('Not authorized', 'error'); return; }
+            
+            const symbol = document.getElementById('newStockSymbol').value.toUpperCase().trim();
+            if (!symbol) { showToast('Enter symbol to remove', 'error'); return; }
+            
+            const idx = stocks.findIndex(s => s.symbol === symbol);
+            if (idx === -1) { showToast('Stock not found', 'error'); return; }
+            
+            stocks.splice(idx, 1);
+            delete stockHistory[symbol];
+            
+            await apiCall({ action: 'removeStock', adminEmail: currentUser.email, symbol });
+            
+            showToast(`Removed ${symbol}`, 'success');
+            document.getElementById('newStockSymbol').value = '';
+            renderStocks();
+            drawStockChart();
         }
 
         // CHAT
