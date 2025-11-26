@@ -2369,7 +2369,7 @@
             showToast('Logged out', 'info');
         }
 
-        async function showApp() {
+        function showApp() {
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('appScreen').classList.remove('hidden');
             document.getElementById('userName').textContent = currentUser.name || currentUser.email;
@@ -2378,9 +2378,8 @@
                 document.getElementById('adminTab').style.display = 'flex';
             }
             
-            // Pre-load holdings in background so they're ready
-            try {
-                const data = await apiCall({ action: 'getPortfolio', email: currentUser.email });
+            // Pre-load holdings in background
+            apiCall({ action: 'getPortfolio', email: currentUser.email }).then(data => {
                 const holdings = data.holdings || data.stocks || data.portfolio || [];
                 userHoldings = {};
                 holdings.forEach(h => {
@@ -2389,13 +2388,12 @@
                     }
                 });
                 console.log('Holdings pre-loaded:', userHoldings);
-            } catch (e) {
+            }).catch(e => {
                 console.log('Could not pre-load holdings:', e);
-            }
+            });
             
             loadDashboard();
         }
-
         function switchTab(tab) {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
