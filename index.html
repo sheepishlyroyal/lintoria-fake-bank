@@ -580,11 +580,11 @@
         .plinko-container {
             position: relative;
             width: 100%;
-            max-width: 420px;
+            max-width: 500px;
             margin: 0.5rem auto;
             background: linear-gradient(180deg, #0a0a1a, #151530);
             border-radius: 16px;
-            padding: 10px;
+            padding: 12px;
             border: 3px solid var(--gold);
             box-shadow: 0 0 30px rgba(251, 191, 36, 0.2), inset 0 0 30px rgba(0, 0, 0, 0.5);
         }
@@ -592,7 +592,7 @@
         .plinko-board {
             position: relative;
             width: 100%;
-            height: 380px;
+            height: 420px;
             overflow: hidden;
         }
 
@@ -796,6 +796,95 @@
             border-radius: 12px;
             padding: 1rem;
             margin-bottom: 1.5rem;
+        }
+
+        /* LOANS */
+        .loan-info-box {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .loan-info-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .loan-label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .loan-value {
+            display: block;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .loan-preview {
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .loan-preview div {
+            margin-bottom: 0.5rem;
+        }
+
+        .loans-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .loan-card {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.05));
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .loan-card.overdue {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(185, 28, 28, 0.05));
+        }
+
+        .loan-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .loan-amount {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .loan-status {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .loan-status.overdue {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .loan-details {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
         }
 
         /* ROULETTE */
@@ -1091,6 +1180,47 @@
         .playing-card.black { color: #1a1a2e; }
         .playing-card.hidden-card { background: linear-gradient(135deg, #1e40af, #3b82f6); color: transparent; }
 
+        .bj-hand {
+            margin-bottom: 1rem;
+        }
+
+        .bj-label {
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .bj-cards {
+            display: flex;
+            justify-content: center;
+            gap: 0.25rem;
+            min-height: 75px;
+        }
+
+        .bj-card {
+            width: 45px;
+            height: 65px;
+            background: white;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .bj-card.red { color: #dc2626; }
+        .bj-card.black { color: #1f2937; }
+        .bj-card.hidden { 
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(255,255,255,0.1) 5px, rgba(255,255,255,0.1) 10px);
+        }
+
         .hand-total {
             background: rgba(0, 0, 0, 0.5);
             color: white;
@@ -1101,6 +1231,42 @@
             display: inline-block;
             margin-top: 0.5rem;
         }
+
+        /* CHEAT GAME */
+        .cheat-game-area {
+            background: linear-gradient(180deg, rgba(139, 92, 246, 0.1), rgba(168, 85, 247, 0.05));
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .cheat-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            justify-content: center;
+            margin: 0.75rem 0;
+        }
+
+        .cheat-card {
+            width: 40px;
+            height: 55px;
+            background: white;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .cheat-card:hover { transform: translateY(-5px); }
+        .cheat-card.selected { border-color: var(--gold); box-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
+        .cheat-card.red { color: #dc2626; }
+        .cheat-card.black { color: #1f2937; }
 
         /* WHEEL */
         .wheel-container { position: relative; width: 220px; height: 220px; margin: 0.5rem auto; }
@@ -1465,6 +1631,7 @@
             <div class="tab-container">
                 <button class="tab-btn active" onclick="switchTab('dashboard')">🏦 Bank</button>
                 <button class="tab-btn" onclick="switchTab('transfer')">💸 Transfer</button>
+                <button class="tab-btn" onclick="switchTab('loans')">💳 Loans</button>
                 <button class="tab-btn" onclick="switchTab('stocks')">📈 Stocks</button>
                 <button class="tab-btn" onclick="switchTab('packs')">🎁 Packs</button>
                 <button class="tab-btn" onclick="switchTab('collection')">🎒 Collection</button>
@@ -1534,6 +1701,72 @@
                         <input type="text" id="transferNote" class="form-input" placeholder="What's this for?">
                     </div>
                     <button class="btn btn-success" onclick="transferMoney()" style="width: 100%;">💸 Send Money</button>
+                </div>
+            </div>
+
+            <!-- LOANS -->
+            <div id="loansContent" class="tab-content hidden">
+                <div class="glass-card">
+                    <div class="section-header">
+                        <h2>💳 Loans</h2>
+                    </div>
+                    
+                    <div class="loan-info-box">
+                        <div class="loan-info-item">
+                            <span class="loan-label">Your Credit Score</span>
+                            <span class="loan-value" id="loanCreditScore">650</span>
+                        </div>
+                        <div class="loan-info-item">
+                            <span class="loan-label">Credit Rating</span>
+                            <span class="loan-value" id="loanCreditRating">Fair</span>
+                        </div>
+                        <div class="loan-info-item">
+                            <span class="loan-label">Max Loan Amount</span>
+                            <span class="loan-value" id="maxLoanAmount">$50,000</span>
+                        </div>
+                        <div class="loan-info-item">
+                            <span class="loan-label">Interest Rate</span>
+                            <span class="loan-value" id="loanInterestRate">15%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="section-header" style="margin-top: 1.5rem;">
+                        <h3>📝 Apply for Loan</h3>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Loan Amount ($)</label>
+                        <input type="number" id="loanAmount" class="form-input" placeholder="Enter amount" min="1000" step="1000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Loan Term</label>
+                        <select id="loanTerm" class="form-input">
+                            <option value="7">7 days (Lower interest)</option>
+                            <option value="14">14 days (Standard)</option>
+                            <option value="30">30 days (Higher interest)</option>
+                        </select>
+                    </div>
+                    <div id="loanPreview" class="loan-preview" style="display: none;">
+                        <div>You will receive: <strong id="loanReceiveAmount">$0</strong></div>
+                        <div>Total to repay: <strong id="loanRepayAmount">$0</strong></div>
+                        <div>Due date: <strong id="loanDueDate">-</strong></div>
+                    </div>
+                    <button class="btn btn-success" onclick="applyForLoan()" style="width: 100%; margin-top: 1rem;">💳 Apply for Loan</button>
+                    
+                    <div class="section-header" style="margin-top: 2rem;">
+                        <h3>📋 Active Loans</h3>
+                    </div>
+                    <div id="activeLoansList" class="loans-list">
+                        <div class="empty-state"><p>No active loans</p></div>
+                    </div>
+                    
+                    <div class="section-header" style="margin-top: 1.5rem;">
+                        <h3>💰 Repay Loan</h3>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Payment Amount ($)</label>
+                        <input type="number" id="repayAmount" class="form-input" placeholder="Enter payment amount" min="1">
+                    </div>
+                    <button class="btn btn-primary" onclick="repayLoan()" style="width: 100%;">💵 Make Payment</button>
                 </div>
             </div>
 
@@ -1739,6 +1972,78 @@
                             </div>
                             <div class="game-result" id="crashResult"></div>
                         </div>
+                        
+                        <!-- BLACKJACK -->
+                        <div class="casino-game">
+                            <h3>🃏 Blackjack</h3>
+                            <p class="game-desc">Beat the dealer! Get closest to 21 without going over.</p>
+                            <div class="blackjack-table">
+                                <div class="bj-hand" id="dealerHand">
+                                    <div class="bj-label">Dealer: <span id="dealerScore">0</span></div>
+                                    <div class="bj-cards" id="dealerCards"></div>
+                                </div>
+                                <div class="bj-hand" id="playerHand">
+                                    <div class="bj-label">You: <span id="playerScore">0</span></div>
+                                    <div class="bj-cards" id="playerCards"></div>
+                                </div>
+                            </div>
+                            <input type="number" id="bjBet" class="form-input" placeholder="Bet amount" min="1" style="margin: 0.75rem 0;">
+                            <div id="bjControls">
+                                <button class="btn btn-success" onclick="startBlackjack()" id="bjDealBtn" style="width: 100%;">🃏 Deal</button>
+                            </div>
+                            <div id="bjGameControls" style="display: none; gap: 0.5rem; grid-template-columns: repeat(3, 1fr);">
+                                <button class="btn btn-primary" onclick="bjHit()">👆 Hit</button>
+                                <button class="btn btn-warning" onclick="bjStand()">✋ Stand</button>
+                                <button class="btn btn-success" onclick="bjDouble()">2️⃣ Double</button>
+                            </div>
+                            <div class="game-result" id="bjResult"></div>
+                        </div>
+                        
+                        <!-- CHEAT (Multiplayer) -->
+                        <div class="casino-game">
+                            <h3>🎭 Cheat</h3>
+                            <p class="game-desc">Bluff your way to victory! (2+ players)</p>
+                            <div class="cheat-game-area">
+                                <div id="cheatStatus" style="text-align: center; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px; margin-bottom: 1rem;">
+                                    <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🎴 Waiting for players...</div>
+                                    <div id="cheatPlayers" style="color: var(--text-muted);">0 players in lobby</div>
+                                </div>
+                                <div id="cheatCards" class="cheat-cards" style="display: none;"></div>
+                                <div id="cheatPile" style="text-align: center; margin: 1rem 0;">
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">Pile: <span id="cheatPileCount">0</span> cards</div>
+                                    <div style="font-size: 0.75rem; color: var(--gold);">Current claim: <span id="cheatCurrentClaim">-</span></div>
+                                </div>
+                            </div>
+                            <input type="number" id="cheatBet" class="form-input" placeholder="Buy-in amount" min="100" style="margin: 0.75rem 0;">
+                            <div id="cheatLobbyControls">
+                                <button class="btn btn-success" onclick="joinCheatGame()" style="width: 100%;">🎭 Join Game ($100+ buy-in)</button>
+                            </div>
+                            <div id="cheatGameControls" style="display: none;">
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 0.5rem;">
+                                    <select id="cheatClaimRank" class="form-input">
+                                        <option value="A">Aces</option>
+                                        <option value="2">2s</option>
+                                        <option value="3">3s</option>
+                                        <option value="4">4s</option>
+                                        <option value="5">5s</option>
+                                        <option value="6">6s</option>
+                                        <option value="7">7s</option>
+                                        <option value="8">8s</option>
+                                        <option value="9">9s</option>
+                                        <option value="10">10s</option>
+                                        <option value="J">Jacks</option>
+                                        <option value="Q">Queens</option>
+                                        <option value="K">Kings</option>
+                                    </select>
+                                    <input type="number" id="cheatClaimCount" class="form-input" placeholder="# cards" min="1" max="4">
+                                </div>
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+                                    <button class="btn btn-success" onclick="cheatPlayCards()">🎴 Play Cards</button>
+                                    <button class="btn btn-danger" onclick="cheatCallBluff()">🚨 Call Bluff!</button>
+                                </div>
+                            </div>
+                            <div class="game-result" id="cheatResult"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1850,6 +2155,12 @@
         const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzJH_jyOreJtTuAS7Aml4aivxkU2yuHfEnxrYXwSBxaqxL8hDhwMYKh4ACV2c4qjvvzKQ/exec';
         const MASTER_ADMIN = 'sheepishlyroyal@gmail.com';
         const STOCK_ADMINS = ['sheepishlyroyal@gmail.com'];
+        
+        function isStockAdmin(email) {
+            if (!email) return false;
+            const lowerEmail = email.toLowerCase().trim();
+            return lowerEmail === MASTER_ADMIN.toLowerCase() || STOCK_ADMINS.some(a => a.toLowerCase() === lowerEmail);
+        }
         
         let currentUser = null;
         let selectedPack = null;
@@ -2037,6 +2348,7 @@
             event.target.classList.add('active');
             switch(tab) {
                 case 'dashboard': loadDashboard(); break;
+                case 'loans': loadLoans(); break;
                 case 'stocks': loadStocks(); break;
                 case 'packs': loadPacks(); break;
                 case 'collection': loadCollection(); break;
@@ -2139,8 +2451,46 @@
                 return `<div class="pack-card ${selectedPack === key ? 'selected' : ''}" onclick="selectPack('${key}')">
                     <div class="pack-name">${pack.name}</div>
                     <div class="pack-emojis">${preview}</div>
+                    <button class="btn btn-sm" onclick="event.stopPropagation(); showPackContents('${key}')" style="margin-top: 0.5rem; font-size: 0.65rem;">📋 View All</button>
                 </div>`;
             }).join('');
+        }
+        
+        function showPackContents(key) {
+            const pack = THEMED_PACKS[key];
+            const rarityLabels = {
+                common: { label: '⚪ Common (50%)', color: '#9ca3af' },
+                uncommon: { label: '🟢 Uncommon (30%)', color: '#22c55e' },
+                rare: { label: '🔵 Rare (12%)', color: '#3b82f6' },
+                epic: { label: '🟣 Epic (5%)', color: '#a855f7' },
+                legendary: { label: '🟡 Legendary (2%)', color: '#fbbf24' },
+                mythic: { label: '💗 Mythic (0.8%)', color: '#ec4899' },
+                divine: { label: '💎 Divine (0.2%)', color: '#06b6d4' }
+            };
+            
+            let html = `<h3 style="margin-bottom: 1rem;">${pack.name} Contents</h3>`;
+            for (const [rarity, info] of Object.entries(rarityLabels)) {
+                const emojis = pack.emojis[rarity];
+                if (emojis && emojis.length > 0) {
+                    html += `<div style="margin-bottom: 0.75rem;">
+                        <div style="color: ${info.color}; font-weight: 600; margin-bottom: 0.25rem;">${info.label}</div>
+                        <div style="font-size: 1.5rem; letter-spacing: 0.25rem;">${emojis.join(' ')}</div>
+                    </div>`;
+                }
+            }
+            html += `<button class="btn" onclick="closePackContentsModal()" style="width: 100%; margin-top: 1rem;">Close</button>`;
+            
+            // Create modal
+            const modal = document.createElement('div');
+            modal.id = 'packContentsModal';
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+            modal.innerHTML = `<div style="background: var(--bg-secondary); border-radius: 16px; padding: 1.5rem; max-width: 400px; max-height: 80vh; overflow-y: auto; border: 2px solid var(--gold);">${html}</div>`;
+            document.body.appendChild(modal);
+        }
+        
+        function closePackContentsModal() {
+            const modal = document.getElementById('packContentsModal');
+            if (modal) modal.remove();
         }
 
         function selectPack(key) {
@@ -2339,18 +2689,33 @@
         }
 
         function launchPlinkoBall(board, w, bet) {
-            const h = board.offsetHeight || 340;
+            const h = board.offsetHeight || 420;
             const ball = document.createElement('div');
             ball.className = 'plinko-ball ' + BALL_COLORS[Math.floor(Math.random() * BALL_COLORS.length)];
             board.appendChild(ball);
             
-            let x = w / 2 + (Math.random() - 0.5) * 60;
+            let x = w / 2 + (Math.random() - 0.5) * 80;
             let y = 10;
             let vx = (Math.random() - 0.5) * 2;
             let vy = 0;
             const ballR = 9;
+            let animating = true;
+            let animationId = null;
+            
+            // Auto-despawn after 20 seconds
+            const despawnTimeout = setTimeout(() => {
+                if (animating) {
+                    animating = false;
+                    if (animationId) cancelAnimationFrame(animationId);
+                    ball.remove();
+                    activePlinkoBalls--;
+                    updatePlinkoStats();
+                }
+            }, 20000);
             
             function animate() {
+                if (!animating) return;
+                
                 vy += 0.3;
                 vx *= 0.98;
                 x += vx;
@@ -2383,16 +2748,17 @@
                 ball.style.left = x + 'px';
                 ball.style.top = y + 'px';
                 
-                if (y > h - 45) {
+                if (y > h - 50) {
+                    animating = false;
+                    clearTimeout(despawnTimeout);
                     const slotWidth = w / 13;
-                    const slotsStart = 0;
                     let finalSlot = Math.floor(x / slotWidth);
                     finalSlot = Math.max(0, Math.min(12, finalSlot));
                     finishPlinkoBall(bet, finalSlot, ball);
                     return;
                 }
                 
-                requestAnimationFrame(animate);
+                animationId = requestAnimationFrame(animate);
             }
             
             animate();
@@ -2404,9 +2770,16 @@
             const profit = winnings - bet;
             const win = profit >= 0;
             
+            // Immediately remove ball
+            ball.remove();
+            activePlinkoBalls--;
+            updatePlinkoStats();
+            
             const slots = document.querySelectorAll('.plinko-slot');
-            slots[slotIndex].classList.add('active');
-            setTimeout(() => slots[slotIndex].classList.remove('active'), 500);
+            if (slots[slotIndex]) {
+                slots[slotIndex].classList.add('active');
+                setTimeout(() => slots[slotIndex].classList.remove('active'), 500);
+            }
             
             // Add winnings back
             currentUser.balance += winnings;
@@ -2421,13 +2794,6 @@
             const color = win ? 'var(--success)' : 'var(--danger)';
             const sign = profit >= 0 ? '+' : '';
             resultDiv.innerHTML = `<span style="color: ${color};">${mult}x: ${sign}$${formatNumber(profit)}</span>`;
-            
-            // Remove ball after delay
-            setTimeout(() => {
-                ball.remove();
-                activePlinkoBalls--;
-                updatePlinkoStats();
-            }, 1000);
         }
 
         // ROULETTE
@@ -2635,7 +3001,20 @@
             document.getElementById('crashMultiplier').classList.remove('crashed');
             
             crashMultiplier = 1.0;
-            const crashPoint = 1 + Math.random() * Math.random() * 10;
+            // Higher chance to crash at 1x-2x: 60% crash under 2x, 85% under 3x
+            const rand = Math.random();
+            let crashPoint;
+            if (rand < 0.35) {
+                crashPoint = 1 + Math.random() * 0.5; // 35% chance: 1.0x - 1.5x
+            } else if (rand < 0.60) {
+                crashPoint = 1.5 + Math.random() * 0.5; // 25% chance: 1.5x - 2.0x
+            } else if (rand < 0.80) {
+                crashPoint = 2 + Math.random() * 1.5; // 20% chance: 2.0x - 3.5x
+            } else if (rand < 0.92) {
+                crashPoint = 3.5 + Math.random() * 3; // 12% chance: 3.5x - 6.5x
+            } else {
+                crashPoint = 6.5 + Math.random() * 8; // 8% chance: 6.5x - 14.5x
+            }
             
             crashInterval = setInterval(() => {
                 crashMultiplier += 0.02 + Math.random() * 0.03;
@@ -2679,6 +3058,564 @@
             crashActive = false;
         }
 
+        // BLACKJACK
+        const SUITS = ['♠', '♣', '♥', '♦'];
+        const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+        let bjDeck = [], bjPlayerHand = [], bjDealerHand = [], bjBet = 0, bjGameActive = false;
+        
+        function createDeck() {
+            const deck = [];
+            for (const suit of SUITS) {
+                for (const rank of RANKS) {
+                    deck.push({ suit, rank, value: rank === 'A' ? 11 : ['J', 'Q', 'K'].includes(rank) ? 10 : parseInt(rank) });
+                }
+            }
+            // Shuffle
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+            return deck;
+        }
+        
+        function getHandValue(hand) {
+            let value = 0, aces = 0;
+            for (const card of hand) {
+                value += card.value;
+                if (card.rank === 'A') aces++;
+            }
+            while (value > 21 && aces > 0) { value -= 10; aces--; }
+            return value;
+        }
+        
+        function renderCard(card, hidden = false) {
+            if (hidden) return '<div class="bj-card hidden"></div>';
+            const isRed = ['♥', '♦'].includes(card.suit);
+            return `<div class="bj-card ${isRed ? 'red' : 'black'}"><div>${card.rank}</div><div>${card.suit}</div></div>`;
+        }
+        
+        function renderHands(hideDealer = true) {
+            const dealerCards = bjDealerHand.map((c, i) => renderCard(c, hideDealer && i === 0)).join('');
+            const playerCards = bjPlayerHand.map(c => renderCard(c)).join('');
+            
+            document.getElementById('dealerCards').innerHTML = dealerCards;
+            document.getElementById('playerCards').innerHTML = playerCards;
+            document.getElementById('dealerScore').textContent = hideDealer ? '?' : getHandValue(bjDealerHand);
+            document.getElementById('playerScore').textContent = getHandValue(bjPlayerHand);
+        }
+        
+        async function startBlackjack() {
+            const bet = parseFloat(document.getElementById('bjBet').value);
+            if (!bet || bet <= 0) { showToast('Enter a valid bet', 'error'); return; }
+            if (bet > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
+            
+            bjBet = bet;
+            bjGameActive = true;
+            currentUser.balance -= bet;
+            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+            
+            bjDeck = createDeck();
+            bjPlayerHand = [bjDeck.pop(), bjDeck.pop()];
+            bjDealerHand = [bjDeck.pop(), bjDeck.pop()];
+            
+            document.getElementById('bjDealBtn').style.display = 'none';
+            document.getElementById('bjGameControls').style.display = 'grid';
+            document.getElementById('bjResult').innerHTML = '';
+            
+            renderHands(true);
+            
+            // Check for blackjack
+            if (getHandValue(bjPlayerHand) === 21) {
+                bjStand();
+            }
+        }
+        
+        function bjHit() {
+            if (!bjGameActive) return;
+            bjPlayerHand.push(bjDeck.pop());
+            renderHands(true);
+            
+            if (getHandValue(bjPlayerHand) > 21) {
+                endBlackjack('bust');
+            }
+        }
+        
+        async function bjStand() {
+            if (!bjGameActive) return;
+            
+            // Dealer plays
+            while (getHandValue(bjDealerHand) < 17) {
+                bjDealerHand.push(bjDeck.pop());
+            }
+            
+            renderHands(false);
+            
+            const playerVal = getHandValue(bjPlayerHand);
+            const dealerVal = getHandValue(bjDealerHand);
+            
+            if (dealerVal > 21) endBlackjack('dealer_bust');
+            else if (playerVal > dealerVal) endBlackjack('win');
+            else if (playerVal < dealerVal) endBlackjack('lose');
+            else endBlackjack('push');
+        }
+        
+        async function bjDouble() {
+            if (!bjGameActive || bjPlayerHand.length !== 2) return;
+            if (bjBet > currentUser.balance) { showToast('Insufficient balance to double', 'error'); return; }
+            
+            currentUser.balance -= bjBet;
+            bjBet *= 2;
+            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+            
+            bjPlayerHand.push(bjDeck.pop());
+            renderHands(true);
+            
+            if (getHandValue(bjPlayerHand) > 21) {
+                endBlackjack('bust');
+            } else {
+                bjStand();
+            }
+        }
+        
+        async function endBlackjack(result) {
+            bjGameActive = false;
+            renderHands(false);
+            
+            let winnings = 0, message = '';
+            
+            switch(result) {
+                case 'bust':
+                    message = '<span style="color: var(--danger);">BUST! You lose $' + formatNumber(bjBet) + '</span>';
+                    break;
+                case 'dealer_bust':
+                    winnings = bjBet * 2;
+                    message = '<span style="color: var(--success);">Dealer busts! You win $' + formatNumber(bjBet) + '!</span>';
+                    break;
+                case 'win':
+                    winnings = bjBet * 2;
+                    message = '<span style="color: var(--success);">You win $' + formatNumber(bjBet) + '!</span>';
+                    break;
+                case 'lose':
+                    message = '<span style="color: var(--danger);">Dealer wins. You lose $' + formatNumber(bjBet) + '</span>';
+                    break;
+                case 'push':
+                    winnings = bjBet;
+                    message = '<span style="color: var(--gold);">Push! Bet returned.</span>';
+                    break;
+            }
+            
+            currentUser.balance += winnings;
+            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+            document.getElementById('bjResult').innerHTML = message;
+            
+            const profit = winnings - bjBet;
+            await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'blackjack', wagered: bjBet, won: profit > 0 ? profit : 0, lost: profit < 0 ? Math.abs(profit) : 0, result: profit > 0 ? 'win' : profit < 0 ? 'loss' : 'push' });
+            
+            document.getElementById('bjDealBtn').style.display = 'block';
+            document.getElementById('bjGameControls').style.display = 'none';
+        }
+
+        // CHEAT GAME (Multiplayer)
+        let cheatPlayers = [];
+        let cheatGameActive = false;
+        let cheatBuyIn = 0;
+        let cheatMyCards = [];
+        let cheatSelectedCards = [];
+        let cheatPile = [];
+        let cheatCurrentClaim = null;
+        let cheatMyTurn = false;
+        let cheatBotCount = 0;
+        
+        function joinCheatGame() {
+            const buyIn = parseFloat(document.getElementById('cheatBet').value);
+            if (!buyIn || buyIn < 100) { showToast('Minimum buy-in is $100', 'error'); return; }
+            if (buyIn > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
+            
+            cheatBuyIn = buyIn;
+            currentUser.balance -= buyIn;
+            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+            
+            // Add player to game
+            cheatPlayers = [{ name: currentUser.name || 'You', isPlayer: true, cards: [] }];
+            
+            // Simulate waiting then add bots (since no real multiplayer)
+            document.getElementById('cheatPlayers').textContent = '1 player in lobby... waiting for others';
+            
+            setTimeout(() => {
+                // Add 1-3 bot players
+                cheatBotCount = 1 + Math.floor(Math.random() * 3);
+                const botNames = ['🤖 Bot Alex', '🤖 Bot Sam', '🤖 Bot Jordan', '🤖 Bot Riley'];
+                for (let i = 0; i < cheatBotCount; i++) {
+                    cheatPlayers.push({ name: botNames[i], isPlayer: false, cards: [] });
+                }
+                document.getElementById('cheatPlayers').textContent = cheatPlayers.length + ' players ready!';
+                
+                setTimeout(startCheatGame, 1500);
+            }, 2000);
+        }
+        
+        function startCheatGame() {
+            cheatGameActive = true;
+            cheatPile = [];
+            cheatCurrentClaim = null;
+            
+            // Create and deal deck
+            const deck = [];
+            for (const suit of SUITS) {
+                for (const rank of RANKS) {
+                    deck.push({ suit, rank });
+                }
+            }
+            // Shuffle
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+            
+            // Deal cards
+            let cardIdx = 0;
+            while (cardIdx < deck.length) {
+                for (const player of cheatPlayers) {
+                    if (cardIdx < deck.length) {
+                        player.cards.push(deck[cardIdx++]);
+                    }
+                }
+            }
+            
+            cheatMyCards = cheatPlayers[0].cards;
+            cheatSelectedCards = [];
+            
+            document.getElementById('cheatLobbyControls').style.display = 'none';
+            document.getElementById('cheatGameControls').style.display = 'block';
+            document.getElementById('cheatCards').style.display = 'flex';
+            
+            renderCheatCards();
+            cheatMyTurn = true;
+            document.getElementById('cheatStatus').innerHTML = '<div style="color: var(--gold);">🎴 Your turn! Select cards and make a claim.</div>';
+        }
+        
+        function renderCheatCards() {
+            const container = document.getElementById('cheatCards');
+            container.innerHTML = cheatMyCards.map((card, idx) => {
+                const isRed = ['♥', '♦'].includes(card.suit);
+                const isSelected = cheatSelectedCards.includes(idx);
+                return `<div class="cheat-card ${isRed ? 'red' : 'black'} ${isSelected ? 'selected' : ''}" onclick="toggleCheatCard(${idx})">
+                    <div>${card.rank}</div><div>${card.suit}</div>
+                </div>`;
+            }).join('');
+            
+            document.getElementById('cheatPileCount').textContent = cheatPile.length;
+            document.getElementById('cheatCurrentClaim').textContent = cheatCurrentClaim ? cheatCurrentClaim.count + 'x ' + cheatCurrentClaim.rank : '-';
+        }
+        
+        function toggleCheatCard(idx) {
+            if (!cheatMyTurn) return;
+            const pos = cheatSelectedCards.indexOf(idx);
+            if (pos >= 0) cheatSelectedCards.splice(pos, 1);
+            else if (cheatSelectedCards.length < 4) cheatSelectedCards.push(idx);
+            renderCheatCards();
+        }
+        
+        function cheatPlayCards() {
+            if (!cheatMyTurn || cheatSelectedCards.length === 0) { showToast('Select cards to play', 'error'); return; }
+            
+            const claimRank = document.getElementById('cheatClaimRank').value;
+            const claimCount = parseInt(document.getElementById('cheatClaimCount').value) || cheatSelectedCards.length;
+            
+            if (claimCount < 1 || claimCount > cheatSelectedCards.length) { showToast('Invalid claim count', 'error'); return; }
+            
+            // Move selected cards to pile
+            const playedCards = cheatSelectedCards.sort((a, b) => b - a).map(idx => cheatMyCards.splice(idx, 1)[0]);
+            cheatPile.push(...playedCards);
+            
+            cheatCurrentClaim = { rank: claimRank, count: claimCount, actualCards: playedCards };
+            cheatSelectedCards = [];
+            cheatMyTurn = false;
+            
+            renderCheatCards();
+            
+            // Check if player won
+            if (cheatMyCards.length === 0) {
+                endCheatGame(true);
+                return;
+            }
+            
+            document.getElementById('cheatStatus').innerHTML = '<div>🤔 Bots are thinking...</div>';
+            
+            // Bot responds
+            setTimeout(botCheatTurn, 1500);
+        }
+        
+        function cheatCallBluff() {
+            if (cheatMyTurn || !cheatCurrentClaim) { showToast('Cannot call bluff now', 'error'); return; }
+            
+            // Check if last claim was a bluff
+            const wasBluff = !cheatCurrentClaim.actualCards.every(c => c.rank === cheatCurrentClaim.rank);
+            
+            if (wasBluff) {
+                // Bluff caught! Bot takes pile
+                showToast('🎉 Bluff caught! Bot takes the pile!', 'success');
+                cheatPile = [];
+            } else {
+                // Wrong call, player takes pile
+                cheatMyCards.push(...cheatPile);
+                cheatPile = [];
+                showToast('😬 They were honest! You take the pile.', 'error');
+            }
+            
+            cheatCurrentClaim = null;
+            cheatMyTurn = true;
+            renderCheatCards();
+            document.getElementById('cheatStatus').innerHTML = '<div style="color: var(--gold);">🎴 Your turn!</div>';
+        }
+        
+        function botCheatTurn() {
+            // Random chance bot calls bluff on player
+            if (cheatCurrentClaim && Math.random() < 0.25) {
+                const wasBluff = !cheatCurrentClaim.actualCards.every(c => c.rank === cheatCurrentClaim.rank);
+                if (wasBluff) {
+                    cheatMyCards.push(...cheatPile);
+                    cheatPile = [];
+                    showToast('🤖 Bot caught your bluff! You take the pile.', 'error');
+                } else {
+                    showToast('🤖 Bot wrongly called bluff!', 'success');
+                    cheatPile = [];
+                }
+                cheatCurrentClaim = null;
+                cheatMyTurn = true;
+                renderCheatCards();
+                document.getElementById('cheatStatus').innerHTML = '<div style="color: var(--gold);">🎴 Your turn!</div>';
+                return;
+            }
+            
+            // Bot plays cards
+            const botIdx = 1 + Math.floor(Math.random() * cheatBotCount);
+            const bot = cheatPlayers[botIdx];
+            if (!bot || bot.cards.length === 0) {
+                cheatMyTurn = true;
+                document.getElementById('cheatStatus').innerHTML = '<div style="color: var(--gold);">🎴 Your turn!</div>';
+                return;
+            }
+            
+            const playCount = Math.min(1 + Math.floor(Math.random() * 2), bot.cards.length);
+            const playedCards = bot.cards.splice(0, playCount);
+            cheatPile.push(...playedCards);
+            
+            const claimRank = RANKS[Math.floor(Math.random() * RANKS.length)];
+            cheatCurrentClaim = { rank: claimRank, count: playCount, actualCards: playedCards };
+            
+            renderCheatCards();
+            document.getElementById('cheatStatus').innerHTML = `<div>🤖 ${bot.name} played ${playCount} card(s), claims ${claimRank}s</div><div style="color: var(--gold); margin-top: 0.5rem;">Call bluff or play your cards!</div>`;
+            
+            // Check if bot won
+            if (bot.cards.length === 0) {
+                endCheatGame(false);
+                return;
+            }
+            
+            cheatMyTurn = true;
+        }
+        
+        async function endCheatGame(playerWon) {
+            cheatGameActive = false;
+            
+            let winnings = 0;
+            if (playerWon) {
+                winnings = cheatBuyIn * (1 + cheatBotCount); // Win all buy-ins
+                showToast('🎉 You win the pot of $' + formatNumber(winnings) + '!', 'success');
+                document.getElementById('cheatResult').innerHTML = '<span style="color: var(--success);">🏆 You win $' + formatNumber(winnings) + '!</span>';
+            } else {
+                showToast('😔 A bot won this round.', 'error');
+                document.getElementById('cheatResult').innerHTML = '<span style="color: var(--danger);">Bot wins! You lose $' + formatNumber(cheatBuyIn) + '</span>';
+            }
+            
+            currentUser.balance += winnings;
+            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+            
+            const profit = winnings - cheatBuyIn;
+            await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'cheat', wagered: cheatBuyIn, won: profit > 0 ? profit : 0, lost: profit < 0 ? Math.abs(profit) : 0, result: playerWon ? 'win' : 'loss' });
+            
+            // Reset
+            document.getElementById('cheatLobbyControls').style.display = 'block';
+            document.getElementById('cheatGameControls').style.display = 'none';
+            document.getElementById('cheatCards').style.display = 'none';
+            document.getElementById('cheatStatus').innerHTML = '<div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🎴 Waiting for players...</div><div id="cheatPlayers" style="color: var(--text-muted);">0 players in lobby</div>';
+            cheatPlayers = [];
+            cheatMyCards = [];
+            cheatSelectedCards = [];
+            cheatPile = [];
+        }
+
+        // LOANS
+        let userLoans = [];
+        
+        function getLoanTerms(creditScore) {
+            // Better credit = better terms
+            let maxLoan, interestRate;
+            if (creditScore >= 750) {
+                maxLoan = 500000; interestRate = 5;
+            } else if (creditScore >= 700) {
+                maxLoan = 250000; interestRate = 8;
+            } else if (creditScore >= 650) {
+                maxLoan = 100000; interestRate = 12;
+            } else if (creditScore >= 550) {
+                maxLoan = 50000; interestRate = 18;
+            } else {
+                maxLoan = 25000; interestRate = 25;
+            }
+            return { maxLoan, interestRate };
+        }
+        
+        function loadLoans() {
+            const creditScore = currentUser.creditScore || 650;
+            const rating = getCreditRating(creditScore);
+            const terms = getLoanTerms(creditScore);
+            
+            document.getElementById('loanCreditScore').textContent = creditScore;
+            document.getElementById('loanCreditRating').textContent = rating.text;
+            document.getElementById('loanCreditRating').style.color = rating.color;
+            document.getElementById('maxLoanAmount').textContent = '$' + formatNumber(terms.maxLoan);
+            document.getElementById('loanInterestRate').textContent = terms.interestRate + '%';
+            
+            // Update loan preview on input
+            const amountInput = document.getElementById('loanAmount');
+            const termSelect = document.getElementById('loanTerm');
+            
+            amountInput.max = terms.maxLoan;
+            amountInput.oninput = updateLoanPreview;
+            termSelect.onchange = updateLoanPreview;
+            
+            loadActiveLoans();
+        }
+        
+        function updateLoanPreview() {
+            const amount = parseFloat(document.getElementById('loanAmount').value) || 0;
+            const termDays = parseInt(document.getElementById('loanTerm').value);
+            const creditScore = currentUser.creditScore || 650;
+            const terms = getLoanTerms(creditScore);
+            
+            if (amount <= 0) {
+                document.getElementById('loanPreview').style.display = 'none';
+                return;
+            }
+            
+            // Interest increases with term length
+            let interestMult = termDays === 7 ? 0.7 : termDays === 14 ? 1.0 : 1.5;
+            const totalInterest = amount * (terms.interestRate / 100) * interestMult;
+            const totalRepay = amount + totalInterest;
+            
+            const dueDate = new Date();
+            dueDate.setDate(dueDate.getDate() + termDays);
+            
+            document.getElementById('loanReceiveAmount').textContent = '$' + formatNumber(amount);
+            document.getElementById('loanRepayAmount').textContent = '$' + formatNumber(totalRepay);
+            document.getElementById('loanDueDate').textContent = dueDate.toLocaleDateString();
+            document.getElementById('loanPreview').style.display = 'block';
+        }
+        
+        async function applyForLoan() {
+            const amount = parseFloat(document.getElementById('loanAmount').value);
+            const termDays = parseInt(document.getElementById('loanTerm').value);
+            const creditScore = currentUser.creditScore || 650;
+            const terms = getLoanTerms(creditScore);
+            
+            if (!amount || amount <= 0) { showToast('Enter a valid amount', 'error'); return; }
+            if (amount > terms.maxLoan) { showToast('Amount exceeds your limit of $' + formatNumber(terms.maxLoan), 'error'); return; }
+            
+            // Check if user already has an active loan
+            if (userLoans.length > 0) { showToast('You already have an active loan. Pay it off first!', 'error'); return; }
+            
+            let interestMult = termDays === 7 ? 0.7 : termDays === 14 ? 1.0 : 1.5;
+            const totalInterest = amount * (terms.interestRate / 100) * interestMult;
+            const totalRepay = amount + totalInterest;
+            
+            const dueDate = new Date();
+            dueDate.setDate(dueDate.getDate() + termDays);
+            
+            // Create loan
+            const loan = {
+                id: 'LOAN' + Date.now(),
+                amount: amount,
+                totalRepay: totalRepay,
+                remaining: totalRepay,
+                dueDate: dueDate.toISOString(),
+                createdAt: new Date().toISOString()
+            };
+            
+            userLoans.push(loan);
+            
+            // Add money to balance
+            currentUser.balance += amount;
+            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+            
+            // Save to backend
+            await apiCall({ action: 'createLoan', email: currentUser.email, amount, totalRepay, dueDate: dueDate.toISOString() });
+            
+            showToast('Loan approved! $' + formatNumber(amount) + ' added to your account.', 'success');
+            document.getElementById('loanAmount').value = '';
+            document.getElementById('loanPreview').style.display = 'none';
+            loadActiveLoans();
+        }
+        
+        function loadActiveLoans() {
+            const container = document.getElementById('activeLoansList');
+            
+            if (userLoans.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>No active loans</p></div>';
+                return;
+            }
+            
+            container.innerHTML = userLoans.map(loan => {
+                const dueDate = new Date(loan.dueDate);
+                const isOverdue = dueDate < new Date();
+                return `
+                    <div class="loan-card ${isOverdue ? 'overdue' : ''}">
+                        <div class="loan-header">
+                            <span class="loan-amount">$${formatNumber(loan.remaining)} remaining</span>
+                            <span class="loan-status ${isOverdue ? 'overdue' : ''}">${isOverdue ? '⚠️ OVERDUE' : '✓ Active'}</span>
+                        </div>
+                        <div class="loan-details">
+                            <div>Original: $${formatNumber(loan.totalRepay)} • Due: ${dueDate.toLocaleDateString()}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        async function repayLoan() {
+            const amount = parseFloat(document.getElementById('repayAmount').value);
+            
+            if (!amount || amount <= 0) { showToast('Enter a valid amount', 'error'); return; }
+            if (userLoans.length === 0) { showToast('No active loans to repay', 'error'); return; }
+            if (amount > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
+            
+            const loan = userLoans[0];
+            const payment = Math.min(amount, loan.remaining);
+            
+            loan.remaining -= payment;
+            currentUser.balance -= payment;
+            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+            
+            // Improve credit score for on-time payment
+            const dueDate = new Date(loan.dueDate);
+            if (new Date() <= dueDate) {
+                currentUser.creditScore = Math.min(850, (currentUser.creditScore || 650) + 5);
+            }
+            
+            await apiCall({ action: 'repayLoan', email: currentUser.email, amount: payment, loanId: loan.id });
+            
+            if (loan.remaining <= 0) {
+                userLoans.shift();
+                currentUser.creditScore = Math.min(850, (currentUser.creditScore || 650) + 20);
+                showToast('🎉 Loan fully paid off! Credit score improved!', 'success');
+            } else {
+                showToast('Payment of $' + formatNumber(payment) + ' applied!', 'success');
+            }
+            
+            document.getElementById('repayAmount').value = '';
+            loadLoans();
+        }
+
         // STOCKS
         const BASE_STOCKS = [
             { symbol: 'DRAG', name: 'Dragon Industries', price: 150, shares: 10000, category: 'fantasy' },
@@ -2719,7 +3656,7 @@
             });
             
             // Show admin panel if stock admin
-            if (STOCK_ADMINS.includes(currentUser.email)) {
+            if (isStockAdmin(currentUser.email)) {
                 document.getElementById('stockAdminPanel').style.display = 'block';
             }
             
@@ -2948,7 +3885,7 @@
         }
         
         async function createNewStock() {
-            if (!STOCK_ADMINS.includes(currentUser.email)) { showToast('Not authorized', 'error'); return; }
+            if (!isStockAdmin(currentUser.email)) { showToast('Not authorized', 'error'); return; }
             
             const symbol = document.getElementById('newStockSymbol').value.toUpperCase().trim();
             const name = document.getElementById('newStockName').value.trim();
@@ -2980,7 +3917,7 @@
         }
         
         async function removeStock() {
-            if (!STOCK_ADMINS.includes(currentUser.email)) { showToast('Not authorized', 'error'); return; }
+            if (!isStockAdmin(currentUser.email)) { showToast('Not authorized', 'error'); return; }
             
             const symbol = document.getElementById('newStockSymbol').value.toUpperCase().trim();
             if (!symbol) { showToast('Enter symbol to remove', 'error'); return; }
