@@ -2016,7 +2016,10 @@
                             </div>
                             <input type="number" id="cheatBet" class="form-input" placeholder="Buy-in amount" min="100" style="margin: 0.75rem 0;">
                             <div id="cheatLobbyControls">
-                                <button class="btn btn-success" onclick="joinCheatGame()" style="width: 100%;">🎭 Join Game ($100+ buy-in)</button>
+                                <button class="btn btn-success" onclick="joinCheatGame()" id="cheatJoinBtn" style="width: 100%;">🎭 Join Game ($100+ buy-in)</button>
+                                <div id="cheatMidwayInfo" style="display: none; margin-top: 0.5rem; padding: 0.5rem; background: rgba(251, 191, 36, 0.1); border-radius: 8px; font-size: 0.75rem; color: var(--gold); text-align: center;">
+                                    🎮 Game in progress! Click to join midway
+                                </div>
                             </div>
                             <div id="cheatGameControls" style="display: none;">
                                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 0.5rem;">
@@ -3225,11 +3228,18 @@
         let cheatCurrentClaim = null;
         let cheatMyTurn = false;
         let cheatBotCount = 0;
+        let cheatLastPlay = null; // Stores the last play info for display when bluff is called
         
         function joinCheatGame() {
             const buyIn = parseFloat(document.getElementById('cheatBet').value);
             if (!buyIn || buyIn < 100) { showToast('Minimum buy-in is $100', 'error'); return; }
             if (buyIn > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
+            
+            // Check if game is already in progress - allow joining midway
+            if (cheatGameActive && cheatPlayers.length > 0) {
+                joinCheatMidway(buyIn);
+                return;
+            }
             
             cheatBuyIn = buyIn;
             currentUser.balance -= buyIn;
@@ -3254,8 +3264,71 @@
             }, 2000);
         }
         
+        function joinCheatMidway(buyIn) {
+            // Join an existing game midway
+            cheatBuyIn += buyIn; // Add to pot
+            currentUser.balance -= buyIn;
+            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+            
+            // Deal new cards from a fresh mini-deck to the new player
+            const miniDeck = [];
+            for (const suit of SUITS) {
+                for (const rank of RANKS) {
+                    miniDeck.push({ suit, rank });
+                }
+            }
+            // Shuffle mini deck
+            for (let i = miniDeck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [miniDeck[i], miniDeck[j]] = [miniDeck[j], miniDeck[i]];
+            }
+            
+            // Give player 5-7 new cards
+            const newCardCount = 5 + Math.floor(Math.random() * 3);
+            for (let i = 0; i < newCardCount && miniDeck.length > 0; i++) {
+                cheatMyCards.push(miniDeck.pop());
+            }
+            
+            // Also add a new bot to balance
+            const botNames = ['🤖 Bot Casey', '🤖 Bot Morgan', '🤖 Bot Taylor', '🤖 Bot Quinn'];
+            const newBotName = botNames[Math.floor(Math.random() * botNames.length)];
+            const newBot = { name: newBotName, isPlayer: false, cards: [] };
+            
+            // Give bot some cards too
+            const botCardCount = 5 + Math.floor(Math.random() * 3);
+            for (let i = 0; i < botCardCount && miniDeck.length > 0; i++) {
+                newBot.cards.push(miniDeck.pop());
+            }
+            
+            function updateCheatLobbyUI() {
+            const joinBtn = document.getElementById('cheatJoinBtn');
+            const midwayInfo = document.getElementById('cheatMidwayInfo');
+            
+            if (cheatGameActive && joinBtn && midwayInfo) {
+                joinBtn.textContent = '🎭 Join Midway ($100+ buy-in)';
+                midwayInfo.style.display = 'block';
+            } else if (joinBtn && midwayInfo) {
+                joinBtn.textContent = '🎭 Join Game ($100+ buy-in)';
+                midwayInfo.style.display = 'none';
+            }
+        }
+            
+            cheatPlayers.push(newBot);
+            cheatBotCount++;
+            
+            showToast(`Joined game! Got ${newCardCount} cards. ${newBotName} also joined!`, 'success');
+            renderCheatCards();
+            
+            document.getElementById('cheatStatus').innerHTML = `
+                <div style="color: var(--success); font-size: 1.1rem; margin-bottom: 0.5rem;">🎴 Joined midway!</div>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">You received ${newCardCount} cards. Pot increased!</div>
+                <div style="color: var(--gold); margin-top: 0.5rem;">${cheatMyTurn ? 'Your turn!' : 'Wait for your turn...'}</div>
+            `;
+        }
+        
         function startCheatGame() {
             cheatGameActive = true;
+            updateCheatLobbyUI();
             cheatPile = [];
             cheatCurrentClaim = null;
             
@@ -3351,22 +3424,50 @@
             
             // Check if last claim was a bluff
             const wasBluff = !cheatCurrentClaim.actualCards.every(c => c.rank === cheatCurrentClaim.rank);
+            const rankNames = { 'A': 'Aces', '2': 'Twos', '3': 'Threes', '4': 'Fours', '5': 'Fives', '6': 'Sixes', '7': 'Sevens', '8': 'Eights', '9': 'Nines', '10': 'Tens', 'J': 'Jacks', 'Q': 'Queens', 'K': 'Kings' };
+            
+            // Reveal what was actually played
+            const actualCardsDisplay = cheatCurrentClaim.actualCards.map(c => {
+                const isRed = ['♥', '♦'].includes(c.suit);
+                return `<span style="color: ${isRed ? '#ef4444' : '#1f2937'}; background: white; padding: 0.25rem 0.5rem; border-radius: 4px; margin: 0.1rem; display: inline-block; font-weight: bold;">${c.rank}${c.suit}</span>`;
+            }).join(' ');
             
             if (wasBluff) {
                 // Bluff caught! Bot takes pile
                 showToast('🎉 Bluff caught! Bot takes the pile!', 'success');
+                document.getElementById('cheatResult').innerHTML = `
+                    <div style="background: rgba(34, 197, 94, 0.2); border: 2px solid var(--success); border-radius: 12px; padding: 1rem; margin-top: 0.5rem;">
+                        <div style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">🎉 BLUFF CAUGHT!</div>
+                        <div style="font-size: 0.85rem; margin-bottom: 0.5rem;">They claimed: <strong>${cheatCurrentClaim.count}x ${rankNames[cheatCurrentClaim.rank] || cheatCurrentClaim.rank}</strong></div>
+                        <div style="font-size: 0.85rem;">Actually played: ${actualCardsDisplay}</div>
+                        <div style="color: var(--success); margin-top: 0.5rem; font-weight: 600;">Bot takes the ${cheatPile.length} card pile!</div>
+                    </div>
+                `;
                 cheatPile = [];
             } else {
                 // Wrong call, player takes pile
+                const pileSize = cheatPile.length;
                 cheatMyCards.push(...cheatPile);
                 cheatPile = [];
                 showToast('😬 They were honest! You take the pile.', 'error');
+                document.getElementById('cheatResult').innerHTML = `
+                    <div style="background: rgba(239, 68, 68, 0.2); border: 2px solid var(--danger); border-radius: 12px; padding: 1rem; margin-top: 0.5rem;">
+                        <div style="color: var(--danger); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">😬 WRONG CALL!</div>
+                        <div style="font-size: 0.85rem; margin-bottom: 0.5rem;">They claimed: <strong>${cheatCurrentClaim.count}x ${rankNames[cheatCurrentClaim.rank] || cheatCurrentClaim.rank}</strong></div>
+                        <div style="font-size: 0.85rem;">Actually played: ${actualCardsDisplay}</div>
+                        <div style="color: var(--danger); margin-top: 0.5rem; font-weight: 600;">They were honest! You take ${pileSize} cards.</div>
+                    </div>
+                `;
             }
             
             cheatCurrentClaim = null;
+            cheatLastPlay = null;
             cheatMyTurn = true;
             renderCheatCards();
-            document.getElementById('cheatStatus').innerHTML = '<div style="color: var(--gold);">🎴 Your turn!</div>';
+            
+            setTimeout(() => {
+                document.getElementById('cheatStatus').innerHTML = '<div style="color: var(--gold);">🎴 Your turn! Select cards and make a claim.</div>';
+            }, 3000);
         }
         
         function botCheatTurn() {
@@ -3384,7 +3485,7 @@
                 cheatCurrentClaim = null;
                 cheatMyTurn = true;
                 renderCheatCards();
-                document.getElementById('cheatStatus').innerHTML = '<div style="color: var(--gold);">🎴 Your turn!</div>';
+                document.getElementById('cheatStatus').innerHTML = '<div style="color: var(--gold);">🎴 Your turn!</div><div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Last claim: None (pile cleared)</div>';
                 return;
             }
             
@@ -3402,10 +3503,33 @@
             cheatPile.push(...playedCards);
             
             const claimRank = RANKS[Math.floor(Math.random() * RANKS.length)];
-            cheatCurrentClaim = { rank: claimRank, count: playCount, actualCards: playedCards };
+            cheatCurrentClaim = { rank: claimRank, count: playCount, actualCards: playedCards, player: bot.name };
+            
+            // Store last play info for display
+            cheatLastPlay = {
+                player: bot.name,
+                count: playCount,
+                claimedRank: claimRank,
+                actualCards: playedCards.map(c => c.rank + c.suit)
+            };
             
             renderCheatCards();
-            document.getElementById('cheatStatus').innerHTML = `<div>🤖 ${bot.name} played ${playCount} card(s), claims ${claimRank}s</div><div style="color: var(--gold); margin-top: 0.5rem;">Call bluff or play your cards!</div>`;
+            
+            // Show detailed claim information with what bot actually put down (hidden until bluff called)
+            const rankNames = { 'A': 'Aces', '2': 'Twos', '3': 'Threes', '4': 'Fours', '5': 'Fives', '6': 'Sixes', '7': 'Sevens', '8': 'Eights', '9': 'Nines', '10': 'Tens', 'J': 'Jacks', 'Q': 'Queens', 'K': 'Kings' };
+            document.getElementById('cheatStatus').innerHTML = `
+                <div style="font-size: 1.1rem; color: var(--gold); margin-bottom: 0.75rem;">🤖 ${bot.name}'s Turn Complete</div>
+                <div style="background: rgba(139, 92, 246, 0.2); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem;">
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Cards played face-down:</div>
+                    <div style="font-size: 1.5rem; margin: 0.5rem 0;">${'🂠 '.repeat(playCount)}</div>
+                    <div style="font-size: 1.1rem; color: var(--gold); font-weight: 700;">Claims: ${playCount}x ${rankNames[claimRank] || claimRank}</div>
+                </div>
+                <div style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem;">
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">📜 Current pile: ${cheatPile.length} cards</div>
+                    <div style="font-size: 0.8rem; color: var(--gold); margin-top: 0.25rem;">Last claim on pile: ${playCount}x ${rankNames[claimRank] || claimRank}</div>
+                </div>
+                <div style="color: var(--success); font-weight: 600;">🎴 Your turn! Play cards or 🚨 Call their bluff!</div>
+            `;
             
             // Check if bot won
             if (bot.cards.length === 0) {
@@ -3641,7 +3765,6 @@
         let userHoldings = {}; // { symbol: shares }
         let chartTimeframe = '1d';
         let stockUpdateInterval = null;
-        
         function initStocks() {
             // Initialize price history for all stocks
             stocks.forEach(s => {
@@ -3655,9 +3778,32 @@
                 }
             });
             
-            // Show admin panel if stock admin
-            if (isStockAdmin(currentUser.email)) {
-                document.getElementById('stockAdminPanel').style.display = 'block';
+            // Show admin panel if stock admin - with detailed logging
+            const adminPanel = document.getElementById('stockAdminPanel');
+            console.log('Stock Admin Check:', {
+                adminPanel: !!adminPanel,
+                currentUser: !!currentUser,
+                email: currentUser?.email,
+                isAdmin: currentUser?.email ? isStockAdmin(currentUser.email) : false
+            });
+            
+            if (adminPanel) {
+                if (currentUser && currentUser.email) {
+                    const emailLower = currentUser.email.toLowerCase().trim();
+                    const isMaster = emailLower === MASTER_ADMIN.toLowerCase();
+                    const isInStockAdmins = STOCK_ADMINS.some(a => a.toLowerCase() === emailLower);
+                    
+                    console.log('Admin check details:', { emailLower, isMaster, isInStockAdmins });
+                    
+                    if (isMaster || isInStockAdmins) {
+                        adminPanel.style.display = 'block';
+                        console.log('Stock admin panel shown');
+                    } else {
+                        adminPanel.style.display = 'none';
+                    }
+                } else {
+                    adminPanel.style.display = 'none';
+                }
             }
             
             // Start price updates every minute
@@ -3885,15 +4031,35 @@
         }
         
         async function createNewStock() {
-            if (!isStockAdmin(currentUser.email)) { showToast('Not authorized', 'error'); return; }
+            console.log('createNewStock called');
+            console.log('Current user:', currentUser);
+            console.log('Is stock admin:', currentUser?.email ? isStockAdmin(currentUser.email) : 'no email');
+            
+            if (!currentUser || !currentUser.email) {
+                showToast('Please log in first', 'error');
+                return;
+            }
+            
+            if (!isStockAdmin(currentUser.email)) {
+                showToast('Not authorized - you need to be a stock admin', 'error');
+                console.log('Authorization failed for:', currentUser.email);
+                return;
+            }
             
             const symbol = document.getElementById('newStockSymbol').value.toUpperCase().trim();
             const name = document.getElementById('newStockName').value.trim();
             const price = parseFloat(document.getElementById('newStockPrice').value);
             const shares = parseInt(document.getElementById('newStockShares').value);
             
-            if (!symbol || !name || !price || !shares) { showToast('Fill all fields', 'error'); return; }
+            console.log('New stock data:', { symbol, name, price, shares });
+            
+            if (!symbol) { showToast('Enter a stock symbol', 'error'); return; }
+            if (!name) { showToast('Enter a company name', 'error'); return; }
+            if (!price || price <= 0) { showToast('Enter a valid price', 'error'); return; }
+            if (!shares || shares <= 0) { showToast('Enter valid shares', 'error'); return; }
             if (stocks.find(s => s.symbol === symbol)) { showToast('Symbol already exists', 'error'); return; }
+            
+            showToast('Creating stock...', 'info');
             
             const newStock = { symbol, name, price, shares, category: 'custom', change: 0 };
             stocks.push(newStock);
@@ -3905,15 +4071,23 @@
                 '6m': generateHistoricalPrices(price, 180)
             };
             
-            await apiCall({ action: 'createStock', adminEmail: currentUser.email, symbol, name, price, shares });
+            const result = await apiCall({ action: 'createStock', adminEmail: currentUser.email, symbol, name, price, shares });
+            console.log('Create stock result:', result);
             
-            showToast(`Created ${symbol}`, 'success');
-            document.getElementById('newStockSymbol').value = '';
-            document.getElementById('newStockName').value = '';
-            document.getElementById('newStockPrice').value = '';
-            document.getElementById('newStockShares').value = '';
-            renderStocks();
-            drawStockChart();
+            if (result.success) {
+                showToast(`✅ Created ${symbol} - ${name}`, 'success');
+                document.getElementById('newStockSymbol').value = '';
+                document.getElementById('newStockName').value = '';
+                document.getElementById('newStockPrice').value = '';
+                document.getElementById('newStockShares').value = '';
+                renderStocks();
+                drawStockChart();
+            } else {
+                // Remove from local if backend failed
+                stocks = stocks.filter(s => s.symbol !== symbol);
+                delete stockHistory[symbol];
+                showToast(result.message || 'Failed to create stock', 'error');
+            }
         }
         
         async function removeStock() {
