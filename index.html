@@ -148,11 +148,7 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+        .logo-container { display: flex; align-items: center; gap: 1rem; }
 
         .logo-icon {
             width: 56px;
@@ -576,7 +572,7 @@
             justify-content: center;
         }
 
-        /* PLINKO - Updated for multiple balls */
+        /* PLINKO */
         .plinko-container {
             position: relative;
             width: 100%;
@@ -683,10 +679,7 @@
             margin-bottom: 0.75rem;
         }
 
-        .chart-timeframe-btns {
-            display: flex;
-            gap: 0.25rem;
-        }
+        .chart-timeframe-btns { display: flex; gap: 0.25rem; }
 
         .timeframe-btn {
             padding: 0.25rem 0.5rem;
@@ -734,28 +727,10 @@
         .stock-card.up { border-color: rgba(34, 197, 94, 0.5); }
         .stock-card.down { border-color: rgba(239, 68, 68, 0.5); }
 
-        .stock-symbol {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--gold);
-        }
-
-        .stock-name {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
-
-        .stock-price {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .stock-change {
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
+        .stock-symbol { font-size: 1.25rem; font-weight: 800; color: var(--gold); }
+        .stock-name { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .stock-price { font-size: 1.5rem; font-weight: 700; }
+        .stock-change { font-size: 0.8rem; font-weight: 600; }
         .stock-change.up { color: #22c55e; }
         .stock-change.down { color: #ef4444; }
 
@@ -766,16 +741,8 @@
             margin-top: 0.75rem;
         }
 
-        .stock-actions input {
-            grid-column: 1 / -1;
-            padding: 0.4rem;
-            font-size: 0.75rem;
-        }
-
-        .stock-actions button {
-            padding: 0.4rem;
-            font-size: 0.7rem;
-        }
+        .stock-actions input { grid-column: 1 / -1; padding: 0.4rem; font-size: 0.75rem; }
+        .stock-actions button { padding: 0.4rem; font-size: 0.7rem; }
 
         .holdings-grid {
             display: grid;
@@ -813,19 +780,8 @@
             text-align: center;
         }
 
-        .loan-label {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
-
-        .loan-value {
-            display: block;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--gold);
-        }
+        .loan-label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .loan-value { display: block; font-size: 1.25rem; font-weight: 700; color: var(--gold); }
 
         .loan-preview {
             background: rgba(37, 99, 235, 0.1);
@@ -835,15 +791,9 @@
             margin-top: 1rem;
         }
 
-        .loan-preview div {
-            margin-bottom: 0.5rem;
-        }
+        .loan-preview div { margin-bottom: 0.5rem; }
 
-        .loans-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
+        .loans-list { display: flex; flex-direction: column; gap: 0.75rem; }
 
         .loan-card {
             background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.05));
@@ -857,17 +807,8 @@
             background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(185, 28, 28, 0.05));
         }
 
-        .loan-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-        }
-
-        .loan-amount {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--gold);
-        }
+        .loan-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+        .loan-amount { font-size: 1.25rem; font-weight: 700; color: var(--gold); }
 
         .loan-status {
             font-size: 0.75rem;
@@ -877,23 +818,11 @@
             color: #22c55e;
         }
 
-        .loan-status.overdue {
-            background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-        }
-
-        .loan-details {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
+        .loan-status.overdue { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .loan-details { font-size: 0.8rem; color: var(--text-secondary); }
 
         /* ROULETTE */
-        .roulette-container {
-            position: relative;
-            width: 240px;
-            height: 240px;
-            margin: 0.5rem auto;
-        }
+        .roulette-container { position: relative; width: 240px; height: 240px; margin: 0.5rem auto; }
 
         .roulette-wheel {
             width: 100%;
@@ -987,12 +916,7 @@
         .roulette-bet-btn.green.selected { background: rgba(22, 163, 74, 0.3); }
 
         /* DICE */
-        .dice-container {
-            perspective: 600px;
-            width: 80px;
-            height: 80px;
-            margin: 1rem auto;
-        }
+        .dice-container { perspective: 600px; width: 80px; height: 80px; margin: 1rem auto; }
 
         .dice {
             width: 100%;
@@ -1076,12 +1000,7 @@
         }
 
         /* COIN */
-        .coin-container {
-            perspective: 400px;
-            width: 90px;
-            height: 90px;
-            margin: 1rem auto;
-        }
+        .coin-container { perspective: 400px; width: 90px; height: 90px; margin: 1rem auto; }
 
         .coin {
             width: 100%;
@@ -1152,37 +1071,7 @@
             position: relative;
         }
 
-        .card-hand {
-            display: flex;
-            justify-content: center;
-            gap: -20px;
-            margin: 0.5rem 0;
-        }
-
-        .playing-card {
-            width: 50px;
-            height: 70px;
-            background: white;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-            margin-left: -15px;
-            transition: transform 0.3s ease;
-        }
-
-        .playing-card:first-child { margin-left: 0; }
-        .playing-card:hover { transform: translateY(-10px); }
-        .playing-card.red { color: #dc2626; }
-        .playing-card.black { color: #1a1a2e; }
-        .playing-card.hidden-card { background: linear-gradient(135deg, #1e40af, #3b82f6); color: transparent; }
-
-        .bj-hand {
-            margin-bottom: 1rem;
-        }
+        .bj-hand { margin-bottom: 1rem; }
 
         .bj-label {
             color: white;
@@ -1219,17 +1108,6 @@
         .bj-card.hidden { 
             background: linear-gradient(135deg, #1e40af, #3b82f6);
             background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(255,255,255,0.1) 5px, rgba(255,255,255,0.1) 10px);
-        }
-
-        .hand-total {
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            display: inline-block;
-            margin-top: 0.5rem;
         }
 
         /* CHEAT GAME */
@@ -1278,69 +1156,7 @@
         .cheat-card.red { color: #dc2626; }
         .cheat-card.black { color: #1f2937; }
 
-        /* WHEEL */
-        .wheel-container { position: relative; width: 220px; height: 220px; margin: 0.5rem auto; }
-
-        .fortune-wheel {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 6px solid var(--gold);
-            position: relative;
-            transition: transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99);
-            box-shadow: 0 0 30px rgba(251, 191, 36, 0.4);
-        }
-
-        .wheel-segment {
-            position: absolute;
-            width: 50%;
-            height: 50%;
-            left: 50%;
-            top: 50%;
-            transform-origin: 0 0;
-            clip-path: polygon(0 0, 100% 0, 100% 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .wheel-pointer-top {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 25px solid var(--gold);
-            z-index: 20;
-            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
-        }
-
-        .win-animation { animation: winPulse 0.5s ease-in-out 3; }
-        .lose-animation { animation: losePulse 0.5s ease-in-out 2; }
-
-        @keyframes winPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        @keyframes losePulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .confetti {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-        }
-
+        /* CHAT */
         .chat-container { display: flex; flex-direction: column; height: 400px; }
 
         .chat-messages {
@@ -1549,6 +1365,16 @@
             background: rgba(15, 23, 42, 0.5);
             border-radius: 10px;
             margin-bottom: 0.5rem;
+        }
+
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
         }
     </style>
 </head>
@@ -1788,7 +1614,6 @@
                         <button class="btn btn-sm" onclick="loadStocks()">🔄 Refresh</button>
                     </div>
                     
-                    <!-- Stock Chart -->
                     <div class="stock-chart-container">
                         <div class="stock-chart-header">
                             <span style="font-weight: 600;">Price History</span>
@@ -1802,7 +1627,6 @@
                         <canvas id="stockChart" width="400" height="200"></canvas>
                     </div>
                     
-                    <!-- Stock Admin Panel -->
                     <div id="stockAdminPanel" class="stock-admin-panel" style="display: none;">
                         <h3 style="color: var(--gold); margin-bottom: 1rem;">🔧 Stock Admin</h3>
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 1rem;">
@@ -1817,12 +1641,10 @@
                         </div>
                     </div>
                     
-                    <!-- Stock List -->
                     <div id="stocksList" class="stocks-grid">
                         <div class="empty-state"><p>Loading stocks...</p></div>
                     </div>
                     
-                    <!-- Your Holdings -->
                     <div class="section-header" style="margin-top: 1.5rem;">
                         <h2>💼 Your Holdings</h2>
                     </div>
@@ -1879,10 +1701,10 @@
                     </div>
 
                     <div class="casino-grid">
-                        <!-- PLINKO - Infinite Balls -->
+                        <!-- PLINKO -->
                         <div class="casino-game">
                             <h3>📍 Plinko</h3>
-                            <p class="game-desc">Drop balls and win up to 5x! Click to drop.</p>
+                            <p class="game-desc">Drop balls and win up to 5x!</p>
                             <div class="plinko-container">
                                 <div class="plinko-board" id="plinkoBoard"></div>
                             </div>
@@ -2010,18 +1832,15 @@
                         </div>
                         
                         <!-- CHEAT (Multiplayer) -->
-                        <!-- CHEAT (Multiplayer) -->
                         <div class="casino-game">
                             <h3>🎭 Cheat</h3>
                             <p class="game-desc">Bluff your way to victory! (2+ players)</p>
                             <div class="cheat-game-area">
-                                <!-- Status Area -->
                                 <div id="cheatStatus" style="text-align: center; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px; margin-bottom: 1rem;">
                                     <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🎴 Waiting for players...</div>
                                     <div id="cheatPlayers" style="color: var(--text-muted);">0 players in lobby</div>
                                 </div>
                                 
-                                <!-- Your Cards Area -->
                                 <div id="cheatCardsContainer" style="display: none;">
                                     <div style="font-size: 0.8rem; color: var(--gold); margin-bottom: 0.5rem; text-align: center;">🃏 Your Cards (click to select):</div>
                                     <div id="cheatCards" class="cheat-cards"></div>
@@ -2030,28 +1849,23 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Pile Info -->
                                 <div id="cheatPileArea" style="text-align: center; margin: 1rem 0; padding: 0.75rem; background: rgba(251, 191, 36, 0.1); border-radius: 8px; display: none;">
                                     <div style="font-size: 0.9rem; color: var(--text-muted);">📚 Pile: <span id="cheatPileCount" style="color: var(--gold); font-weight: 700;">0</span> cards</div>
                                     <div style="font-size: 0.85rem; color: var(--gold); margin-top: 0.25rem;">Last claim: <span id="cheatCurrentClaim" style="font-weight: 700;">-</span></div>
                                 </div>
                                 
-                                <!-- Last Play Info (what bot played) -->
                                 <div id="cheatLastPlayInfo" style="display: none; background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem;">
                                     <div style="font-size: 0.8rem; color: var(--text-muted);">🤖 Last play:</div>
                                     <div id="cheatLastPlayDetails" style="font-size: 0.9rem; color: var(--gold);"></div>
                                 </div>
                             </div>
                             
-                            <!-- Buy-in Input -->
                             <input type="number" id="cheatBet" class="form-input" placeholder="Buy-in amount ($100 min)" min="100" value="100" style="margin: 0.75rem 0;">
                             
-                            <!-- Lobby Controls -->
                             <div id="cheatLobbyControls">
                                 <button class="btn btn-success" onclick="joinCheatGame()" id="cheatJoinBtn" style="width: 100%;">🎭 Join Game ($100+ buy-in)</button>
                             </div>
                             
-                            <!-- Game Controls (hidden until game starts) -->
                             <div id="cheatGameControls" style="display: none;">
                                 <div style="background: rgba(37, 99, 235, 0.1); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem;">
                                     <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Make your claim:</div>
@@ -2080,9 +1894,11 @@
                                 </div>
                             </div>
                             
-                            <!-- Result Area -->
                             <div class="game-result" id="cheatResult"></div>
                         </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- CHAT -->
             <div id="chatContent" class="tab-content hidden">
@@ -2186,7 +2002,6 @@
 
     <div id="packOpeningModal" class="hidden"></div>
     <div id="confetti" class="confetti"></div>
-
     <script>
         const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzJH_jyOreJtTuAS7Aml4aivxkU2yuHfEnxrYXwSBxaqxL8hDhwMYKh4ACV2c4qjvvzKQ/exec';
         const MASTER_ADMIN = 'sheepishlyroyal@gmail.com';
@@ -2206,6 +2021,25 @@
         let crashBet = 0;
         let activePlinkoBalls = 0;
         let plinkoTotalWon = 0;
+        let userHoldings = {};
+        let stocks = [];
+        let stockHistory = {};
+        let chartTimeframe = '1d';
+        let stockUpdateInterval = null;
+        let userLoans = [];
+
+        // CHEAT GAME VARIABLES
+        let cheatPlayers = [];
+        let cheatGameActive = false;
+        let cheatBuyIn = 0;
+        let cheatMyCards = [];
+        let cheatSelectedCards = [];
+        let cheatPile = [];
+        let cheatCurrentClaim = null;
+        let cheatMyTurn = false;
+        let cheatBotCount = 0;
+        let cheatLastPlay = null;
+        let cheatTotalPot = 0;
 
         const THEMED_PACKS = {
             nature: { name: '🌿 Nature', emojis: { common: ['🌱','🌿','🍀','🌾','🌵'], uncommon: ['🍄','🌊','💧','🔥'], rare: ['🌈','🌅','🏔️'], epic: ['🦋','🐝','🐞'], legendary: ['🐉','🦕'], mythic: ['🌍','🪐'], divine: ['🔮','💎'] }},
@@ -2252,6 +2086,29 @@
         const PLINKO_MULTIPLIERS = [5, 2, 1.5, 1, 0.5, 0.2, 0.2, 0.2, 0.5, 1, 1.5, 2, 5];
         const BALL_COLORS = ['ball-red', 'ball-blue', 'ball-green', 'ball-purple', 'ball-orange'];
 
+        const BASE_STOCKS = [
+            { symbol: 'DRAG', name: 'Dragon Industries', price: 150, shares: 10000, category: 'fantasy' },
+            { symbol: 'PHXR', name: 'Phoenix Rising Corp', price: 85, shares: 15000, category: 'fantasy' },
+            { symbol: 'GRFN', name: 'Griffin Airways', price: 220, shares: 8000, category: 'fantasy' },
+            { symbol: 'MAGE', name: 'Mage Technologies', price: 175, shares: 12000, category: 'fantasy' },
+            { symbol: 'ELFS', name: 'Elven Forests Inc', price: 95, shares: 20000, category: 'fantasy' },
+            { symbol: 'DWRF', name: 'Dwarven Mining Co', price: 310, shares: 5000, category: 'fantasy' },
+            { symbol: 'UNCRN', name: 'Unicorn Ventures', price: 420, shares: 3000, category: 'fantasy' },
+            { symbol: 'WIZD', name: 'Wizard Labs', price: 195, shares: 10000, category: 'fantasy' },
+            { symbol: 'NXAI', name: 'NexGen AI', price: 380, shares: 7500, category: 'tech' },
+            { symbol: 'QNTM', name: 'Quantum Computing Inc', price: 520, shares: 4000, category: 'tech' },
+            { symbol: 'CYBR', name: 'CyberShield Security', price: 145, shares: 18000, category: 'tech' },
+            { symbol: 'ROBO', name: 'RoboTech Industries', price: 265, shares: 9000, category: 'tech' },
+            { symbol: 'NURO', name: 'NeuroLink Systems', price: 340, shares: 6000, category: 'tech' },
+            { symbol: 'SOLR', name: 'Solar Dynamics', price: 125, shares: 22000, category: 'tech' },
+            { symbol: 'SPCE', name: 'SpaceX Ventures', price: 890, shares: 2000, category: 'tech' },
+            { symbol: 'BLKC', name: 'BlockChain Corp', price: 205, shares: 11000, category: 'tech' }
+        ];
+
+        // =============================================
+        // INITIALIZATION
+        // =============================================
+
         document.addEventListener('DOMContentLoaded', () => {
             createParticles();
             const saved = localStorage.getItem('lintoriaUser');
@@ -2272,6 +2129,10 @@
                 bg.appendChild(particle);
             }
         }
+
+        // =============================================
+        // UTILITY FUNCTIONS
+        // =============================================
 
         function showToast(message, type = 'info') {
             const toast = document.getElementById('toast');
@@ -2301,6 +2162,12 @@
             catch { return dateStr; }
         }
 
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text || '';
+            return div.innerHTML;
+        }
+
         async function apiCall(params) {
             try {
                 const url = SHEETS_URL + '?' + new URLSearchParams(params).toString();
@@ -2315,6 +2182,10 @@
                 return { success: false, error: 'Network error' };
             }
         }
+
+        // =============================================
+        // AUTHENTICATION
+        // =============================================
 
         function switchAuthTab(tab) {
             document.querySelectorAll('#authScreen .tab-btn').forEach(b => b.classList.remove('active'));
@@ -2348,7 +2219,6 @@
             if (password.length < 4) { showToast('Password must be at least 4 characters', 'error'); return; }
             showToast('Creating account...', 'info');
             const data = await apiCall({ action: 'register', email, name, password });
-            console.log('Register response:', data);
             if (data.success || data.registered || data.user) {
                 currentUser = data.user || { email, name, balance: 100000 };
                 currentUser.email = email;
@@ -2373,12 +2243,12 @@
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('appScreen').classList.remove('hidden');
             document.getElementById('userName').textContent = currentUser.name || currentUser.email;
-            // Case-insensitive admin check
+            
             if (currentUser.email && currentUser.email.toLowerCase().trim() === MASTER_ADMIN.toLowerCase()) {
                 document.getElementById('adminTab').style.display = 'flex';
             }
             
-            // Pre-load holdings in background
+            // Pre-load holdings
             apiCall({ action: 'getPortfolio', email: currentUser.email }).then(data => {
                 const holdings = data.holdings || data.stocks || data.portfolio || [];
                 userHoldings = {};
@@ -2394,6 +2264,7 @@
             
             loadDashboard();
         }
+
         function switchTab(tab) {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -2411,6 +2282,10 @@
                 case 'admin': loadAdmin(); break;
             }
         }
+
+        // =============================================
+        // DASHBOARD
+        // =============================================
 
         async function loadDashboard() {
             const data = await apiCall({ action: 'getDashboard', email: currentUser.email });
@@ -2471,6 +2346,10 @@
             }
         }
 
+        // =============================================
+        // LEADERBOARD
+        // =============================================
+
         async function loadLeaderboards() {
             const data = await apiCall({ action: 'getLeaderboard' });
             let users = data.users || data.leaderboard || [];
@@ -2496,6 +2375,10 @@
                 </div>`;
             }).join('');
         }
+
+        // =============================================
+        // EMOJI PACKS
+        // =============================================
 
         function loadPacks() {
             const container = document.getElementById('packsList');
@@ -2533,7 +2416,6 @@
             }
             html += `<button class="btn" onclick="closePackContentsModal()" style="width: 100%; margin-top: 1rem;">Close</button>`;
             
-            // Create modal
             const modal = document.createElement('div');
             modal.id = 'packContentsModal';
             modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
@@ -2641,7 +2523,533 @@
             }
         }
 
-        // CASINO
+        // =============================================
+        // LOANS
+        // =============================================
+
+        function getLoanTerms(creditScore) {
+            let maxLoan, interestRate;
+            if (creditScore >= 750) { maxLoan = 500000; interestRate = 5; }
+            else if (creditScore >= 700) { maxLoan = 250000; interestRate = 8; }
+            else if (creditScore >= 650) { maxLoan = 100000; interestRate = 12; }
+            else if (creditScore >= 550) { maxLoan = 50000; interestRate = 18; }
+            else { maxLoan = 25000; interestRate = 25; }
+            return { maxLoan, interestRate };
+        }
+        
+        function loadLoans() {
+            const creditScore = currentUser.creditScore || 650;
+            const rating = getCreditRating(creditScore);
+            const terms = getLoanTerms(creditScore);
+            
+            document.getElementById('loanCreditScore').textContent = creditScore;
+            document.getElementById('loanCreditRating').textContent = rating.text;
+            document.getElementById('loanCreditRating').style.color = rating.color;
+            document.getElementById('maxLoanAmount').textContent = '$' + formatNumber(terms.maxLoan);
+            document.getElementById('loanInterestRate').textContent = terms.interestRate + '%';
+            
+            const amountInput = document.getElementById('loanAmount');
+            const termSelect = document.getElementById('loanTerm');
+            
+            amountInput.max = terms.maxLoan;
+            amountInput.oninput = updateLoanPreview;
+            termSelect.onchange = updateLoanPreview;
+            
+            loadActiveLoans();
+        }
+        
+        function updateLoanPreview() {
+            const amount = parseFloat(document.getElementById('loanAmount').value) || 0;
+            const termDays = parseInt(document.getElementById('loanTerm').value);
+            const creditScore = currentUser.creditScore || 650;
+            const terms = getLoanTerms(creditScore);
+            
+            if (amount <= 0) {
+                document.getElementById('loanPreview').style.display = 'none';
+                return;
+            }
+            
+            let interestMult = termDays === 7 ? 0.7 : termDays === 14 ? 1.0 : 1.5;
+            const totalInterest = amount * (terms.interestRate / 100) * interestMult;
+            const totalRepay = amount + totalInterest;
+            
+            const dueDate = new Date();
+            dueDate.setDate(dueDate.getDate() + termDays);
+            
+            document.getElementById('loanReceiveAmount').textContent = '$' + formatNumber(amount);
+            document.getElementById('loanRepayAmount').textContent = '$' + formatNumber(totalRepay);
+            document.getElementById('loanDueDate').textContent = dueDate.toLocaleDateString();
+            document.getElementById('loanPreview').style.display = 'block';
+        }
+        
+        async function applyForLoan() {
+            const amount = parseFloat(document.getElementById('loanAmount').value);
+            const termDays = parseInt(document.getElementById('loanTerm').value);
+            const creditScore = currentUser.creditScore || 650;
+            const terms = getLoanTerms(creditScore);
+            
+            if (!amount || amount <= 0) { showToast('Enter a valid amount', 'error'); return; }
+            if (amount > terms.maxLoan) { showToast('Amount exceeds your limit of $' + formatNumber(terms.maxLoan), 'error'); return; }
+            if (userLoans.length > 0) { showToast('You already have an active loan. Pay it off first!', 'error'); return; }
+            
+            let interestMult = termDays === 7 ? 0.7 : termDays === 14 ? 1.0 : 1.5;
+            const totalInterest = amount * (terms.interestRate / 100) * interestMult;
+            const totalRepay = amount + totalInterest;
+            
+            const dueDate = new Date();
+            dueDate.setDate(dueDate.getDate() + termDays);
+            
+            const loan = {
+                id: 'LOAN' + Date.now(),
+                amount: amount,
+                totalRepay: totalRepay,
+                remaining: totalRepay,
+                dueDate: dueDate.toISOString(),
+                createdAt: new Date().toISOString()
+            };
+            
+            userLoans.push(loan);
+            currentUser.balance += amount;
+            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+            
+            await apiCall({ action: 'createLoan', email: currentUser.email, amount, totalRepay, dueDate: dueDate.toISOString() });
+            
+            showToast('Loan approved! $' + formatNumber(amount) + ' added to your account.', 'success');
+            document.getElementById('loanAmount').value = '';
+            document.getElementById('loanPreview').style.display = 'none';
+            loadActiveLoans();
+        }
+        
+        function loadActiveLoans() {
+            const container = document.getElementById('activeLoansList');
+            
+            if (userLoans.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>No active loans</p></div>';
+                return;
+            }
+            
+            container.innerHTML = userLoans.map(loan => {
+                const dueDate = new Date(loan.dueDate);
+                const isOverdue = dueDate < new Date();
+                return `
+                    <div class="loan-card ${isOverdue ? 'overdue' : ''}">
+                        <div class="loan-header">
+                            <span class="loan-amount">$${formatNumber(loan.remaining)} remaining</span>
+                            <span class="loan-status ${isOverdue ? 'overdue' : ''}">${isOverdue ? '⚠️ OVERDUE' : '✓ Active'}</span>
+                        </div>
+                        <div class="loan-details">
+                            <div>Original: $${formatNumber(loan.totalRepay)} • Due: ${dueDate.toLocaleDateString()}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        async function repayLoan() {
+            const amount = parseFloat(document.getElementById('repayAmount').value);
+            
+            if (!amount || amount <= 0) { showToast('Enter a valid amount', 'error'); return; }
+            if (userLoans.length === 0) { showToast('No active loans to repay', 'error'); return; }
+            if (amount > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
+            
+            const loan = userLoans[0];
+            const payment = Math.min(amount, loan.remaining);
+            
+            loan.remaining -= payment;
+            currentUser.balance -= payment;
+            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+            
+            const dueDate = new Date(loan.dueDate);
+            if (new Date() <= dueDate) {
+                currentUser.creditScore = Math.min(850, (currentUser.creditScore || 650) + 5);
+            }
+            
+            await apiCall({ action: 'repayLoan', email: currentUser.email, amount: payment, loanId: loan.id });
+            
+            if (loan.remaining <= 0) {
+                userLoans.shift();
+                currentUser.creditScore = Math.min(850, (currentUser.creditScore || 650) + 20);
+                showToast('🎉 Loan fully paid off! Credit score improved!', 'success');
+            } else {
+                showToast('Payment of $' + formatNumber(payment) + ' applied!', 'success');
+            }
+            
+            document.getElementById('repayAmount').value = '';
+            loadLoans();
+        }
+        // =============================================
+        // STOCKS
+        // =============================================
+
+        function initStocks() {
+            if (stocks.length === 0) {
+                stocks = [...BASE_STOCKS];
+            }
+            
+            stocks.forEach(s => {
+                if (!stockHistory[s.symbol]) {
+                    stockHistory[s.symbol] = {
+                        '1d': generateHistoricalPrices(s.price, 24),
+                        '2w': generateHistoricalPrices(s.price, 14),
+                        '1m': generateHistoricalPrices(s.price, 30),
+                        '6m': generateHistoricalPrices(s.price, 180)
+                    };
+                }
+            });
+            
+            const adminPanel = document.getElementById('stockAdminPanel');
+            if (adminPanel && currentUser && currentUser.email) {
+                if (isStockAdmin(currentUser.email)) {
+                    adminPanel.style.display = 'block';
+                } else {
+                    adminPanel.style.display = 'none';
+                }
+            }
+            
+            if (stockUpdateInterval) clearInterval(stockUpdateInterval);
+            stockUpdateInterval = setInterval(updateStockPrices, 60000);
+        }
+        
+        function generateHistoricalPrices(currentPrice, points) {
+            const prices = [];
+            let price = currentPrice * (0.7 + Math.random() * 0.4);
+            for (let i = 0; i < points; i++) {
+                prices.push(price);
+                const drift = (currentPrice - price) * 0.02;
+                const volatility = price * 0.03 * (Math.random() - 0.5);
+                price = Math.max(1, price + drift + volatility);
+            }
+            prices.push(currentPrice);
+            return prices;
+        }
+        
+        function updateStockPrices() {
+            stocks.forEach(stock => {
+                const oldPrice = stock.price;
+                const trend = (Math.random() - 0.48) * 0.04;
+                const volatility = stock.price * trend;
+                const meanReversion = (stock.price > 1000 ? -0.01 : stock.price < 10 ? 0.01 : 0) * stock.price;
+                
+                stock.price = Math.max(1, stock.price + volatility + meanReversion);
+                stock.price = Math.round(stock.price * 100) / 100;
+                stock.change = ((stock.price - oldPrice) / oldPrice * 100).toFixed(2);
+                
+                if (stockHistory[stock.symbol]) {
+                    Object.keys(stockHistory[stock.symbol]).forEach(tf => {
+                        stockHistory[stock.symbol][tf].push(stock.price);
+                        const maxLen = tf === '1d' ? 24 : tf === '2w' ? 14 : tf === '1m' ? 30 : 180;
+                        if (stockHistory[stock.symbol][tf].length > maxLen + 10) {
+                            stockHistory[stock.symbol][tf].shift();
+                        }
+                    });
+                }
+            });
+            
+            renderStocks();
+            drawStockChart();
+        }
+        
+        async function loadStocks() {
+            initStocks();
+            renderStocks();
+            await loadHoldingsFromBackend();
+            drawStockChart();
+        }
+        
+        function renderStocks() {
+            const container = document.getElementById('stocksList');
+            if (stocks.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>No stocks available</p></div>';
+                return;
+            }
+            
+            container.innerHTML = stocks.map(s => {
+                const change = s.change || 0;
+                const isUp = change >= 0;
+                return `
+                    <div class="stock-card ${isUp ? 'up' : 'down'}">
+                        <div class="stock-symbol">${s.symbol}</div>
+                        <div class="stock-name">${s.name}</div>
+                        <div class="stock-price">$${formatNumber(s.price)}</div>
+                        <div class="stock-change ${isUp ? 'up' : 'down'}">${isUp ? '▲' : '▼'} ${Math.abs(change)}%</div>
+                        <div class="stock-actions">
+                            <input type="number" id="qty_${s.symbol}" class="form-input" placeholder="Qty" min="1">
+                            <button class="btn btn-success btn-sm" onclick="buyStock('${s.symbol}')">Buy</button>
+                            <button class="btn btn-danger btn-sm" onclick="sellStock('${s.symbol}')">Sell</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        async function loadHoldingsFromBackend() {
+            const container = document.getElementById('holdingsList');
+            container.innerHTML = '<div class="empty-state"><p>Loading holdings...</p></div>';
+            
+            try {
+                const data = await apiCall({ action: 'getPortfolio', email: currentUser.email });
+                const holdings = data.holdings || data.stocks || data.portfolio || [];
+                
+                userHoldings = {};
+                holdings.forEach(h => {
+                    if (h.symbol && (h.shares || h.quantity)) {
+                        userHoldings[h.symbol] = parseInt(h.shares) || parseInt(h.quantity) || 0;
+                    }
+                });
+                
+                renderHoldingsDisplay(holdings);
+            } catch (error) {
+                console.error('Error loading holdings:', error);
+                container.innerHTML = '<div class="empty-state"><p>Error loading holdings</p></div>';
+            }
+        }
+        
+        function renderHoldingsDisplay(holdings) {
+            const container = document.getElementById('holdingsList');
+            const validHoldings = holdings.filter(h => (h.shares || h.quantity || 0) > 0);
+            
+            if (validHoldings.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>No stocks owned</p></div>';
+                return;
+            }
+            
+            container.innerHTML = validHoldings.map(h => {
+                const symbol = h.symbol;
+                const qty = parseInt(h.shares) || parseInt(h.quantity) || 0;
+                const avgPrice = parseFloat(h.avgPrice) || parseFloat(h.price) || 0;
+                const stock = stocks.find(s => s.symbol === symbol);
+                const currentPrice = stock ? stock.price : avgPrice;
+                const value = currentPrice * qty;
+                const profit = (currentPrice - avgPrice) * qty;
+                const profitPercent = avgPrice > 0 ? ((currentPrice - avgPrice) / avgPrice * 100) : 0;
+                const isProfit = profit >= 0;
+                
+                return `
+                    <div class="holding-card">
+                        <div class="stock-symbol">${symbol}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">${qty} shares @ $${formatNumber(avgPrice)}</div>
+                        <div style="font-size: 1.1rem; font-weight: 600; color: var(--gold);">$${formatNumber(value)}</div>
+                        <div style="font-size: 0.7rem; color: ${isProfit ? 'var(--success)' : 'var(--danger)'};">
+                            ${isProfit ? '▲' : '▼'} $${formatNumber(Math.abs(profit))} (${profitPercent.toFixed(1)}%)
+                        </div>
+                        <button class="btn btn-sm btn-danger" onclick="quickSellStock('${symbol}', ${qty})" style="margin-top: 0.5rem; font-size: 0.65rem;">Sell All</button>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        async function quickSellStock(symbol, qty) {
+            if (!confirm(`Sell all ${qty} shares of ${symbol}?`)) return;
+            const stock = stocks.find(s => s.symbol === symbol);
+            if (!stock) { showToast('Stock not found', 'error'); return; }
+            
+            showToast(`Selling ${qty} ${symbol}...`, 'info');
+            const result = await apiCall({ action: 'sellStock', email: currentUser.email, symbol, shares: qty, price: stock.price });
+            
+            if (result.success || result.newBalance !== undefined) {
+                const revenue = stock.price * qty;
+                currentUser.balance = result.newBalance !== undefined ? result.newBalance : (currentUser.balance + revenue);
+                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+                delete userHoldings[symbol];
+                showToast(`Sold ${qty} ${symbol} for $${formatNumber(revenue)}`, 'success');
+                await loadHoldingsFromBackend();
+            } else {
+                showToast(result.message || result.error || 'Sale failed', 'error');
+            }
+        }
+        
+        async function buyStock(symbol) {
+            const qtyInput = document.getElementById(`qty_${symbol}`);
+            const qty = parseInt(qtyInput?.value);
+            if (!qty || qty <= 0) { showToast('Enter a valid quantity', 'error'); return; }
+            
+            const stock = stocks.find(s => s.symbol === symbol);
+            if (!stock) { showToast('Stock not found', 'error'); return; }
+            
+            const cost = stock.price * qty;
+            if (cost > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
+            
+            showToast(`Buying ${qty} ${symbol}...`, 'info');
+            const result = await apiCall({ action: 'buyStock', email: currentUser.email, symbol, shares: qty, price: stock.price });
+            
+            if (result.success || result.newBalance !== undefined) {
+                currentUser.balance = result.newBalance !== undefined ? result.newBalance : (currentUser.balance - cost);
+                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+                userHoldings[symbol] = (userHoldings[symbol] || 0) + qty;
+                showToast(`Bought ${qty} ${symbol} for $${formatNumber(cost)}`, 'success');
+                await loadHoldingsFromBackend();
+                if (qtyInput) qtyInput.value = '';
+            } else {
+                showToast(result.message || result.error || 'Purchase failed', 'error');
+            }
+        }
+        
+        async function sellStock(symbol) {
+            const qtyInput = document.getElementById(`qty_${symbol}`);
+            const qty = parseInt(qtyInput?.value);
+            if (!qty || qty <= 0) { showToast('Enter a valid quantity', 'error'); return; }
+            
+            const owned = userHoldings[symbol] || 0;
+            if (qty > owned && owned > 0) { showToast(`You only own ${owned} shares`, 'error'); return; }
+            
+            const stock = stocks.find(s => s.symbol === symbol);
+            if (!stock) { showToast('Stock not found', 'error'); return; }
+            
+            const revenue = stock.price * qty;
+            showToast(`Selling ${qty} ${symbol}...`, 'info');
+            
+            const result = await apiCall({ action: 'sellStock', email: currentUser.email, symbol, shares: qty, price: stock.price });
+            
+            if (result.success || result.newBalance !== undefined) {
+                currentUser.balance = result.newBalance !== undefined ? result.newBalance : (currentUser.balance + revenue);
+                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+                userHoldings[symbol] = Math.max(0, (userHoldings[symbol] || 0) - qty);
+                if (userHoldings[symbol] === 0) delete userHoldings[symbol];
+                showToast(`Sold ${qty} ${symbol} for $${formatNumber(revenue)}`, 'success');
+                await loadHoldingsFromBackend();
+                if (qtyInput) qtyInput.value = '';
+            } else {
+                showToast(result.message || result.error || 'Sale failed', 'error');
+            }
+        }
+        
+        function setChartTimeframe(tf) {
+            chartTimeframe = tf;
+            document.querySelectorAll('.timeframe-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            drawStockChart();
+        }
+        
+        function drawStockChart() {
+            const canvas = document.getElementById('stockChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.offsetWidth || 400;
+            const h = canvas.height = 200;
+            
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.fillRect(0, 0, w, h);
+            
+            const colors = ['#fbbf24', '#3b82f6', '#22c55e', '#ef4444', '#a855f7', '#06b6d4', '#f97316', '#ec4899'];
+            let allPrices = [];
+            
+            stocks.slice(0, 8).forEach(stock => {
+                const history = stockHistory[stock.symbol]?.[chartTimeframe] || [];
+                allPrices = allPrices.concat(history);
+            });
+            
+            if (allPrices.length === 0) return;
+            
+            const minPrice = Math.min(...allPrices) * 0.95;
+            const maxPrice = Math.max(...allPrices) * 1.05;
+            const priceRange = maxPrice - minPrice || 1;
+            
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = (h / 4) * i;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+                ctx.stroke();
+            }
+            
+            stocks.slice(0, 8).forEach((stock, idx) => {
+                const history = stockHistory[stock.symbol]?.[chartTimeframe] || [];
+                if (history.length < 2) return;
+                
+                ctx.strokeStyle = colors[idx % colors.length];
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                
+                history.forEach((price, i) => {
+                    const x = (i / (history.length - 1)) * w;
+                    const y = h - ((price - minPrice) / priceRange) * h;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                });
+                
+                ctx.stroke();
+            });
+            
+            ctx.font = '10px Inter, sans-serif';
+            stocks.slice(0, 8).forEach((stock, idx) => {
+                ctx.fillStyle = colors[idx % colors.length];
+                const x = 10 + (idx % 4) * 95;
+                const y = 15 + Math.floor(idx / 4) * 15;
+                ctx.fillText(stock.symbol, x, y);
+            });
+        }
+        
+        async function createNewStock() {
+            if (!currentUser || !currentUser.email) { showToast('Please log in first', 'error'); return; }
+            if (!isStockAdmin(currentUser.email)) { showToast('Not authorized', 'error'); return; }
+            
+            const symbol = document.getElementById('newStockSymbol').value.toUpperCase().trim();
+            const name = document.getElementById('newStockName').value.trim();
+            const price = parseFloat(document.getElementById('newStockPrice').value);
+            const shares = parseInt(document.getElementById('newStockShares').value);
+            
+            if (!symbol) { showToast('Enter a stock symbol', 'error'); return; }
+            if (!name) { showToast('Enter a company name', 'error'); return; }
+            if (!price || price <= 0) { showToast('Enter a valid price', 'error'); return; }
+            if (!shares || shares <= 0) { showToast('Enter valid shares', 'error'); return; }
+            if (stocks.find(s => s.symbol === symbol)) { showToast('Symbol already exists', 'error'); return; }
+            
+            showToast('Creating stock...', 'info');
+            
+            const newStock = { symbol, name, price, shares, category: 'custom', change: 0 };
+            stocks.push(newStock);
+            
+            stockHistory[symbol] = {
+                '1d': generateHistoricalPrices(price, 24),
+                '2w': generateHistoricalPrices(price, 14),
+                '1m': generateHistoricalPrices(price, 30),
+                '6m': generateHistoricalPrices(price, 180)
+            };
+            
+            const result = await apiCall({ action: 'createStock', adminEmail: currentUser.email, symbol, name, price, shares });
+            
+            if (result.success) {
+                showToast(`✅ Created ${symbol} - ${name}`, 'success');
+                document.getElementById('newStockSymbol').value = '';
+                document.getElementById('newStockName').value = '';
+                document.getElementById('newStockPrice').value = '';
+                document.getElementById('newStockShares').value = '';
+                renderStocks();
+                drawStockChart();
+            } else {
+                stocks = stocks.filter(s => s.symbol !== symbol);
+                delete stockHistory[symbol];
+                showToast(result.message || 'Failed to create stock', 'error');
+            }
+        }
+        
+        async function removeStock() {
+            if (!isStockAdmin(currentUser.email)) { showToast('Not authorized', 'error'); return; }
+            
+            const symbol = document.getElementById('newStockSymbol').value.toUpperCase().trim();
+            if (!symbol) { showToast('Enter symbol to remove', 'error'); return; }
+            
+            const idx = stocks.findIndex(s => s.symbol === symbol);
+            if (idx === -1) { showToast('Stock not found', 'error'); return; }
+            
+            stocks.splice(idx, 1);
+            delete stockHistory[symbol];
+            
+            await apiCall({ action: 'removeStock', adminEmail: currentUser.email, symbol });
+            
+            showToast(`Removed ${symbol}`, 'success');
+            document.getElementById('newStockSymbol').value = '';
+            renderStocks();
+            drawStockChart();
+        }
+
+        // =============================================
+        // CASINO - INITIALIZATION
+        // =============================================
+
         function initCasino() {
             initPlinko();
             initRoulette();
@@ -2650,7 +3058,10 @@
             updatePlinkoStats();
         }
 
-        // PLINKO - MULTI-BALL VERSION
+        // =============================================
+        // PLINKO
+        // =============================================
+
         let plinkoPegs = [];
 
         function initPlinko() {
@@ -2703,7 +3114,6 @@
             if (!bet || bet <= 0) { showToast('Enter a valid bet', 'error'); return; }
             if (bet > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
             
-            // Deduct bet immediately
             currentUser.balance -= bet;
             document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
             
@@ -2713,32 +3123,6 @@
             activePlinkoBalls++;
             updatePlinkoStats();
             launchPlinkoBall(board, w, bet);
-        }
-
-        async function playPlinko(count = 1) {
-            const bet = parseFloat(document.getElementById('plinkoBet').value);
-            if (!bet || bet <= 0) { showToast('Enter a valid bet', 'error'); return; }
-            
-            const totalBet = bet * count;
-            if (totalBet > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
-            
-            // Deduct bet immediately
-            currentUser.balance -= totalBet;
-            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-            
-            document.getElementById('plinkoResult').innerHTML = '';
-            
-            const board = document.getElementById('plinkoBoard');
-            const w = board.offsetWidth || 400;
-            
-            // Launch balls with slight delays
-            for (let i = 0; i < count; i++) {
-                setTimeout(() => {
-                    activePlinkoBalls++;
-                    updatePlinkoStats();
-                    launchPlinkoBall(board, w, bet);
-                }, i * 200);
-            }
         }
 
         function launchPlinkoBall(board, w, bet) {
@@ -2755,7 +3139,6 @@
             let animating = true;
             let animationId = null;
             
-            // Auto-despawn after 20 seconds
             const despawnTimeout = setTimeout(() => {
                 if (animating) {
                     animating = false;
@@ -2823,7 +3206,6 @@
             const profit = winnings - bet;
             const win = profit >= 0;
             
-            // Immediately remove ball
             ball.remove();
             activePlinkoBalls--;
             updatePlinkoStats();
@@ -2834,22 +3216,23 @@
                 setTimeout(() => slots[slotIndex].classList.remove('active'), 500);
             }
             
-            // Add winnings back
             currentUser.balance += winnings;
             document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
             plinkoTotalWon += profit;
+            updatePlinkoStats();
             
-            // Record to backend - FIXED: Record profit as win, bet as loss
             await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'plinko', wagered: bet, won: win ? profit : 0, lost: win ? 0 : Math.abs(profit), result: win ? 'win' : 'loss' });
             
-            // Show result
             const resultDiv = document.getElementById('plinkoResult');
             const color = win ? 'var(--success)' : 'var(--danger)';
             const sign = profit >= 0 ? '+' : '';
             resultDiv.innerHTML = `<span style="color: ${color};">${mult}x: ${sign}$${formatNumber(profit)}</span>`;
         }
 
+        // =============================================
         // ROULETTE
+        // =============================================
+
         function initRoulette() {
             const wheel = document.getElementById('rouletteWheel');
             if (!wheel) return;
@@ -2918,7 +3301,10 @@
             }, 5000);
         }
 
+        // =============================================
         // SLOTS
+        // =============================================
+
         async function playSlots() {
             const bet = parseFloat(document.getElementById('slotsBet').value);
             if (!bet || bet <= 0) { showToast('Enter a valid bet', 'error'); return; }
@@ -2964,7 +3350,10 @@
             }, 1500);
         }
 
+        // =============================================
         // COIN FLIP
+        // =============================================
+
         async function playCoinFlip(choice) {
             const bet = parseFloat(document.getElementById('coinBet').value);
             if (!bet || bet <= 0) { showToast('Enter a valid bet', 'error'); return; }
@@ -2999,7 +3388,10 @@
             }, 1500);
         }
 
+        // =============================================
         // DICE
+        // =============================================
+
         async function playDice() {
             const bet = parseFloat(document.getElementById('diceBet').value);
             if (!bet || bet <= 0) { showToast('Enter a valid bet', 'error'); return; }
@@ -3033,7 +3425,10 @@
             }, 1000);
         }
 
+        // =============================================
         // CRASH
+        // =============================================
+
         let crashActive = false;
         
         async function startCrash() {
@@ -3054,20 +3449,13 @@
             document.getElementById('crashMultiplier').classList.remove('crashed');
             
             crashMultiplier = 1.0;
-            // Higher chance to crash at 1x-2x: 60% crash under 2x, 85% under 3x
             const rand = Math.random();
             let crashPoint;
-            if (rand < 0.35) {
-                crashPoint = 1 + Math.random() * 0.5; // 35% chance: 1.0x - 1.5x
-            } else if (rand < 0.60) {
-                crashPoint = 1.5 + Math.random() * 0.5; // 25% chance: 1.5x - 2.0x
-            } else if (rand < 0.80) {
-                crashPoint = 2 + Math.random() * 1.5; // 20% chance: 2.0x - 3.5x
-            } else if (rand < 0.92) {
-                crashPoint = 3.5 + Math.random() * 3; // 12% chance: 3.5x - 6.5x
-            } else {
-                crashPoint = 6.5 + Math.random() * 8; // 8% chance: 6.5x - 14.5x
-            }
+            if (rand < 0.35) { crashPoint = 1 + Math.random() * 0.5; }
+            else if (rand < 0.60) { crashPoint = 1.5 + Math.random() * 0.5; }
+            else if (rand < 0.80) { crashPoint = 2 + Math.random() * 1.5; }
+            else if (rand < 0.92) { crashPoint = 3.5 + Math.random() * 3; }
+            else { crashPoint = 6.5 + Math.random() * 8; }
             
             crashInterval = setInterval(() => {
                 crashMultiplier += 0.02 + Math.random() * 0.03;
@@ -3111,7 +3499,10 @@
             crashActive = false;
         }
 
+        // =============================================
         // BLACKJACK
+        // =============================================
+
         const SUITS = ['♠', '♣', '♥', '♦'];
         const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
         let bjDeck = [], bjPlayerHand = [], bjDealerHand = [], bjBet = 0, bjGameActive = false;
@@ -3123,7 +3514,6 @@
                     deck.push({ suit, rank, value: rank === 'A' ? 11 : ['J', 'Q', 'K'].includes(rank) ? 10 : parseInt(rank) });
                 }
             }
-            // Shuffle
             for (let i = deck.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [deck[i], deck[j]] = [deck[j], deck[i]];
@@ -3141,15 +3531,15 @@
             return value;
         }
         
-        function renderCard(card, hidden = false) {
+        function renderBJCard(card, hidden = false) {
             if (hidden) return '<div class="bj-card hidden"></div>';
             const isRed = ['♥', '♦'].includes(card.suit);
             return `<div class="bj-card ${isRed ? 'red' : 'black'}"><div>${card.rank}</div><div>${card.suit}</div></div>`;
         }
         
-        function renderHands(hideDealer = true) {
-            const dealerCards = bjDealerHand.map((c, i) => renderCard(c, hideDealer && i === 0)).join('');
-            const playerCards = bjPlayerHand.map(c => renderCard(c)).join('');
+        function renderBJHands(hideDealer = true) {
+            const dealerCards = bjDealerHand.map((c, i) => renderBJCard(c, hideDealer && i === 0)).join('');
+            const playerCards = bjPlayerHand.map(c => renderBJCard(c)).join('');
             
             document.getElementById('dealerCards').innerHTML = dealerCards;
             document.getElementById('playerCards').innerHTML = playerCards;
@@ -3175,9 +3565,8 @@
             document.getElementById('bjGameControls').style.display = 'grid';
             document.getElementById('bjResult').innerHTML = '';
             
-            renderHands(true);
+            renderBJHands(true);
             
-            // Check for blackjack
             if (getHandValue(bjPlayerHand) === 21) {
                 bjStand();
             }
@@ -3186,7 +3575,7 @@
         function bjHit() {
             if (!bjGameActive) return;
             bjPlayerHand.push(bjDeck.pop());
-            renderHands(true);
+            renderBJHands(true);
             
             if (getHandValue(bjPlayerHand) > 21) {
                 endBlackjack('bust');
@@ -3196,12 +3585,11 @@
         async function bjStand() {
             if (!bjGameActive) return;
             
-            // Dealer plays
             while (getHandValue(bjDealerHand) < 17) {
                 bjDealerHand.push(bjDeck.pop());
             }
             
-            renderHands(false);
+            renderBJHands(false);
             
             const playerVal = getHandValue(bjPlayerHand);
             const dealerVal = getHandValue(bjDealerHand);
@@ -3221,7 +3609,7 @@
             document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
             
             bjPlayerHand.push(bjDeck.pop());
-            renderHands(true);
+            renderBJHands(true);
             
             if (getHandValue(bjPlayerHand) > 21) {
                 endBlackjack('bust');
@@ -3232,24 +3620,24 @@
         
         async function endBlackjack(result) {
             bjGameActive = false;
-            renderHands(false);
+            renderBJHands(false);
             
             let winnings = 0, message = '';
             
             switch(result) {
                 case 'bust':
-                    message = '<span style="color: var(--danger);">BUST! You lose $' + formatNumber(bjBet) + '</span>';
+                    message = `<span style="color: var(--danger);">BUST! You lose $${formatNumber(bjBet)}</span>`;
                     break;
                 case 'dealer_bust':
                     winnings = bjBet * 2;
-                    message = '<span style="color: var(--success);">Dealer busts! You win $' + formatNumber(bjBet) + '!</span>';
+                    message = `<span style="color: var(--success);">Dealer busts! You win $${formatNumber(bjBet)}!</span>`;
                     break;
                 case 'win':
                     winnings = bjBet * 2;
-                    message = '<span style="color: var(--success);">You win $' + formatNumber(bjBet) + '!</span>';
+                    message = `<span style="color: var(--success);">You win $${formatNumber(bjBet)}!</span>`;
                     break;
                 case 'lose':
-                    message = '<span style="color: var(--danger);">Dealer wins. You lose $' + formatNumber(bjBet) + '</span>';
+                    message = `<span style="color: var(--danger);">Dealer wins. You lose $${formatNumber(bjBet)}</span>`;
                     break;
                 case 'push':
                     winnings = bjBet;
@@ -3268,706 +3656,279 @@
             document.getElementById('bjGameControls').style.display = 'none';
         }
 
-// CHEAT GAME VARIABLES
-        let cheatPlayers = [];
-        let cheatGameActive = false;
-        let cheatBuyIn = 0;
-        let cheatMyCards = [];
-        let cheatSelectedCards = [];
-        let cheatPile = [];
-        let cheatCurrentClaim = null;
-        let cheatMyTurn = false;
-        let cheatBotCount = 0;
-        let cheatLastPlay = null;
-        let cheatTotalPot = 0;
-        
-        .cheat-card {
-            width: 45px;
-            height: 62px;
-            background: white;
-            border-radius: 6px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 2px solid #ddd;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+        // =============================================
+        // CHEAT GAME
+        // =============================================
 
-        .cheat-card:hover { 
-            transform: translateY(-5px); 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        .cheat-card.selected { 
-            border-color: var(--gold); 
-            box-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
-            transform: translateY(-8px);
-        }
-        
-        .cheat-card.red { color: #dc2626; }
-        .cheat-card.black { color: #1f2937; }
-
-        // LOANS
-        let userLoans = [];
-        
-        function getLoanTerms(creditScore) {
-            // Better credit = better terms
-            let maxLoan, interestRate;
-            if (creditScore >= 750) {
-                maxLoan = 500000; interestRate = 5;
-            } else if (creditScore >= 700) {
-                maxLoan = 250000; interestRate = 8;
-            } else if (creditScore >= 650) {
-                maxLoan = 100000; interestRate = 12;
-            } else if (creditScore >= 550) {
-                maxLoan = 50000; interestRate = 18;
-            } else {
-                maxLoan = 25000; interestRate = 25;
-            }
-            return { maxLoan, interestRate };
-        }
-        
-        function loadLoans() {
-            const creditScore = currentUser.creditScore || 650;
-            const rating = getCreditRating(creditScore);
-            const terms = getLoanTerms(creditScore);
-            
-            document.getElementById('loanCreditScore').textContent = creditScore;
-            document.getElementById('loanCreditRating').textContent = rating.text;
-            document.getElementById('loanCreditRating').style.color = rating.color;
-            document.getElementById('maxLoanAmount').textContent = '$' + formatNumber(terms.maxLoan);
-            document.getElementById('loanInterestRate').textContent = terms.interestRate + '%';
-            
-            // Update loan preview on input
-            const amountInput = document.getElementById('loanAmount');
-            const termSelect = document.getElementById('loanTerm');
-            
-            amountInput.max = terms.maxLoan;
-            amountInput.oninput = updateLoanPreview;
-            termSelect.onchange = updateLoanPreview;
-            
-            loadActiveLoans();
-        }
-        
-        function updateLoanPreview() {
-            const amount = parseFloat(document.getElementById('loanAmount').value) || 0;
-            const termDays = parseInt(document.getElementById('loanTerm').value);
-            const creditScore = currentUser.creditScore || 650;
-            const terms = getLoanTerms(creditScore);
-            
-            if (amount <= 0) {
-                document.getElementById('loanPreview').style.display = 'none';
-                return;
-            }
-            
-            // Interest increases with term length
-            let interestMult = termDays === 7 ? 0.7 : termDays === 14 ? 1.0 : 1.5;
-            const totalInterest = amount * (terms.interestRate / 100) * interestMult;
-            const totalRepay = amount + totalInterest;
-            
-            const dueDate = new Date();
-            dueDate.setDate(dueDate.getDate() + termDays);
-            
-            document.getElementById('loanReceiveAmount').textContent = '$' + formatNumber(amount);
-            document.getElementById('loanRepayAmount').textContent = '$' + formatNumber(totalRepay);
-            document.getElementById('loanDueDate').textContent = dueDate.toLocaleDateString();
-            document.getElementById('loanPreview').style.display = 'block';
-        }
-        
-        async function applyForLoan() {
-            const amount = parseFloat(document.getElementById('loanAmount').value);
-            const termDays = parseInt(document.getElementById('loanTerm').value);
-            const creditScore = currentUser.creditScore || 650;
-            const terms = getLoanTerms(creditScore);
-            
-            if (!amount || amount <= 0) { showToast('Enter a valid amount', 'error'); return; }
-            if (amount > terms.maxLoan) { showToast('Amount exceeds your limit of $' + formatNumber(terms.maxLoan), 'error'); return; }
-            
-            // Check if user already has an active loan
-            if (userLoans.length > 0) { showToast('You already have an active loan. Pay it off first!', 'error'); return; }
-            
-            let interestMult = termDays === 7 ? 0.7 : termDays === 14 ? 1.0 : 1.5;
-            const totalInterest = amount * (terms.interestRate / 100) * interestMult;
-            const totalRepay = amount + totalInterest;
-            
-            const dueDate = new Date();
-            dueDate.setDate(dueDate.getDate() + termDays);
-            
-            // Create loan
-            const loan = {
-                id: 'LOAN' + Date.now(),
-                amount: amount,
-                totalRepay: totalRepay,
-                remaining: totalRepay,
-                dueDate: dueDate.toISOString(),
-                createdAt: new Date().toISOString()
-            };
-            
-            userLoans.push(loan);
-            
-            // Add money to balance
-            currentUser.balance += amount;
-            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-            
-            // Save to backend
-            await apiCall({ action: 'createLoan', email: currentUser.email, amount, totalRepay, dueDate: dueDate.toISOString() });
-            
-            showToast('Loan approved! $' + formatNumber(amount) + ' added to your account.', 'success');
-            document.getElementById('loanAmount').value = '';
-            document.getElementById('loanPreview').style.display = 'none';
-            loadActiveLoans();
-        }
-        
-        function loadActiveLoans() {
-            const container = document.getElementById('activeLoansList');
-            
-            if (userLoans.length === 0) {
-                container.innerHTML = '<div class="empty-state"><p>No active loans</p></div>';
-                return;
-            }
-            
-            container.innerHTML = userLoans.map(loan => {
-                const dueDate = new Date(loan.dueDate);
-                const isOverdue = dueDate < new Date();
-                return `
-                    <div class="loan-card ${isOverdue ? 'overdue' : ''}">
-                        <div class="loan-header">
-                            <span class="loan-amount">$${formatNumber(loan.remaining)} remaining</span>
-                            <span class="loan-status ${isOverdue ? 'overdue' : ''}">${isOverdue ? '⚠️ OVERDUE' : '✓ Active'}</span>
-                        </div>
-                        <div class="loan-details">
-                            <div>Original: $${formatNumber(loan.totalRepay)} • Due: ${dueDate.toLocaleDateString()}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-        
-        async function repayLoan() {
-            const amount = parseFloat(document.getElementById('repayAmount').value);
-            
-            if (!amount || amount <= 0) { showToast('Enter a valid amount', 'error'); return; }
-            if (userLoans.length === 0) { showToast('No active loans to repay', 'error'); return; }
-            if (amount > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
-            
-            const loan = userLoans[0];
-            const payment = Math.min(amount, loan.remaining);
-            
-            loan.remaining -= payment;
-            currentUser.balance -= payment;
-            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-            
-            // Improve credit score for on-time payment
-            const dueDate = new Date(loan.dueDate);
-            if (new Date() <= dueDate) {
-                currentUser.creditScore = Math.min(850, (currentUser.creditScore || 650) + 5);
-            }
-            
-            await apiCall({ action: 'repayLoan', email: currentUser.email, amount: payment, loanId: loan.id });
-            
-            if (loan.remaining <= 0) {
-                userLoans.shift();
-                currentUser.creditScore = Math.min(850, (currentUser.creditScore || 650) + 20);
-                showToast('🎉 Loan fully paid off! Credit score improved!', 'success');
-            } else {
-                showToast('Payment of $' + formatNumber(payment) + ' applied!', 'success');
-            }
-            
-            document.getElementById('repayAmount').value = '';
-            loadLoans();
-        }
-
-        // STOCKS
-        const BASE_STOCKS = [
-            { symbol: 'DRAG', name: 'Dragon Industries', price: 150, shares: 10000, category: 'fantasy' },
-            { symbol: 'PHXR', name: 'Phoenix Rising Corp', price: 85, shares: 15000, category: 'fantasy' },
-            { symbol: 'GRFN', name: 'Griffin Airways', price: 220, shares: 8000, category: 'fantasy' },
-            { symbol: 'MAGE', name: 'Mage Technologies', price: 175, shares: 12000, category: 'fantasy' },
-            { symbol: 'ELFS', name: 'Elven Forests Inc', price: 95, shares: 20000, category: 'fantasy' },
-            { symbol: 'DWRF', name: 'Dwarven Mining Co', price: 310, shares: 5000, category: 'fantasy' },
-            { symbol: 'UNCRN', name: 'Unicorn Ventures', price: 420, shares: 3000, category: 'fantasy' },
-            { symbol: 'WIZD', name: 'Wizard Labs', price: 195, shares: 10000, category: 'fantasy' },
-            { symbol: 'NXAI', name: 'NexGen AI', price: 380, shares: 7500, category: 'tech' },
-            { symbol: 'QNTM', name: 'Quantum Computing Inc', price: 520, shares: 4000, category: 'tech' },
-            { symbol: 'CYBR', name: 'CyberShield Security', price: 145, shares: 18000, category: 'tech' },
-            { symbol: 'ROBO', name: 'RoboTech Industries', price: 265, shares: 9000, category: 'tech' },
-            { symbol: 'NURO', name: 'NeuroLink Systems', price: 340, shares: 6000, category: 'tech' },
-            { symbol: 'SOLR', name: 'Solar Dynamics', price: 125, shares: 22000, category: 'tech' },
-            { symbol: 'SPCE', name: 'SpaceX Ventures', price: 890, shares: 2000, category: 'tech' },
-            { symbol: 'BLKC', name: 'BlockChain Corp', price: 205, shares: 11000, category: 'tech' }
-        ];
-        
-        let stocks = [...BASE_STOCKS];
-        let stockHistory = {}; // { symbol: { '1d': [], '2w': [], '1m': [], '6m': [] } }
-        let userHoldings = {}; // { symbol: shares }
-        let chartTimeframe = '1d';
-        let stockUpdateInterval = null;
-        function initStocks() {
-            // Initialize price history for all stocks
-            stocks.forEach(s => {
-                if (!stockHistory[s.symbol]) {
-                    stockHistory[s.symbol] = {
-                        '1d': generateHistoricalPrices(s.price, 24),
-                        '2w': generateHistoricalPrices(s.price, 14),
-                        '1m': generateHistoricalPrices(s.price, 30),
-                        '6m': generateHistoricalPrices(s.price, 180)
-                    };
+        function createCheatDeck() {
+            const deck = [];
+            for (const suit of SUITS) {
+                for (const rank of RANKS) {
+                    deck.push({ suit, rank });
                 }
-            });
+            }
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+            return deck;
+        }
+
+        function joinCheatGame() {
+            const buyIn = parseFloat(document.getElementById('cheatBet').value) || 100;
+            if (buyIn < 100) { showToast('Minimum buy-in is $100', 'error'); return; }
+            if (buyIn > currentUser.balance) { showToast('Insufficient balance', 'error'); return; }
             
-            // Show admin panel if stock admin - with detailed logging
-            const adminPanel = document.getElementById('stockAdminPanel');
-            console.log('Stock Admin Check:', {
-                adminPanel: !!adminPanel,
-                currentUser: !!currentUser,
-                email: currentUser?.email,
-                isAdmin: currentUser?.email ? isStockAdmin(currentUser.email) : false
-            });
+            cheatBuyIn = buyIn;
+            currentUser.balance -= buyIn;
+            document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
             
-            if (adminPanel) {
-                if (currentUser && currentUser.email) {
-                    const emailLower = currentUser.email.toLowerCase().trim();
-                    const isMaster = emailLower === MASTER_ADMIN.toLowerCase();
-                    const isInStockAdmins = STOCK_ADMINS.some(a => a.toLowerCase() === emailLower);
-                    
-                    console.log('Admin check details:', { emailLower, isMaster, isInStockAdmins });
-                    
-                    if (isMaster || isInStockAdmins) {
-                        adminPanel.style.display = 'block';
-                        console.log('Stock admin panel shown');
+            cheatBotCount = 1 + Math.floor(Math.random() * 3);
+            cheatTotalPot = buyIn * (cheatBotCount + 1);
+            
+            document.getElementById('cheatStatus').innerHTML = `
+                <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🎴 Starting game...</div>
+                <div style="color: var(--text-muted);">${cheatBotCount + 1} players • Pot: $${formatNumber(cheatTotalPot)}</div>
+            `;
+            
+            document.getElementById('cheatLobbyControls').style.display = 'none';
+            
+            setTimeout(() => startCheatGame(), 2000);
+        }
+
+        function startCheatGame() {
+            cheatGameActive = true;
+            cheatPile = [];
+            cheatCurrentClaim = null;
+            cheatSelectedCards = [];
+            cheatLastPlay = null;
+            
+            const deck = createCheatDeck();
+            const cardsPerPlayer = Math.floor(52 / (cheatBotCount + 1));
+            cheatMyCards = deck.splice(0, cardsPerPlayer);
+            
+            document.getElementById('cheatStatus').innerHTML = `
+                <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🎴 Your turn!</div>
+                <div style="color: var(--text-muted);">Pot: $${formatNumber(cheatTotalPot)}</div>
+            `;
+            
+            document.getElementById('cheatCardsContainer').style.display = 'block';
+            document.getElementById('cheatPileArea').style.display = 'block';
+            document.getElementById('cheatGameControls').style.display = 'block';
+            document.getElementById('cheatLastPlayInfo').style.display = 'none';
+            
+            renderCheatCards();
+            cheatMyTurn = true;
+        }
+
+        function renderCheatCards() {
+            const container = document.getElementById('cheatCards');
+            container.innerHTML = cheatMyCards.map((card, idx) => {
+                const isRed = ['♥', '♦'].includes(card.suit);
+                const isSelected = cheatSelectedCards.includes(idx);
+                return `<div class="cheat-card ${isRed ? 'red' : 'black'} ${isSelected ? 'selected' : ''}" onclick="toggleCheatCard(${idx})">
+                    <div>${card.rank}</div>
+                    <div>${card.suit}</div>
+                </div>`;
+            }).join('');
+            
+            document.getElementById('cheatSelectedCount').textContent = cheatSelectedCards.length;
+            document.getElementById('cheatPileCount').textContent = cheatPile.length;
+            document.getElementById('cheatCurrentClaim').textContent = cheatCurrentClaim ? `${cheatCurrentClaim.count}x ${cheatCurrentClaim.rank}` : '-';
+        }
+
+        function toggleCheatCard(idx) {
+            if (!cheatMyTurn) return;
+            
+            const pos = cheatSelectedCards.indexOf(idx);
+            if (pos > -1) {
+                cheatSelectedCards.splice(pos, 1);
+            } else if (cheatSelectedCards.length < 4) {
+                cheatSelectedCards.push(idx);
+            }
+            renderCheatCards();
+        }
+
+        function cheatPlayCards() {
+            if (!cheatMyTurn || cheatSelectedCards.length === 0) {
+                showToast('Select at least 1 card', 'error');
+                return;
+            }
+            
+            const claimRank = document.getElementById('cheatClaimRank').value;
+            const claimCount = parseInt(document.getElementById('cheatClaimCount').value) || cheatSelectedCards.length;
+            
+            const playedCards = cheatSelectedCards.map(i => cheatMyCards[i]);
+            cheatSelectedCards.sort((a, b) => b - a).forEach(i => cheatMyCards.splice(i, 1));
+            cheatSelectedCards = [];
+            
+            cheatPile.push(...playedCards);
+            cheatCurrentClaim = { rank: claimRank, count: claimCount };
+            cheatLastPlay = { player: 'You', count: playedCards.length, claimedRank: claimRank, actualCards: playedCards };
+            
+            renderCheatCards();
+            
+            if (cheatMyCards.length === 0) {
+                endCheatGame(true);
+                return;
+            }
+            
+            cheatMyTurn = false;
+            document.getElementById('cheatStatus').innerHTML = `
+                <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🤖 Bot's turn...</div>
+                <div style="color: var(--text-muted);">Pot: $${formatNumber(cheatTotalPot)}</div>
+            `;
+            
+            setTimeout(() => botCheatTurn(), 1500);
+        }
+
+        function botCheatTurn() {
+            if (!cheatGameActive) return;
+            
+            if (cheatLastPlay && cheatLastPlay.player === 'You' && Math.random() < 0.25) {
+                const actualRanks = cheatLastPlay.actualCards.map(c => c.rank);
+                const wasBluff = !actualRanks.every(r => r === cheatLastPlay.claimedRank);
+                
+                document.getElementById('cheatLastPlayInfo').style.display = 'block';
+                document.getElementById('cheatLastPlayDetails').innerHTML = `🚨 Bot calls your bluff!`;
+                
+                setTimeout(() => {
+                    if (wasBluff) {
+                        document.getElementById('cheatResult').innerHTML = `<span style="color: var(--danger);">You were caught bluffing! You pick up ${cheatPile.length} cards.</span>`;
+                        cheatMyCards.push(...cheatPile);
+                        cheatPile = [];
                     } else {
-                        adminPanel.style.display = 'none';
+                        document.getElementById('cheatResult').innerHTML = `<span style="color: var(--success);">You weren't bluffing! Bot picks up the pile.</span>`;
+                        cheatPile = [];
                     }
-                } else {
-                    adminPanel.style.display = 'none';
-                }
-            }
-            
-            // Start price updates every minute
-            if (stockUpdateInterval) clearInterval(stockUpdateInterval);
-            stockUpdateInterval = setInterval(updateStockPrices, 60000);
-        }
-        
-        function generateHistoricalPrices(currentPrice, points) {
-            const prices = [];
-            let price = currentPrice * (0.7 + Math.random() * 0.4); // Start 70-110% of current
-            for (let i = 0; i < points; i++) {
-                prices.push(price);
-                // Smooth random walk toward current price
-                const drift = (currentPrice - price) * 0.02;
-                const volatility = price * 0.03 * (Math.random() - 0.5);
-                price = Math.max(1, price + drift + volatility);
-            }
-            prices.push(currentPrice);
-            return prices;
-        }
-        
-        function updateStockPrices() {
-            stocks.forEach(stock => {
-                const oldPrice = stock.price;
-                // Smooth price movement - not too random
-                const trend = (Math.random() - 0.48) * 0.04; // Slight upward bias
-                const volatility = stock.price * trend;
-                const meanReversion = (stock.price > 1000 ? -0.01 : stock.price < 10 ? 0.01 : 0) * stock.price;
-                
-                stock.price = Math.max(1, stock.price + volatility + meanReversion);
-                stock.price = Math.round(stock.price * 100) / 100;
-                stock.change = ((stock.price - oldPrice) / oldPrice * 100).toFixed(2);
-                
-                // Update history
-                if (stockHistory[stock.symbol]) {
-                    Object.keys(stockHistory[stock.symbol]).forEach(tf => {
-                        stockHistory[stock.symbol][tf].push(stock.price);
-                        // Keep appropriate length
-                        const maxLen = tf === '1d' ? 24 : tf === '2w' ? 14 : tf === '1m' ? 30 : 180;
-                        if (stockHistory[stock.symbol][tf].length > maxLen + 10) {
-                            stockHistory[stock.symbol][tf].shift();
-                        }
-                    });
-                }
-            });
-            
-            renderStocks();
-            drawStockChart();
-        }
-        
-        async function loadStocks() {
-            initStocks();
-            renderStocks();
-            await loadHoldingsFromBackend(); // Load from backend, not local
-            drawStockChart();
-        }
-        
-        function renderStocks() {
-            const container = document.getElementById('stocksList');
-            if (stocks.length === 0) {
-                container.innerHTML = '<div class="empty-state"><p>No stocks available</p></div>';
+                    
+                    cheatLastPlay = null;
+                    renderCheatCards();
+                    
+                    setTimeout(() => {
+                        cheatMyTurn = true;
+                        document.getElementById('cheatStatus').innerHTML = `
+                            <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🎴 Your turn!</div>
+                            <div style="color: var(--text-muted);">Pot: $${formatNumber(cheatTotalPot)}</div>
+                        `;
+                        document.getElementById('cheatResult').innerHTML = '';
+                    }, 2000);
+                }, 1000);
                 return;
             }
             
-            container.innerHTML = stocks.map(s => {
-                const change = s.change || 0;
-                const isUp = change >= 0;
-                return `
-                    <div class="stock-card ${isUp ? 'up' : 'down'}">
-                        <div class="stock-symbol">${s.symbol}</div>
-                        <div class="stock-name">${s.name}</div>
-                        <div class="stock-price">$${formatNumber(s.price)}</div>
-                        <div class="stock-change ${isUp ? 'up' : 'down'}">${isUp ? '▲' : '▼'} ${Math.abs(change)}%</div>
-                        <div class="stock-actions">
-                            <input type="number" id="qty_${s.symbol}" class="form-input" placeholder="Qty" min="1">
-                            <button class="btn btn-success btn-sm" onclick="buyStock('${s.symbol}')">Buy</button>
-                            <button class="btn btn-danger btn-sm" onclick="sellStock('${s.symbol}')">Sell</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-        
-    async function loadHoldingsFromBackend() {
-            const container = document.getElementById('holdingsList');
-            container.innerHTML = '<div class="empty-state"><p>Loading holdings...</p></div>';
+            const botCardCount = 1 + Math.floor(Math.random() * 3);
+            const botClaimRank = RANKS[Math.floor(Math.random() * RANKS.length)];
             
-            try {
-                // Fetch holdings from backend
-                const data = await apiCall({ action: 'getPortfolio', email: currentUser.email });
-                console.log('Portfolio data:', data);
-                
-                const holdings = data.holdings || data.stocks || data.portfolio || [];
-                
-                // Update local userHoldings from backend data
-                userHoldings = {};
-                holdings.forEach(h => {
-                    if (h.symbol && (h.shares || h.quantity)) {
-                        userHoldings[h.symbol] = parseInt(h.shares) || parseInt(h.quantity) || 0;
-                    }
-                });
-                
-                console.log('User holdings loaded:', userHoldings);
-                
-                // Render holdings
-                renderHoldings(holdings);
-            } catch (error) {
-                console.error('Error loading holdings:', error);
-                container.innerHTML = '<div class="empty-state"><p>Error loading holdings</p></div>';
-            }
-        }
-        
-        function renderHoldings(holdings) {
-            const container = document.getElementById('holdingsList');
-            
-            // Filter out zero holdings
-            const validHoldings = holdings.filter(h => (h.shares || h.quantity || 0) > 0);
-            
-            if (validHoldings.length === 0) {
-                container.innerHTML = '<div class="empty-state"><p>No stocks owned</p></div>';
-                return;
+            for (let i = 0; i < botCardCount; i++) {
+                cheatPile.push({ suit: SUITS[Math.floor(Math.random() * 4)], rank: RANKS[Math.floor(Math.random() * 13)] });
             }
             
-            container.innerHTML = validHoldings.map(h => {
-                const symbol = h.symbol;
-                const qty = parseInt(h.shares) || parseInt(h.quantity) || 0;
-                const avgPrice = parseFloat(h.avgPrice) || parseFloat(h.price) || 0;
-                const stock = stocks.find(s => s.symbol === symbol);
-                const currentPrice = stock ? stock.price : avgPrice;
-                const value = currentPrice * qty;
-                const profit = (currentPrice - avgPrice) * qty;
-                const profitPercent = avgPrice > 0 ? ((currentPrice - avgPrice) / avgPrice * 100) : 0;
-                const isProfit = profit >= 0;
-                
-                return `
-                    <div class="holding-card" style="position: relative;">
-                        <div class="stock-symbol">${symbol}</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted);">${qty} shares @ $${formatNumber(avgPrice)}</div>
-                        <div style="font-size: 1.1rem; font-weight: 600; color: var(--gold);">$${formatNumber(value)}</div>
-                        <div style="font-size: 0.7rem; color: ${isProfit ? 'var(--success)' : 'var(--danger)'};">
-                            ${isProfit ? '▲' : '▼'} $${formatNumber(Math.abs(profit))} (${profitPercent.toFixed(1)}%)
-                        </div>
-                        <div style="margin-top: 0.5rem; display: flex; gap: 0.25rem;">
-                            <button class="btn btn-sm btn-danger" onclick="quickSellStock('${symbol}', ${qty})" style="font-size: 0.65rem; padding: 0.25rem 0.5rem;">Sell All</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-        
-        // Legacy function for backwards compatibility
-        function loadHoldings() {
-            loadHoldingsFromBackend();
-        }
-        
-        async function buyStock(symbol) {
-            const qtyInput = document.getElementById(`qty_${symbol}`);
-            const qty = parseInt(qtyInput?.value);
-            if (!qty || qty <= 0) { 
-                showToast('Enter a valid quantity', 'error'); 
-                return; 
-            }
+            cheatCurrentClaim = { rank: botClaimRank, count: botCardCount };
+            cheatLastPlay = { player: 'Bot', count: botCardCount, claimedRank: botClaimRank };
             
-            const stock = stocks.find(s => s.symbol === symbol);
-            if (!stock) { 
-                showToast('Stock not found', 'error'); 
-                return; 
-            }
+            document.getElementById('cheatLastPlayInfo').style.display = 'block';
+            document.getElementById('cheatLastPlayDetails').innerHTML = `Played ${botCardCount} card(s), claimed ${botCardCount}x ${botClaimRank}`;
             
-            const cost = stock.price * qty;
-            if (cost > currentUser.balance) { 
-                showToast('Insufficient balance', 'error'); 
-                return; 
-            }
+            renderCheatCards();
             
-            showToast(`Buying ${qty} ${symbol}...`, 'info');
-            
-            // Save to backend first
-            const result = await apiCall({ 
-                action: 'buyStock', 
-                email: currentUser.email, 
-                symbol, 
-                shares: qty, 
-                price: stock.price, 
-                cost 
-            });
-            
-            console.log('Buy result:', result);
-            
-            if (result.success || result.newBalance !== undefined) {
-                // Update balance from backend response or calculate locally
-                currentUser.balance = result.newBalance !== undefined ? result.newBalance : (currentUser.balance - cost);
-                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-                
-                // Update local holdings
-                userHoldings[symbol] = (userHoldings[symbol] || 0) + qty;
-                
-                showToast(`Bought ${qty} ${symbol} for $${formatNumber(cost)}`, 'success');
-                
-                // Reload holdings from backend to ensure sync
-                await loadHoldingsFromBackend();
-                
-                // Clear input
-                if (qtyInput) qtyInput.value = '';
-            } else {
-                showToast(result.message || result.error || 'Purchase failed', 'error');
-            }
-        }
-        async function sellStock(symbol) {
-            const qtyInput = document.getElementById(`qty_${symbol}`);
-            const qty = parseInt(qtyInput?.value);
-            if (!qty || qty <= 0) { 
-                showToast('Enter a valid quantity', 'error'); 
-                return; 
-            }
-            
-            // Check local holdings first, but also verify with what we know
-            const owned = userHoldings[symbol] || 0;
-            if (qty > owned && owned > 0) { 
-                showToast(`You only own ${owned} shares`, 'error'); 
-                return; 
-            }
-            
-            const stock = stocks.find(s => s.symbol === symbol);
-            if (!stock) { 
-                showToast('Stock not found', 'error'); 
-                return; 
-            }
-            
-            const revenue = stock.price * qty;
-            
-            showToast(`Selling ${qty} ${symbol}...`, 'info');
-            
-            // Save to backend first
-            const result = await apiCall({ 
-                action: 'sellStock', 
-                email: currentUser.email, 
-                symbol, 
-                shares: qty, 
-                price: stock.price, 
-                revenue 
-            });
-            
-            console.log('Sell result:', result);
-            
-            if (result.success || result.newBalance !== undefined) {
-                // Update balance from backend response or calculate locally
-                currentUser.balance = result.newBalance !== undefined ? result.newBalance : (currentUser.balance + revenue);
-                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
-                
-                // Update local holdings
-                userHoldings[symbol] = Math.max(0, (userHoldings[symbol] || 0) - qty);
-                if (userHoldings[symbol] === 0) {
-                    delete userHoldings[symbol];
-                }
-                
-                showToast(`Sold ${qty} ${symbol} for $${formatNumber(revenue)}`, 'success');
-                
-                // Reload holdings from backend to ensure sync
-                await loadHoldingsFromBackend();
-                
-                // Clear input
-                if (qtyInput) qtyInput.value = '';
-            } else {
-                showToast(result.message || result.error || 'Sale failed', 'error');
-            }
-        }
-        
-        function setChartTimeframe(tf) {
-            chartTimeframe = tf;
-            document.querySelectorAll('.timeframe-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            drawStockChart();
-        }
-        
-        function drawStockChart() {
-            const canvas = document.getElementById('stockChart');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            const w = canvas.width = canvas.offsetWidth || 400;
-            const h = canvas.height = 200;
-            
-            ctx.clearRect(0, 0, w, h);
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-            ctx.fillRect(0, 0, w, h);
-            
-            // Get all price data for the timeframe
-            const colors = ['#fbbf24', '#3b82f6', '#22c55e', '#ef4444', '#a855f7', '#06b6d4', '#f97316', '#ec4899'];
-            let allPrices = [];
-            
-            stocks.slice(0, 8).forEach(stock => {
-                const history = stockHistory[stock.symbol]?.[chartTimeframe] || [];
-                allPrices = allPrices.concat(history);
-            });
-            
-            if (allPrices.length === 0) return;
-            
-            const minPrice = Math.min(...allPrices) * 0.95;
-            const maxPrice = Math.max(...allPrices) * 1.05;
-            const priceRange = maxPrice - minPrice || 1;
-            
-            // Draw grid
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-            ctx.lineWidth = 1;
-            for (let i = 0; i <= 4; i++) {
-                const y = (h / 4) * i;
-                ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(w, y);
-                ctx.stroke();
-            }
-            
-            // Draw lines for each stock
-            stocks.slice(0, 8).forEach((stock, idx) => {
-                const history = stockHistory[stock.symbol]?.[chartTimeframe] || [];
-                if (history.length < 2) return;
-                
-                ctx.strokeStyle = colors[idx % colors.length];
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                
-                history.forEach((price, i) => {
-                    const x = (i / (history.length - 1)) * w;
-                    const y = h - ((price - minPrice) / priceRange) * h;
-                    if (i === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
-                });
-                
-                ctx.stroke();
-            });
-            
-            // Draw legend
-            ctx.font = '10px Inter, sans-serif';
-            stocks.slice(0, 8).forEach((stock, idx) => {
-                ctx.fillStyle = colors[idx % colors.length];
-                const x = 10 + (idx % 4) * 95;
-                const y = 15 + Math.floor(idx / 4) * 15;
-                ctx.fillText(stock.symbol, x, y);
-            });
-        }
-        
-        async function createNewStock() {
-            console.log('createNewStock called');
-            console.log('Current user:', currentUser);
-            console.log('Is stock admin:', currentUser?.email ? isStockAdmin(currentUser.email) : 'no email');
-            
-            if (!currentUser || !currentUser.email) {
-                showToast('Please log in first', 'error');
-                return;
-            }
-            
-            if (!isStockAdmin(currentUser.email)) {
-                showToast('Not authorized - you need to be a stock admin', 'error');
-                console.log('Authorization failed for:', currentUser.email);
-                return;
-            }
-            
-            const symbol = document.getElementById('newStockSymbol').value.toUpperCase().trim();
-            const name = document.getElementById('newStockName').value.trim();
-            const price = parseFloat(document.getElementById('newStockPrice').value);
-            const shares = parseInt(document.getElementById('newStockShares').value);
-            
-            console.log('New stock data:', { symbol, name, price, shares });
-            
-            if (!symbol) { showToast('Enter a stock symbol', 'error'); return; }
-            if (!name) { showToast('Enter a company name', 'error'); return; }
-            if (!price || price <= 0) { showToast('Enter a valid price', 'error'); return; }
-            if (!shares || shares <= 0) { showToast('Enter valid shares', 'error'); return; }
-            if (stocks.find(s => s.symbol === symbol)) { showToast('Symbol already exists', 'error'); return; }
-            
-            showToast('Creating stock...', 'info');
-            
-            const newStock = { symbol, name, price, shares, category: 'custom', change: 0 };
-            stocks.push(newStock);
-            
-            stockHistory[symbol] = {
-                '1d': generateHistoricalPrices(price, 24),
-                '2w': generateHistoricalPrices(price, 14),
-                '1m': generateHistoricalPrices(price, 30),
-                '6m': generateHistoricalPrices(price, 180)
-            };
-            
-            const result = await apiCall({ action: 'createStock', adminEmail: currentUser.email, symbol, name, price, shares });
-            console.log('Create stock result:', result);
-            
-            if (result.success) {
-                showToast(`✅ Created ${symbol} - ${name}`, 'success');
-                document.getElementById('newStockSymbol').value = '';
-                document.getElementById('newStockName').value = '';
-                document.getElementById('newStockPrice').value = '';
-                document.getElementById('newStockShares').value = '';
-                renderStocks();
-                drawStockChart();
-            } else {
-                // Remove from local if backend failed
-                stocks = stocks.filter(s => s.symbol !== symbol);
-                delete stockHistory[symbol];
-                showToast(result.message || 'Failed to create stock', 'error');
-            }
-        }
-        
-        async function removeStock() {
-            if (!isStockAdmin(currentUser.email)) { showToast('Not authorized', 'error'); return; }
-            
-            const symbol = document.getElementById('newStockSymbol').value.toUpperCase().trim();
-            if (!symbol) { showToast('Enter symbol to remove', 'error'); return; }
-            
-            const idx = stocks.findIndex(s => s.symbol === symbol);
-            if (idx === -1) { showToast('Stock not found', 'error'); return; }
-            
-            stocks.splice(idx, 1);
-            delete stockHistory[symbol];
-            
-            await apiCall({ action: 'removeStock', adminEmail: currentUser.email, symbol });
-            
-            showToast(`Removed ${symbol}`, 'success');
-            document.getElementById('newStockSymbol').value = '';
-            renderStocks();
-            drawStockChart();
+            cheatMyTurn = true;
+            document.getElementById('cheatStatus').innerHTML = `
+                <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🎴 Your turn!</div>
+                <div style="color: var(--text-muted);">Pot: $${formatNumber(cheatTotalPot)}</div>
+            `;
         }
 
+        function cheatCallBluff() {
+            if (!cheatMyTurn || !cheatLastPlay || cheatLastPlay.player === 'You') {
+                showToast('Nothing to call bluff on!', 'error');
+                return;
+            }
+            
+            const wasBluff = Math.random() < 0.5;
+            
+            document.getElementById('cheatLastPlayInfo').style.display = 'block';
+            
+            if (wasBluff) {
+                document.getElementById('cheatLastPlayDetails').innerHTML = `🎉 Bot was bluffing! Bot picks up ${cheatPile.length} cards.`;
+                document.getElementById('cheatResult').innerHTML = `<span style="color: var(--success);">Correct! The bot was bluffing!</span>`;
+                cheatPile = [];
+            } else {
+                document.getElementById('cheatLastPlayDetails').innerHTML = `😅 Bot wasn't bluffing! You pick up ${cheatPile.length} cards.`;
+                document.getElementById('cheatResult').innerHTML = `<span style="color: var(--danger);">Wrong! Bot wasn't bluffing. You pick up the pile.</span>`;
+                cheatMyCards.push(...cheatPile);
+                cheatPile = [];
+            }
+            
+            cheatLastPlay = null;
+            renderCheatCards();
+            
+            if (cheatMyCards.length > 20) {
+                setTimeout(() => endCheatGame(false), 2000);
+                return;
+            }
+            
+            setTimeout(() => {
+                document.getElementById('cheatResult').innerHTML = '';
+                cheatMyTurn = true;
+                document.getElementById('cheatStatus').innerHTML = `
+                    <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🎴 Your turn!</div>
+                    <div style="color: var(--text-muted);">Pot: $${formatNumber(cheatTotalPot)}</div>
+                `;
+            }, 2000);
+        }
+
+        async function endCheatGame(won) {
+            cheatGameActive = false;
+            cheatMyTurn = false;
+            
+            let winnings = 0;
+            if (won) {
+                winnings = cheatTotalPot;
+                currentUser.balance += winnings;
+                document.getElementById('balanceAmount').textContent = formatNumber(currentUser.balance);
+                document.getElementById('cheatResult').innerHTML = `<span style="color: var(--success);">🎉 YOU WIN! +$${formatNumber(winnings - cheatBuyIn)}</span>`;
+                createConfetti();
+            } else {
+                document.getElementById('cheatResult').innerHTML = `<span style="color: var(--danger);">😔 You lose! -$${formatNumber(cheatBuyIn)}</span>`;
+            }
+            
+            await apiCall({ action: 'recordGambling', email: currentUser.email, game: 'cheat', wagered: cheatBuyIn, won: won ? (winnings - cheatBuyIn) : 0, lost: won ? 0 : cheatBuyIn, result: won ? 'win' : 'loss' });
+            
+            document.getElementById('cheatStatus').innerHTML = `
+                <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🎴 Game Over</div>
+                <div style="color: var(--text-muted);">${won ? 'You got rid of all your cards!' : 'Too many cards!'}</div>
+            `;
+            
+            setTimeout(() => resetCheatGame(), 3000);
+        }
+
+        function resetCheatGame() {
+            cheatGameActive = false;
+            cheatMyTurn = false;
+            cheatMyCards = [];
+            cheatSelectedCards = [];
+            cheatPile = [];
+            cheatCurrentClaim = null;
+            cheatLastPlay = null;
+            cheatTotalPot = 0;
+            
+            document.getElementById('cheatCardsContainer').style.display = 'none';
+            document.getElementById('cheatPileArea').style.display = 'none';
+            document.getElementById('cheatGameControls').style.display = 'none';
+            document.getElementById('cheatLastPlayInfo').style.display = 'none';
+            document.getElementById('cheatLobbyControls').style.display = 'block';
+            document.getElementById('cheatResult').innerHTML = '';
+            document.getElementById('cheatStatus').innerHTML = `
+                <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🎴 Waiting for players...</div>
+                <div id="cheatPlayers" style="color: var(--text-muted);">0 players in lobby</div>
+            `;
+        }
+
+        // =============================================
         // CHAT
+        // =============================================
+
         async function loadChat() {
             const data = await apiCall({ action: 'getChat' });
             const container = document.getElementById('chatMessages');
@@ -3986,12 +3947,6 @@
             }
         }
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text || '';
-            return div.innerHTML;
-        }
-
         async function sendChat() {
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
@@ -4001,9 +3956,12 @@
             loadChat();
         }
 
+        // =============================================
         // ADMIN
+        // =============================================
+
         async function loadAdmin() {
-            if (currentUser.email !== MASTER_ADMIN) return;
+            if (currentUser.email.toLowerCase() !== MASTER_ADMIN.toLowerCase()) return;
             const data = await apiCall({ action: 'getAdminData', adminEmail: currentUser.email });
             if (data.success && data.users) {
                 document.getElementById('adminUsersList').innerHTML = data.users.map(u => `
@@ -4019,7 +3977,7 @@
         }
 
         async function adminAddMoney() {
-            if (currentUser.email !== MASTER_ADMIN) return;
+            if (currentUser.email.toLowerCase() !== MASTER_ADMIN.toLowerCase()) return;
             const targetEmail = document.getElementById('adminTargetEmail').value.trim().toLowerCase();
             const amount = parseFloat(document.getElementById('adminAddAmount').value);
             if (!targetEmail || !amount) { showToast('Fill in all fields', 'error'); return; }
@@ -4033,6 +3991,10 @@
                 showToast(data.message || 'Failed', 'error');
             }
         }
+
+        // =============================================
+        // SETTINGS & MODALS
+        // =============================================
 
         function showSettingsModal() { document.getElementById('settingsModal').classList.add('active'); }
         function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('active'); }
@@ -4051,7 +4013,10 @@
             }
         }
 
-        // Auto refresh balance
+        // =============================================
+        // AUTO-REFRESH
+        // =============================================
+
         setInterval(async () => {
             if (currentUser) {
                 const data = await apiCall({ action: 'getBalance', email: currentUser.email });
