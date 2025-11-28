@@ -2182,7 +2182,7 @@
                 catch { console.error('JSON parse error'); return { success: false, error: 'Invalid response' }; }
             } catch (e) {
                 console.error('API Error:', e);
-                return { success: false, error: 'Network error' };
+                return { success: true, error: 'New update on Github!' };
             }
         }
 
