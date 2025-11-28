@@ -1787,7 +1787,7 @@
     <div id="confetti" class="confetti"></div>
     <script>
         // ==================== CONFIGURATION ====================
-        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyHiqWKJD0tK3zIyHlUKaXhQKTGdfgdBZnE85x8gcQLXyhL7u2JpDFQDvm8A8EobMMMVQ/exec';
+        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyacOKdmduEiTUlD70AU64bPF0UhANRlRfOXNhzvRLDMHVY1BUmW1w0_JJBHWSyRHAw8w/exec';
         
         // ==================== STATE ====================
         let currentUser = null;
@@ -1923,6 +1923,10 @@
 
         function logout() {
             stopCheatPolling();
+            if (stockRefreshInterval) {
+                clearInterval(stockRefreshInterval);
+                stockRefreshInterval = null;
+            }
             currentUser = null;
             localStorage.removeItem('lintoriaUser');
             document.getElementById('authScreen').classList.remove('hidden');
@@ -2006,6 +2010,17 @@
             event.target.classList.add('active');
             document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
             document.getElementById(tab + 'Content').classList.remove('hidden');
+            
+            // Stop stock refresh when leaving stocks tab
+            if (tab !== 'stocks' && stockRefreshInterval) {
+                clearInterval(stockRefreshInterval);
+                stockRefreshInterval = null;
+            }
+            
+            // Stop cheat polling when leaving casino
+            if (tab !== 'casino') {
+                stopCheatPolling();
+            }
             
             if (tab === 'dashboard') loadDashboard();
             else if (tab === 'packs') loadPacks();
@@ -2128,31 +2143,56 @@
         }
 
         // ==================== STOCKS ====================
+        let stockTaxRate = 2; // Default 2%
+        let stockRefreshInterval = null;
+        
         async function loadStocks() {
             const result = await apiCall('getStocks');
             const container = document.getElementById('stocksList');
             
-            if (result.success && result.stocks && result.stocks.length > 0) {
-                container.innerHTML = result.stocks.map(stock => `
-                    <div class="stock-card ${stock.change >= 0 ? 'up' : 'down'}">
-                        <div class="stock-symbol">${stock.symbol}</div>
-                        <div class="stock-name">${stock.name}</div>
-                        <div class="stock-price">${formatMoney(stock.price)}</div>
-                        <div class="stock-change ${stock.change >= 0 ? 'up' : 'down'}">
-                            ${stock.change >= 0 ? '▲' : '▼'} ${Math.abs(stock.change).toFixed(2)}%
+            if (result.success) {
+                if (result.taxRate) stockTaxRate = result.taxRate;
+                
+                // Show tax info
+                let taxInfo = document.getElementById('stockTaxInfo');
+                if (!taxInfo) {
+                    taxInfo = document.createElement('div');
+                    taxInfo.id = 'stockTaxInfo';
+                    taxInfo.style.cssText = 'background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 0.75rem; margin-bottom: 1rem; text-align: center;';
+                    container.parentElement.insertBefore(taxInfo, container);
+                }
+                taxInfo.innerHTML = `<span style="color: var(--warning);">⚠️ ${stockTaxRate}% tax on all stock transactions</span> <span style="color: var(--text-muted); font-size: 0.75rem;">(Prices update every minute)</span>`;
+                
+                if (result.stocks && result.stocks.length > 0) {
+                    container.innerHTML = result.stocks.map(stock => `
+                        <div class="stock-card ${stock.change >= 0 ? 'up' : 'down'}">
+                            <div class="stock-symbol">${stock.symbol}</div>
+                            <div class="stock-name">${stock.name}</div>
+                            <div class="stock-price">${formatMoney(stock.price)}</div>
+                            <div class="stock-change ${stock.change >= 0 ? 'up' : 'down'}">
+                                ${stock.change >= 0 ? '▲' : '▼'} ${Math.abs(stock.change).toFixed(2)}%
+                            </div>
+                            <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.25rem;">${stock.category || 'general'}</div>
+                            <div class="stock-actions">
+                                <input type="number" id="qty-${stock.symbol}" placeholder="Qty" min="1" value="1">
+                                <button class="btn btn-sm btn-success" onclick="buyStock('${stock.symbol}')">Buy</button>
+                                <button class="btn btn-sm btn-danger" onclick="sellStock('${stock.symbol}')">Sell</button>
+                            </div>
                         </div>
-                        <div class="stock-actions">
-                            <input type="number" id="qty-${stock.symbol}" placeholder="Qty" min="1" value="1">
-                            <button class="btn btn-sm btn-success" onclick="buyStock('${stock.symbol}', ${stock.price})">Buy</button>
-                            <button class="btn btn-sm btn-danger" onclick="sellStock('${stock.symbol}', ${stock.price})">Sell</button>
-                        </div>
-                    </div>
-                `).join('');
+                    `).join('');
+                } else {
+                    container.innerHTML = '<div class="empty-state"><p>No stocks available</p></div>';
+                }
             } else {
-                container.innerHTML = '<div class="empty-state"><p>No stocks available</p></div>';
+                container.innerHTML = '<div class="empty-state"><p>Failed to load stocks</p></div>';
             }
             
             loadHoldings();
+            
+            // Start auto-refresh every 30 seconds
+            if (!stockRefreshInterval) {
+                stockRefreshInterval = setInterval(loadStocks, 30000);
+            }
         }
 
         async function loadHoldings() {
@@ -2164,10 +2204,12 @@
                     <div class="holding-card">
                         <div style="font-weight: 700; color: var(--gold);">${h.symbol}</div>
                         <div style="font-size: 0.85rem;">${h.shares} shares</div>
-                        <div style="font-size: 0.85rem;">Avg: ${formatMoney(h.avgPrice)}</div>
-                        <div style="font-size: 0.85rem; color: ${h.profit >= 0 ? 'var(--success)' : 'var(--danger)'};">
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Avg: ${formatMoney(h.avgPrice)}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Now: ${formatMoney(h.currentPrice)}</div>
+                        <div style="font-size: 0.85rem; color: ${h.profit >= 0 ? 'var(--success)' : 'var(--danger)'}; font-weight: 600;">
                             P/L: ${h.profit >= 0 ? '+' : ''}${formatMoney(h.profit)}
                         </div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">Value: ${formatMoney(h.currentValue)}</div>
                     </div>
                 `).join('');
             } else {
@@ -2175,24 +2217,17 @@
             }
         }
 
-        async function buyStock(symbol, price) {
+        async function buyStock(symbol) {
             const qty = parseInt(document.getElementById('qty-' + symbol).value) || 1;
-            const total = price * qty;
-            
-            if (total > currentUser.balance) {
-                showToast('Insufficient funds', 'error');
-                return;
-            }
             
             const result = await apiCall('buyStock', {
                 email: currentUser.email,
                 symbol: symbol,
-                qty: qty,
-                price: price
+                qty: qty
             });
             
             if (result.success) {
-                showToast('Bought ' + qty + ' ' + symbol + ' for ' + formatMoney(total), 'success');
+                showToast('Bought ' + qty + ' ' + symbol + ' for ' + formatMoney(result.total) + ' (incl. ' + formatMoney(result.tax) + ' tax)', 'success');
                 updateBalance();
                 loadStocks();
             } else {
@@ -2200,18 +2235,17 @@
             }
         }
 
-        async function sellStock(symbol, price) {
+        async function sellStock(symbol) {
             const qty = parseInt(document.getElementById('qty-' + symbol).value) || 1;
             
             const result = await apiCall('sellStock', {
                 email: currentUser.email,
                 symbol: symbol,
-                qty: qty,
-                price: price
+                qty: qty
             });
             
             if (result.success) {
-                showToast('Sold ' + qty + ' ' + symbol + ' for ' + formatMoney(price * qty), 'success');
+                showToast('Sold ' + qty + ' ' + symbol + ' for ' + formatMoney(result.net) + ' (after ' + formatMoney(result.tax) + ' tax)', 'success');
                 updateBalance();
                 loadStocks();
             } else {
@@ -3346,6 +3380,17 @@
         function renderCheatGameState(result) {
             const lobby = result.lobby;
             const gameState = result.gameState;
+            
+            if (!gameState) {
+                // Game state not ready yet
+                const statusDiv = document.getElementById('cheatStatus');
+                statusDiv.innerHTML = `
+                    <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🎴 Loading game...</div>
+                    <div style="color: var(--text-muted);">Please wait...</div>
+                `;
+                return;
+            }
+            
             cheatGameState = gameState;
             cheatMyHand = result.myHand || [];
             
@@ -3387,21 +3432,26 @@
             // Render hand
             cardsContainer.style.display = 'block';
             const cardsDiv = document.getElementById('cheatCards');
-            cardsDiv.innerHTML = cheatMyHand.map((card, idx) => {
-                const isRed = card.suit === '♥' || card.suit === '♦';
-                const selected = cheatSelectedCards.includes(idx);
-                return `
-                    <div class="cheat-card ${isRed ? 'red' : 'black'} ${selected ? 'selected' : ''}" onclick="toggleCheatCard(${idx})">
-                        <div>${card.value}</div>
-                        <div>${card.suit}</div>
-                    </div>
-                `;
-            }).join('');
+            
+            if (cheatMyHand && cheatMyHand.length > 0) {
+                cardsDiv.innerHTML = cheatMyHand.map((card, idx) => {
+                    const isRed = card.suit === '♥' || card.suit === '♦';
+                    const selected = cheatSelectedCards.includes(idx);
+                    return `
+                        <div class="cheat-card ${isRed ? 'red' : 'black'} ${selected ? 'selected' : ''}" onclick="toggleCheatCard(${idx})">
+                            <div>${card.value}</div>
+                            <div>${card.suit}</div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                cardsDiv.innerHTML = '<div style="color: var(--success); padding: 1rem;">🎉 You have no cards left!</div>';
+            }
             
             document.getElementById('cheatSelectedCount').textContent = cheatSelectedCards.length;
             
             // Game controls
-            if (isMyTurn) {
+            if (isMyTurn && cheatMyHand.length > 0) {
                 const canCallCheat = gameState.pileCount > 0 && gameState.lastPlayer;
                 
                 gameControls.style.display = 'block';
@@ -3415,7 +3465,7 @@
                         <button class="btn btn-danger" onclick="callCheat()" ${canCallCheat ? '' : 'disabled'}>🚨 Call Cheat!</button>
                     </div>
                 `;
-            } else {
+            } else if (!isMyTurn) {
                 const canCallCheat = gameState.pileCount > 0 && gameState.lastPlayer && gameState.lastPlayer !== currentUser.email;
                 
                 gameControls.style.display = 'block';
@@ -3424,6 +3474,8 @@
                         🚨 Call Cheat on ${gameState.lastPlayerName || 'player'}!
                     </button>
                 `;
+            } else {
+                gameControls.style.display = 'none';
             }
         }
 
